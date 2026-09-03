@@ -19,9 +19,10 @@ you push, it's live.
 
 ## Still needed before this goes live
 
-**1. The logo file.** Save the Riah's Fav's logo as `logo.png` in this folder.
-Until it's there, both pages fall back to a CSS-rendered wordmark — readable,
-but it isn't the real mark. A transparent PNG around 600px wide works well.
+**1. ~~The logo file.~~ Done.** `logo.png`, `icon-192.png`, `icon-512.png`
+and `apple-touch-icon.png` are all in place, derived from `logo-source.png`.
+To regenerate them after a logo change, crop to the alpha bounding box and
+resize to 1200px wide; square icons centre the mark on `#141010`.
 
 **2. A Firebase project.** Create one at console.firebase.google.com, then:
    - Build → Firestore Database → Create database (production mode)
