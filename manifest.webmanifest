@@ -1,0 +1,11 @@
+{
+  "name": "Riah's Fav's — Korean Fried Chicken Catering",
+  "short_name": "Riah's Fav's",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#141010",
+  "theme_color": "#141010",
+  "icons": [
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

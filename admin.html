@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Riah's Fav's — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" href="logo.png">
+<meta name="theme-color" content="#141010">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<style>
+/* ================= Riah's Fav's Admin — Version 1.1 ================= */
+:root{
+  --ink:#141010;--ink-2:#1F1917;--ink-3:#2A2220;--ink-4:#352B28;--line:rgba(255,243,214,.12);
+  --gold:#F7A81B;--orange:#F26522;--red:#E01B12;--blue:#1B4FA8;--blue-lite:#3B79E0;
+  --petal:#FFF3D6;--cream:#F6EFE4;--muted:#A3948C;--ok:#5FA86F;
+  --grad:linear-gradient(100deg,var(--gold) 0%,var(--orange) 52%,var(--red) 100%);
+  --shadow:0 10px 28px rgba(0,0,0,.45);--radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito Sans',sans-serif;background:var(--ink);color:var(--cream);line-height:1.5;padding-bottom:80px}
+.display{font-family:'Archivo Black','Nunito Sans',sans-serif;font-weight:400}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer;border:none;color:inherit}
+.hidden{display:none !important}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.eyebrow{font-size:.64rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.title{font-size:1.5rem;line-height:1.15;margin-top:4px}
+.sub{font-size:.82rem;color:var(--muted);font-weight:600;margin-top:6px}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:14px}
+.status{font-size:.82rem;font-weight:700;margin-top:10px;min-height:1.1em}
+.status.err{color:#FF6B60}
+.status.ok{color:var(--ok)}
+
+.topbar{position:sticky;top:0;z-index:30;background:rgba(20,16,16,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;gap:12px}
+.topbar .burger{background:var(--ink-3);width:36px;height:36px;border-radius:10px;font-size:1.05rem;line-height:1;flex:none}
+.topbar .tt{flex:1;font-size:.95rem;font-weight:800}
+.topbar .tt small{display:block;font-size:.56rem;letter-spacing:.2em;color:var(--muted);font-weight:800;margin-top:2px}
+.bell{position:relative;background:var(--ink-3);width:36px;height:36px;border-radius:10px;font-size:.95rem;flex:none}
+.bell b{position:absolute;top:-5px;right:-5px;background:var(--grad);color:#fff;font-size:.58rem;min-width:17px;height:17px;
+  border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+
+.drawer-scrim{position:fixed;inset:0;background:rgba(0,0,0,.68);opacity:0;pointer-events:none;transition:opacity .25s;z-index:48}
+.drawer-scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:274px;background:var(--ink-2);border-right:1px solid var(--line);z-index:49;
+  transform:translateX(-100%);transition:transform .28s cubic-bezier(.3,.8,.3,1);overflow-y:auto;padding-bottom:24px}
+.drawer.show{transform:none}
+.drawer-head{padding:calc(22px + env(safe-area-inset-top)) 18px 18px;border-bottom:1px solid var(--line)}
+.drawer-n{font-family:'Kaushan Script',cursive;font-size:1.5rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.drawer-s{font-size:.6rem;letter-spacing:.2em;color:var(--muted);font-weight:800;margin-top:3px}
+.drawer a{display:flex;align-items:center;gap:11px;padding:14px 18px;font-weight:800;font-size:.88rem;text-decoration:none;
+  border-bottom:1px solid var(--line);cursor:pointer;color:var(--cream)}
+.drawer a.on{background:rgba(247,168,27,.12);color:var(--gold)}
+.drawer a .ic{font-size:.98rem;width:20px;text-align:center}
+.dbadge{margin-left:auto;background:var(--grad);color:#fff;font-size:.62rem;min-width:19px;height:19px;border-radius:99px;
+  display:flex;align-items:center;justify-content:center;padding:0 5px}
+.dbadge:empty{display:none}
+.drawer-tools{margin:14px 18px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.drawer-tools summary{padding:12px;font-weight:800;font-size:.82rem;cursor:pointer;background:var(--ink-3)}
+.drawer-tools-body{padding:12px;font-size:.76rem;color:var(--muted);font-weight:600}
+.drawer-out{width:calc(100% - 36px);margin:16px 18px 0;background:var(--ink-3);color:var(--cream);font-weight:800;padding:12px;border-radius:12px}
+
+.btn{background:var(--grad);color:#fff;font-weight:800;padding:13px 18px;border-radius:12px;font-size:.89rem;width:100%;
+  margin-top:12px;display:block;text-align:center;text-decoration:none}
+.btn.secondary{background:var(--ink-3);color:var(--cream)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--muted)}
+.btn.blue{background:var(--blue)}
+.btn:disabled{opacity:.45}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.actions button,.actions a{flex:1;min-width:118px;padding:11px 12px;border-radius:11px;font-size:.8rem;font-weight:800;text-align:center;text-decoration:none}
+.a-go{background:var(--grad);color:#fff}
+.a-ok{background:var(--ok);color:#fff}
+.a-soft{background:var(--ink-3);color:var(--cream)}
+.a-warn{background:rgba(224,27,18,.18);color:#FF8A80}
+.a-ghost{background:transparent;border:1.5px solid var(--line);color:var(--muted)}
+
+.inp{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);font-size:.89rem;font-weight:700;
+  background:var(--ink);color:var(--cream);margin-top:8px}
+.inp:focus{outline:none;border-color:var(--gold)}
+.inp::placeholder{color:#6A5C57}
+textarea.inp{min-height:76px;resize:vertical;line-height:1.5}
+label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);display:block;margin-top:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hint{font-size:.74rem;color:var(--muted);font-weight:600;margin-top:6px;line-height:1.45}
+
+.drop{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);margin-top:12px;overflow:hidden}
+.drop>summary{list-style:none;padding:15px 16px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:.92rem;cursor:pointer}
+.drop>summary::-webkit-details-marker{display:none}
+.drop .di{font-size:1.05rem}
+.drop .dsub{font-size:.7rem;color:var(--muted);font-weight:700;margin-top:2px}
+.drop .dmeta{margin-left:auto;display:flex;align-items:center;gap:8px}
+.drop .dcount{font-size:.68rem;font-weight:800;color:var(--muted)}
+.drop .chev{transition:transform .2s;font-size:.78rem;color:var(--muted)}
+.drop[open] .chev{transform:rotate(90deg)}
+.dbody{padding:0 16px 16px}
+
+.setrow{border-bottom:1px solid var(--line);padding:14px 0}
+.setrow:last-of-type{border:none}
+.setrow-head{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.setrow-t{font-weight:800;font-size:.88rem}
+.setrow-d{font-size:.72rem;color:var(--muted);font-weight:700;margin-top:2px}
+.setrow-eg{font-size:.73rem;color:var(--petal);font-weight:700;background:var(--ink-3);border-radius:9px;padding:8px 10px;margin-top:9px;line-height:1.45}
+.stepbtns{display:flex;align-items:center;gap:6px;flex:none}
+.stepbtns button{width:32px;height:32px;border-radius:9px;background:var(--ink-3);color:var(--cream);font-weight:800;font-size:1rem;line-height:1}
+.stepbtns .n{font-weight:800;min-width:38px;text-align:center;font-size:1rem;color:var(--gold)}
+
+.filters{display:flex;gap:7px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:none;padding:9px 14px;border-radius:99px;background:var(--ink-2);border:1px solid var(--line);
+  font-size:.77rem;font-weight:800;color:var(--muted)}
+.filters button.on{background:var(--grad);border-color:transparent;color:#fff}
+.req{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);margin-top:12px;overflow:hidden;border-left:5px solid var(--red)}
+.req.quoted{border-left-color:var(--blue-lite)}
+.req.confirmed{border-left-color:var(--ok)}
+.req.completed,.req.declined,.req.cancelled{border-left-color:#5A4F4B;opacity:.72}
+.req-h{padding:14px 16px;cursor:pointer}
+.req-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.req-n{font-weight:800;font-size:.98rem}
+.req-m{font-size:.75rem;color:var(--muted);font-weight:700;margin-top:2px}
+.pill{font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:99px;
+  background:var(--ink-3);color:var(--muted);flex:none}
+.pill.p-pending{background:rgba(224,27,18,.2);color:#FF8A80}
+.pill.p-quoted{background:rgba(59,121,224,.2);color:#8FB6F5}
+.pill.p-confirmed{background:rgba(95,168,111,.2);color:#96D3A3}
+.rush{font-size:.6rem;font-weight:800;color:#FF8A80;background:rgba(224,27,18,.2);padding:4px 8px;border-radius:99px;margin-left:6px}
+.req-b{padding:0 16px 16px;display:none}
+.req.open .req-b{display:block}
+.detail{display:flex;justify-content:space-between;gap:12px;font-size:.81rem;padding:6px 0;border-bottom:1px solid var(--line)}
+.detail:last-child{border:none}
+.detail span:first-child{color:var(--muted);font-weight:700;flex:none}
+.detail span:last-child{text-align:right;font-weight:700}
+
+.evrow{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;border-left:5px solid var(--gold);cursor:pointer}
+.evrow.past,.evrow.off{opacity:.5;border-left-color:#5A4F4B}
+.evrow-t{font-weight:800;font-size:.94rem}
+.evrow-m{font-size:.75rem;color:var(--muted);font-weight:700;margin-top:3px}
+.evrow-host{font-size:.75rem;color:var(--petal);font-weight:700;margin-top:3px}
+.evrow img{width:100%;border-radius:10px;margin-top:9px;display:block}
+
+.lrow{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border:none}
+.lrow .ln{flex:1;font-weight:800;font-size:.86rem;min-width:0}
+.lrow .lm{font-size:.71rem;color:var(--muted);font-weight:700}
+.tgl{width:44px;height:25px;border-radius:99px;background:var(--ink-4);position:relative;flex:none}
+.tgl.on{background:var(--ok)}
+.tgl i{position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:left .18s}
+.tgl.on i{left:22px}
+.xbtn{background:none;color:#FF8A80;font-weight:800;font-size:.95rem;flex:none;padding:4px 6px}
+.blkchips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.blk{background:var(--ink-3);color:var(--cream);border-radius:99px;padding:7px 11px;font-size:.75rem;font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.blk b{cursor:pointer;color:#FF8A80}
+
+.calweek{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);margin-top:12px;overflow:hidden}
+.calweek-h{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--ink-3)}
+.calweek-h .cw-t{font-weight:800;font-size:.86rem;flex:1}
+.calweek-h .cw-c{font-size:.71rem;font-weight:800;color:var(--gold)}
+.calday{display:flex;gap:10px;padding:9px 14px;border-top:1px solid var(--line);align-items:flex-start}
+.calday.blocked{background:rgba(224,27,18,.08)}
+.calday-d{width:56px;flex:none;font-size:.73rem;font-weight:800;color:var(--muted)}
+.calday-b{flex:1;min-width:0}
+.calday-empty{font-size:.73rem;color:#5A4F4B;font-weight:700}
+.calcake{font-size:.77rem;font-weight:700;padding:3px 0}
+.calcake i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.calblk{font-size:.66rem;font-weight:800;color:var(--muted);background:none;padding:3px 0}
+.callegend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:.69rem;font-weight:800;color:var(--muted)}
+.callegend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+
+.ggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.gcell{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--ink-3)}
+.gcell img{width:100%;height:100%;object-fit:cover;display:block}
+.gcell .gx{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.72);color:#fff;width:24px;height:24px;border-radius:50%;font-size:.72rem;line-height:1}
+.gadd{aspect-ratio:1;border-radius:12px;border:1.5px dashed var(--line);background:var(--ink-2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--muted)}
+
+.hq{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+.hq-v{font-family:'Archivo Black';font-size:1.3rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hq-k{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.hqgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.bar{margin-top:10px}
+.bar-t{display:flex;justify-content:space-between;font-size:.79rem;font-weight:800}
+.bar-r{height:8px;background:var(--ink-3);border-radius:99px;margin-top:5px;overflow:hidden}
+.bar-r i{display:block;height:100%;background:var(--grad);border-radius:99px}
+
+.sheet-veil{position:fixed;inset:0;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .25s;z-index:52}
+.sheet-veil.show{opacity:1;pointer-events:auto}
+.esheet{position:fixed;inset:0;background:var(--ink);z-index:53;transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.3,.8,.3,1);overflow-y:auto;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+.esheet.show{transform:none}
+.esheet-top{position:sticky;top:0;background:var(--ink);padding:calc(14px + env(safe-area-inset-top)) 16px 12px;
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;z-index:3}
+.esheet-top b{flex:1;font-size:.94rem}
+.esheet-body{padding:16px}
+
+.greet{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px}
+.greet-hi{font-size:1.45rem}
+.greet-d{font-size:.77rem;color:var(--muted);font-weight:700;margin-top:2px}
+.greet-b{background:var(--ink-2);border:1px solid var(--line);color:var(--gold);border-radius:12px;padding:9px 12px;
+  font-size:.7rem;font-weight:800;text-align:center;flex:none;line-height:1.4}
+.att{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;
+  border-left:4px solid var(--gold);display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.att .ai{font-size:1.15rem;flex:none}
+.att-t{font-weight:800;font-size:.88rem}
+.att-d{font-size:.75rem;color:var(--muted);font-weight:700;margin-top:2px}
+.att-a{background:var(--ink-3);color:var(--cream);font-weight:800;font-size:.74rem;padding:8px 12px;border-radius:10px;margin-top:9px}
+.ver{font-size:.62rem;color:#4E4340;letter-spacing:.12em;text-align:center;margin-top:26px;font-weight:800}
+.warnbox{background:rgba(224,27,18,.1);border:1px solid rgba(224,27,18,.3);border-radius:12px;padding:13px;font-size:.79rem;
+  font-weight:700;color:#FFB4AD;margin-top:12px;line-height:1.5}
+
+@media(min-width:760px){ .wrap{max-width:760px} .ggrid{grid-template-columns:repeat(4,1fr)} .hqgrid{grid-template-columns:repeat(4,1fr)} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="burger" onclick="openDrawer()">☰</button>
+  <div class="tt" id="topTitle">Home<small>RIAH'S FAV'S ADMIN</small></div>
+  <button class="bell" onclick="navTo('inbox')">🔔<b id="bellCount" style="display:none"></b></button>
+</div>
+
+<div class="drawer-scrim" id="drawerScrim" onclick="closeDrawer()"></div>
+<nav class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-n">Riah's Fav's</div>
+    <div class="drawer-s">ADMIN · V1.1</div>
+  </div>
+  <a onclick="navTo('home')"     data-sec="home" class="on"><span class="ic">🏠</span> Home</a>
+  <a onclick="navTo('inbox')"    data-sec="inbox"><span class="ic">💌</span> Requests <span class="dbadge" id="drawerInboxBadge"></span></a>
+  <a onclick="navTo('events')"   data-sec="events"><span class="ic">📣</span> Events &amp; pop-ups <span class="dbadge" id="drawerEvBadge"></span></a>
+  <a onclick="navTo('schedule')" data-sec="schedule"><span class="ic">📅</span> Schedule</a>
+  <a onclick="navTo('menu')"     data-sec="menu"><span class="ic">🍗</span> Menu</a>
+  <a onclick="navTo('gallery')"  data-sec="gallery"><span class="ic">🖼️</span> Photos</a>
+  <a onclick="navTo('stats')"    data-sec="stats"><span class="ic">📊</span> Stats</a>
+  <a onclick="navTo('settings')" data-sec="settings"><span class="ic">⚙️</span> Settings</a>
+  <details class="drawer-tools">
+    <summary>🛠️ Database tools</summary>
+    <div class="drawer-tools-body">
+      <p>Writes the starting structure into an empty database: the two chicken styles, booking rules, serving windows and deposit policy. It does <b>not</b> invent packages or prices — those stay empty until you add them.</p>
+      <button class="btn secondary" id="seedBtn">Set up a new database</button>
+      <div class="status" id="seedStatus"></div>
+    </div>
+  </details>
+  <button class="drawer-out" id="drawerSignOut">↪ Sign out</button>
+</nav>
+
+<div class="wrap">
+
+  <div class="card" id="loginCard">
+    <h2 class="display">Riah's Fav's admin</h2>
+    <p class="sub">Sign in with a Google account on the allowlist.</p>
+    <button class="btn" id="loginBtn">Sign in with Google</button>
+    <div class="status" id="loginStatus"></div>
+  </div>
+
+  <div class="card hidden" id="deniedCard">
+    <h2 class="display">Not your kitchen 🍗</h2>
+    <p class="sub">This account isn't on the admin allowlist.</p>
+    <button class="btn secondary" id="deniedOut">Sign out</button>
+  </div>
+
+  <div class="hidden" id="adminArea">
+
+    <!-- ============ HOME ============ -->
+    <div id="sec-home">
+      <div class="greet">
+        <div>
+          <div class="greet-hi display" id="homeGreet">Hi</div>
+          <div class="greet-d" id="homeDate"></div>
+        </div>
+        <div class="greet-b" id="homeWeekBadge"></div>
+      </div>
+      <div id="homeAttention"></div>
+      <div class="hqgrid" id="homeQuick"></div>
+      <h3 class="title display" style="font-size:1.05rem;margin-top:26px">Next 14 days</h3>
+      <div id="homeUpcoming"></div>
+      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.1</div>
+    </div>
+
+    <!-- ============ REQUESTS ============ -->
+    <div id="sec-inbox" class="hidden">
+      <span class="eyebrow">Catering</span>
+      <h2 class="title display">Requests</h2>
+      <div class="filters" id="filters"></div>
+      <div id="reqList"></div>
+    </div>
+
+    <!-- ============ EVENTS ============ -->
+    <div id="sec-events" class="hidden">
+      <span class="eyebrow">Announcements</span>
+      <h2 class="title display">Events &amp; pop-ups</h2>
+      <p class="sub">Who's hosting, where it is, when it is, what times, and a photo. Anything dated today or later shows on the site automatically, soonest first.</p>
+      <button class="btn" onclick="openEvent(null)">＋ Add an event</button>
+      <h3 class="title display" style="font-size:1rem;margin-top:24px">Upcoming</h3>
+      <div id="evUpcoming"></div>
+      <h3 class="title display" style="font-size:1rem;margin-top:24px">Past</h3>
+      <div id="evPast"></div>
+    </div>
+
+    <!-- ============ SCHEDULE ============ -->
+    <div id="sec-schedule" class="hidden">
+      <span class="eyebrow">Schedule</span>
+      <h2 class="title display">How you take bookings</h2>
+
+      <details class="drop" open>
+        <summary><span class="di">⚙️</span><div>Booking rules<div class="dsub">Capacity, notice, guest limits</div></div><span class="dmeta"><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <p class="sub">The line under each setting says exactly what it does right now.</p>
+
+          <div class="setrow">
+            <div class="setrow-head">
+              <div><div class="setrow-t">🍗 Jobs per week</div><div class="setrow-d">Most catering jobs you'll take in one week</div></div>
+              <div class="stepbtns"><button onclick="stAdj('weeklyCapacity',-1)">−</button><span class="n" id="st_weeklyCapacity">3</span><button onclick="stAdj('weeklyCapacity',1)">+</button></div>
+            </div>
+            <div class="setrow-eg" id="eg_cap"></div>
+          </div>
+
+          <div class="setrow">
+            <div class="setrow-head">
+              <div><div class="setrow-t">⏳ Minimum notice</div><div class="setrow-d">Days ahead a request must be placed</div></div>
+              <div class="stepbtns"><button onclick="stAdj('leadTimeDays',-1)">−</button><span class="n" id="st_leadTimeDays">14</span><button onclick="stAdj('leadTimeDays',1)">+</button></div>
+            </div>
+            <div class="setrow-eg" id="eg_lead"></div>
+          </div>
+
+          <div class="setrow">
+            <div class="setrow-head">
+              <div><div class="setrow-t">⏱️ Rush window</div><div class="setrow-d">Bookings inside this get a rush flag in your inbox</div></div>
+              <div class="stepbtns"><button onclick="stAdj('shortNoticeDays',-1)">−</button><span class="n" id="st_shortNoticeDays">21</span><button onclick="stAdj('shortNoticeDays',1)">+</button></div>
+            </div>
+            <div class="setrow-eg" id="eg_short"></div>
+          </div>
+
+          <div class="setrow">
+            <div class="setrow-head">
+              <div><div class="setrow-t">📅 How far ahead</div><div class="setrow-d">Weeks into the future customers can book</div></div>
+              <div class="stepbtns"><button onclick="stAdj('horizonWeeks',-1)">−</button><span class="n" id="st_horizonWeeks">12</span><button onclick="stAdj('horizonWeeks',1)">+</button></div>
+            </div>
+            <div class="setrow-eg" id="eg_horizon"></div>
+          </div>
+
+          <div class="setrow">
+            <div class="setrow-head">
+              <div><div class="setrow-t">👥 Minimum guests</div><div class="setrow-d">Smallest party you'll cater. 0 = no minimum</div></div>
+              <div class="stepbtns"><button onclick="stAdj('minGuests',-5)">−</button><span class="n" id="st_minGuests">0</span><button onclick="stAdj('minGuests',5)">+</button></div>
+            </div>
+            <div class="setrow-eg" id="eg_min"></div>
+          </div>
+
+          <div class="setrow">
+            <div class="setrow-head">
+              <div><div class="setrow-t">👥 Maximum guests</div><div class="setrow-d">Above this it's flagged custom. 0 = no maximum</div></div>
+              <div class="stepbtns"><button onclick="stAdj('maxGuests',-25)">−</button><span class="n" id="st_maxGuests">0</span><button onclick="stAdj('maxGuests',25)">+</button></div>
+            </div>
+            <div class="setrow-eg" id="eg_max"></div>
+          </div>
+
+          <button class="btn" onclick="saveSched()">Save booking rules</button>
+          <div class="status" id="schedStatus"></div>
+        </div>
+      </details>
+
+      <details class="drop">
+        <summary><span class="di">🕐</span><div>Serving windows<div class="dsub">Times customers can pick</div></div><span class="dmeta"><span class="dcount" id="twCount"></span><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <div id="twList"></div>
+          <input class="inp" id="twNew" placeholder="e.g. 4pm – 6pm">
+          <button class="btn secondary" onclick="addTw()">+ Add window</button>
+          <button class="btn" onclick="saveSched()">Save</button>
+          <div class="status" id="twStatus"></div>
+        </div>
+      </details>
+
+      <details class="drop">
+        <summary><span class="di">🚫</span><div>Blocked dates<div class="dsub">Days you won't cater</div></div><span class="dmeta"><span class="dcount" id="blkCount"></span><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <p class="sub">Customers can't pick these, even if the week has room.</p>
+          <div class="blkchips" id="blkList"></div>
+          <input type="date" class="inp" id="blkDate">
+          <button class="btn secondary" onclick="addBlk()">+ Block this date</button>
+          <button class="btn" onclick="saveSched()">Save blocked dates</button>
+          <div class="status" id="blkStatus"></div>
+        </div>
+      </details>
+
+      <h3 class="title display" style="font-size:1.05rem;margin-top:26px">Your calendar</h3>
+      <div class="callegend">
+        <span><i style="background:#E01B12"></i>Needs quote</span>
+        <span><i style="background:#3B79E0"></i>Quoted</span>
+        <span><i style="background:#5FA86F"></i>Confirmed</span>
+        <span><i style="background:#5A4F4B"></i>Done</span>
+      </div>
+      <div id="calRoot"></div>
+    </div>
+
+    <!-- ============ MENU ============ -->
+    <div id="sec-menu" class="hidden">
+      <span class="eyebrow">Menu control</span>
+      <h2 class="title display">Your menu</h2>
+      <p class="sub">Changes go live on the order form within seconds of saving.</p>
+
+      <details class="drop" open>
+        <summary><span class="di">🍗</span><div>Chicken styles<div class="dsub">How you fry it</div></div><span class="dmeta"><span class="dcount" id="styleCount"></span><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <p class="sub">These are the two options customers choose between. Edit the wording or add a third if you ever want one.</p>
+          <div id="styleEdit"></div>
+          <label class="fl">Add a style</label>
+          <input class="inp" id="newStyleLabel" placeholder="Name (e.g. Extra Crispy)">
+          <input class="inp" id="newStyleKicker" placeholder="Kicker (e.g. Sauced / No sauce)">
+          <input class="inp" id="newStyleDesc" placeholder="One-line description">
+          <button class="btn secondary" onclick="addStyle()">+ Add style</button>
+          <button class="btn" onclick="saveList('styles','styleStatus')">Save styles</button>
+          <div class="status" id="styleStatus"></div>
+        </div>
+      </details>
+
+      <details class="drop">
+        <summary><span class="di">📦</span><div>Packages<div class="dsub">Per-guest pricing tiers</div></div><span class="dmeta"><span class="dcount" id="pkgCount"></span><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <p class="sub">Optional. With no packages, the site tells customers you quote by head count and the request form skips pricing entirely — nothing fake is ever shown.</p>
+          <div id="pkgEdit"></div>
+          <button class="btn secondary" onclick="openPkg(null)">+ Add a package</button>
+          <div class="status" id="pkgStatus"></div>
+        </div>
+      </details>
+
+      <details class="drop">
+        <summary><span class="di">🍚</span><div>Sides<div class="dsub">What comes alongside</div></div><span class="dmeta"><span class="dcount" id="sideCount"></span><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <p class="sub">Leave empty and the whole sides section stays hidden on the site.</p>
+          <div id="sideEdit"></div>
+          <input class="inp" id="newSide" placeholder="New side name">
+          <button class="btn secondary" onclick="addSide()">+ Add side</button>
+          <button class="btn" onclick="saveList('sides','sideStatus')">Save sides</button>
+          <div class="status" id="sideStatus"></div>
+        </div>
+      </details>
+
+      <details class="drop">
+        <summary><span class="di">➕</span><div>Add-ons<div class="dsub">Extras with their own price</div></div><span class="dmeta"><span class="dcount" id="addonCount"></span><span class="chev">▸</span></span></summary>
+        <div class="dbody">
+          <div id="addonEdit"></div>
+          <label class="fl">New add-on</label>
+          <input class="inp" id="newAddon" placeholder="Name">
+          <div class="row2">
+            <input class="inp" id="newAddonPrice" inputmode="decimal" placeholder="Price">
+            <select class="inp" id="newAddonUnit"><option value="flat">flat fee</option><option value="perPerson">per guest</option></select>
+          </div>
+          <button class="btn secondary" onclick="addAddon()">+ Add add-on</button>
+          <button class="btn" onclick="saveList('addons','addonStatus')">Save add-ons</button>
+          <div class="status" id="addonStatus"></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- ============ GALLERY ============ -->
+    <div id="sec-gallery" class="hidden">
+      <span class="eyebrow">Photos</span>
+      <h2 class="title display">Gallery</h2>
+      <p class="sub">Shots from past jobs, shown in the "From the fryer" strip. Photos are resized and compressed automatically.</p>
+      <div class="status" id="gStatus"></div>
+      <div class="ggrid" id="gGrid"></div>
+      <input type="file" id="gFile" accept="image/*" class="hidden">
+    </div>
+
+    <!-- ============ STATS ============ -->
+    <div id="sec-stats" class="hidden">
+      <span class="eyebrow">Business</span>
+      <h2 class="title display">Stats</h2>
+      <div class="hqgrid" id="statTiles"></div>
+      <div class="card"><b style="font-size:.88rem">Chicken styles requested</b><div id="statStyle"></div></div>
+      <div class="card"><b style="font-size:.88rem">Occasions</b><div id="statOcc"></div></div>
+      <button class="btn secondary" onclick="exportCSV()">⬇ Export all requests as CSV</button>
+    </div>
+
+    <!-- ============ SETTINGS ============ -->
+    <div id="sec-settings" class="hidden">
+      <span class="eyebrow">Settings</span>
+      <h2 class="title display">Business details</h2>
+
+      <div class="card">
+        <b style="font-size:.88rem">Public info</b>
+        <label class="fl">Tagline (hero + footer)</label>
+        <input class="inp" id="setTagline" placeholder="Fried fresh for your party, office lunch, wedding or fundraiser.">
+        <label class="fl">Service area</label>
+        <textarea class="inp" id="setArea" placeholder="Salt Lake County, Davis County, and parts of Utah County."></textarea>
+        <div class="hint">Shows in the footer and as a note on the address step of the request form.</div>
+        <button class="btn" onclick="saveBusiness()">Save public info</button>
+        <div class="status" id="bizStatus"></div>
+      </div>
+
+      <div class="card">
+        <b style="font-size:.88rem">Socials &amp; contact</b>
+        <label class="fl">Instagram URL</label>
+        <input class="inp" id="setIg" placeholder="https://instagram.com/…">
+        <label class="fl">TikTok URL</label>
+        <input class="inp" id="setTt" placeholder="https://tiktok.com/@…">
+        <label class="fl">Facebook URL</label>
+        <input class="inp" id="setFb" placeholder="https://facebook.com/…">
+        <label class="fl">Phone (the "Text us" link)</label>
+        <input class="inp" id="setPhone" placeholder="(801) 555-0134">
+        <label class="fl">Public email</label>
+        <input class="inp" id="setEmail" placeholder="hello@riahsfavs.com">
+        <div class="hint">Blank fields simply don't appear in the footer.</div>
+        <button class="btn" onclick="saveBusiness()">Save socials</button>
+        <div class="status" id="socStatus"></div>
+      </div>
+
+      <div class="card">
+        <b style="font-size:.88rem">Deposit policy</b>
+        <div class="setrow">
+          <div class="setrow-head">
+            <div><div class="setrow-t">Deposit %</div><div class="setrow-d">Share of the quote that holds a date</div></div>
+            <div class="stepbtns"><button onclick="polAdj('depositPercent',-5)">−</button><span class="n" id="st_depositPercent">50</span><button onclick="polAdj('depositPercent',5)">+</button></div>
+          </div>
+          <div class="setrow-eg" id="eg_dep"></div>
+        </div>
+        <div class="setrow">
+          <div class="setrow-head">
+            <div><div class="setrow-t">Pay in full under $</div><div class="setrow-d">Small jobs paid up front. 0 = always take a deposit</div></div>
+            <div class="stepbtns"><button onclick="polAdj('payInFullUnder',-25)">−</button><span class="n" id="st_payInFullUnder">0</span><button onclick="polAdj('payInFullUnder',25)">+</button></div>
+          </div>
+          <div class="setrow-eg" id="eg_pif"></div>
+        </div>
+        <button class="btn" onclick="savePolicy()">Save policy</button>
+        <div class="status" id="polStatus"></div>
+      </div>
+
+      <div class="card" style="border-color:rgba(59,121,224,.35)">
+        <b style="font-size:.88rem">🎗️ "Why we do this" section</b>
+        <p class="sub">The blue ribbon section on the site. It stays completely hidden until you turn it on and write something — nothing is written for you.</p>
+        <label class="fl">Show this section?</label>
+        <div class="actions"><button id="causeToggle" onclick="toggleCause()">…</button></div>
+        <label class="fl">Heading</label>
+        <input class="inp" id="causeHeading" placeholder="e.g. Why we do this">
+        <label class="fl">Your words</label>
+        <textarea class="inp" id="causeBody" style="min-height:150px" placeholder="Write it in your own voice. Line breaks are kept."></textarea>
+        <label class="fl">Link label (optional)</label>
+        <input class="inp" id="causeLinkLabel" placeholder="e.g. Donate / Learn more">
+        <label class="fl">Link URL (optional)</label>
+        <input class="inp" id="causeLinkUrl" placeholder="https://…">
+        <button class="btn blue" onclick="saveCause()">Save section</button>
+        <div class="status" id="causeStatus"></div>
+      </div>
+
+      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.1</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ EVENT EDITOR ============ -->
+<div class="sheet-veil" id="evVeil" onclick="closeEvent()"></div>
+<div class="esheet" id="evSheet">
+  <div class="esheet-top">
+    <button class="a-ghost" style="padding:8px 12px;border-radius:10px;font-weight:800;font-size:.78rem" onclick="closeEvent()">‹ Cancel</button>
+    <b id="evSheetTitle">New event</b>
+  </div>
+  <div class="esheet-body">
+    <label class="fl">What kind of event?</label>
+    <select class="inp" id="evKind">
+      <option value="market">Farmers market</option>
+      <option value="popup">Pop-up</option>
+      <option value="truck">Food truck stop</option>
+      <option value="festival">Festival</option>
+      <option value="fundraiser">Fundraiser</option>
+      <option value="private">Private event</option>
+    </select>
+
+    <label class="fl">Event name</label>
+    <input class="inp" id="evTitle" placeholder="e.g. Downtown Farmers Market">
+
+    <label class="fl">Who is hosting it?</label>
+    <input class="inp" id="evHost" placeholder="e.g. Urban Food Connection, Davis County Fair">
+    <div class="hint">Shows on the site as "Hosted by …". Leave blank if you're hosting it yourselves.</div>
+
+    <label class="fl">Where — venue or location name</label>
+    <input class="inp" id="evVenue" placeholder="e.g. Pioneer Park">
+
+    <label class="fl">Where — street address</label>
+    <input class="inp" id="evAddress" placeholder="300 S 300 W, Salt Lake City">
+
+    <label class="fl">When — date</label>
+    <input class="inp" type="date" id="evDate">
+
+    <label class="fl">When — end date (multi-day only)</label>
+    <input class="inp" type="date" id="evEnd">
+    <div class="hint">Leave blank for a single-day event.</div>
+
+    <label class="fl">What times</label>
+    <div class="row2">
+      <input class="inp" id="evStart" placeholder="Start · 8am">
+      <input class="inp" id="evEndTime" placeholder="End · 1pm">
+    </div>
+
+    <label class="fl">Note (optional)</label>
+    <textarea class="inp" id="evNote" placeholder="e.g. Look for the red canopy near the north entrance. Cash and card."></textarea>
+
+    <label class="fl">Map link (optional)</label>
+    <input class="inp" id="evMap" placeholder="https://maps.google.com/…">
+
+    <label class="fl">Photo (optional)</label>
+    <div id="evImgPrev"></div>
+    <button class="btn secondary" onclick="document.getElementById('evFile').click()">📷 Choose photo</button>
+    <button class="btn ghost" id="evImgClear" onclick="clearEvImg()">Remove photo</button>
+    <input type="file" id="evFile" accept="image/*" class="hidden">
+
+    <label class="fl">Show on the site?</label>
+    <div class="actions"><button id="evActiveBtn" onclick="toggleEvActive()">…</button></div>
+
+    <button class="btn" onclick="saveEvent()">Save event</button>
+    <button class="btn ghost" id="evDeleteBtn" onclick="deleteEvent()">🗑 Delete this event</button>
+    <div class="status" id="evSheetStatus"></div>
+  </div>
+</div>
+
+<!-- ============ PACKAGE EDITOR ============ -->
+<div class="sheet-veil" id="pkgVeil" onclick="closePkg()"></div>
+<div class="esheet" id="pkgSheet">
+  <div class="esheet-top">
+    <button class="a-ghost" style="padding:8px 12px;border-radius:10px;font-weight:800;font-size:.78rem" onclick="closePkg()">‹ Cancel</button>
+    <b id="pkgSheetTitle">New package</b>
+  </div>
+  <div class="esheet-body">
+    <label class="fl">Package name</label>
+    <input class="inp" id="pkName" placeholder="e.g. The Classic">
+    <label class="fl">Price per guest ($)</label>
+    <input class="inp" id="pkPrice" inputmode="decimal" placeholder="16">
+    <label class="fl">Minimum guests (0 for none)</label>
+    <input class="inp" id="pkMin" inputmode="numeric" placeholder="0">
+    <label class="fl">Short description</label>
+    <textarea class="inp" id="pkDesc"></textarea>
+    <label class="fl">What's included (one per line)</label>
+    <textarea class="inp" id="pkInc" style="min-height:120px"></textarea>
+    <button class="btn" onclick="savePkg()">Save package</button>
+    <button class="btn ghost" id="pkDeleteBtn" onclick="deletePkg()">🗑 Delete this package</button>
+    <div class="status" id="pkgSheetStatus"></div>
+  </div>
+</div>
+
+<!-- ============ QUOTE SHEET ============ -->
+<div class="sheet-veil" id="qVeil" onclick="closeQuote()"></div>
+<div class="esheet" id="qSheet">
+  <div class="esheet-top">
+    <button class="a-ghost" style="padding:8px 12px;border-radius:10px;font-weight:800;font-size:.78rem" onclick="closeQuote()">‹ Cancel</button>
+    <b>Send a quote</b>
+  </div>
+  <div class="esheet-body" id="qBody"></div>
+</div>
+
+<script>
+/* ================= Riah's Fav's Admin — Version 1.1 ================= */
+var RF_VERSION = '1.1';
+var dynImport = new Function('u','return import(u)');
+
+/* ---------------------------------------------------------------
+   FIREBASE CONFIG — must match the block in index.html exactly.
+   --------------------------------------------------------------- */
+var CFG = {
+  apiKey: "REPLACE_ME",
+  authDomain: "REPLACE_ME.firebaseapp.com",
+  projectId: "REPLACE_ME",
+  storageBucket: "REPLACE_ME.firebasestorage.app",
+  messagingSenderId: "REPLACE_ME",
+  appId: "REPLACE_ME"
+};
+
+/* Only these Google accounts can open the admin. Add Riah's address here. */
+var ADMIN_EMAILS = ["kasaha01@gmail.com"];
+
+var FS=null, AUTH=null, db=null, auth=null;
+var REQS=[], EVENTS=[], GAL=[], WEEKDOCS={};
+var sched=null, policy={depositPercent:50,payInFullUnder:0}, business={}, cause={active:false};
+var menu={ styles:[], packages:[], sides:[], addons:[] };
+var filter='pending';
+
+/* Starting structure for a brand-new database.
+   The two chicken styles are real. Packages, sides and add-ons are
+   deliberately empty — no prices are invented anywhere. */
+var STARTER = {
+  schedule: { weeklyCapacity:3, leadTimeDays:14, shortNoticeDays:21, horizonWeeks:12,
+    minGuests:0, maxGuests:0, blockedDates:[],
+    timeWindows:['11am – 1pm','1pm – 3pm','4pm – 6pm','6pm – 8pm','Late night'] },
+  policy: { depositPercent:50, payInFullUnder:0 },
+  styles: [
+    { id:'sauced', label:'Original Korean Style', kicker:'Sauced',   desc:'Our original, tossed in sauce and served hot.', active:true },
+    { id:'plain',  label:'Original',              kicker:'No sauce', desc:'Same chicken, no sauce. Crispy straight through.', active:true }
+  ],
+  packages: [], sides: [], addons: [],
+  business: {
+    tagline:'Fried fresh for your party, office lunch, wedding or fundraiser.',
+    serviceArea:'Salt Lake County, Davis County, and parts of Utah County.',
+    instagram:null, tiktok:null, facebook:null, phone:null, email:null
+  },
+  cause: { active:false, heading:'Why we do this', body:'', linkLabel:'', linkUrl:'' }
+};
+
+/* ================= helpers ================= */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function err(id,e){ var el=$(id); if(el){ el.className='status err'; el.textContent='Error: '+(e.message||e); } }
+function ok(id,m){ var el=$(id); if(el){ el.className='status ok'; el.textContent=m; } }
+function money(n){ return '$'+(Math.round((n||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function isoD(d){ return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+function slug(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,20) || ('x'+Date.now().toString(36)); }
+function startOfWeek(dt){ var d=new Date(dt); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d; }
+
+/* ================= boot & auth ================= */
+(async function boot(){
+  try{
+    if(CFG.projectId.indexOf('REPLACE_ME')>=0)
+      throw new Error('Firebase config not filled in yet — paste your project config into admin.html and index.html.');
+    var appM=await dynImport('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+    AUTH=await dynImport('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
+    FS  =await dynImport('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    var app=appM.initializeApp(CFG);
+    auth=AUTH.getAuth(app); db=FS.getFirestore(app);
+    wireAuth();
+  }catch(e){
+    $('loginStatus').className='status err';
+    $('loginStatus').textContent=e.message||'Couldn’t load. Check your connection and refresh.';
+  }
+})();
+
+function wireAuth(){
+  $('loginBtn').onclick=async function(){
+    $('loginStatus').className='status'; $('loginStatus').textContent='Opening Google sign-in…';
+    try{ await AUTH.signInWithPopup(auth,new AUTH.GoogleAuthProvider()); }
+    catch(e){
+      if(e.code==='auth/popup-blocked'){ try{ await AUTH.signInWithRedirect(auth,new AUTH.GoogleAuthProvider()); }catch(e2){ err('loginStatus',e2); } }
+      else err('loginStatus',e);
+    }
+  };
+  $('drawerSignOut').onclick=function(){ AUTH.signOut(auth); };
+  $('deniedOut').onclick=function(){ AUTH.signOut(auth); };
+  AUTH.onAuthStateChanged(auth,function(user){
+    var allowed=user && ADMIN_EMAILS.indexOf((user.email||'').toLowerCase())>=0;
+    $('loginCard').classList.toggle('hidden', !!user);
+    $('deniedCard').classList.toggle('hidden', !(user && !allowed));
+    $('adminArea').classList.toggle('hidden', !allowed);
+    if(allowed) startAdmin(user);
+  });
+}
+
+function getDoc(c,i){ return FS.getDoc(FS.doc(db,c,i)).then(function(s){ return s.exists()?s.data():null; }).catch(function(){ return null; }); }
+
+async function startAdmin(user){
+  $('homeGreet').textContent='Hi '+((user.displayName||'there').split(' ')[0]);
+  $('homeDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+  var p=await Promise.all([
+    getDoc('settings','schedule'), getDoc('settings','policy'), getDoc('settings','business'), getDoc('settings','cause'),
+    getDoc('menu','styles'), getDoc('menu','packages'), getDoc('menu','sides'), getDoc('menu','addons')
+  ]);
+  sched   = Object.assign({}, STARTER.schedule, p[0]||{});
+  policy  = Object.assign({}, STARTER.policy,  p[1]||{});
+  business= Object.assign({}, STARTER.business, p[2]||{});
+  cause   = Object.assign({}, STARTER.cause,   p[3]||{});
+  menu.styles   = (p[4]&&p[4].list) || STARTER.styles.slice();
+  menu.packages = (p[5]&&p[5].list) || [];
+  menu.sides    = (p[6]&&p[6].list) || [];
+  menu.addons   = (p[7]&&p[7].list) || [];
+
+  renderSched(); renderTw(); renderMenuEditors(); renderSettings();
+  await refreshWeeks();
+
+  FS.onSnapshot(FS.collection(db,'requests'),function(s){
+    REQS=[]; s.forEach(function(d){ REQS.push(Object.assign({id:d.id},d.data())); });
+    REQS.sort(function(a,b){ return (a.dayISO||'')<(b.dayISO||'')?-1:1; });
+    renderFilters(); renderList(); renderHome(); renderCalendar(); renderStats(); renderBadges();
+  },function(e){ console.error(e); });
+
+  FS.onSnapshot(FS.collection(db,'events'),function(s){
+    EVENTS=[]; s.forEach(function(d){ EVENTS.push(Object.assign({id:d.id},d.data())); });
+    EVENTS.sort(function(a,b){ return (a.dateISO||'')<(b.dateISO||'')?-1:1; });
+    renderEventList(); renderHome(); renderBadges();
+  },function(e){ console.error(e); });
+
+  FS.onSnapshot(FS.collection(db,'gallery'),function(s){
+    GAL=[]; s.forEach(function(d){ GAL.push(Object.assign({id:d.id},d.data())); });
+    renderGalleryGrid();
+  },function(e){ console.error(e); });
+
+  $('seedBtn').onclick=seedAll;
+  $('gFile').onchange=onGalleryFile;
+  $('evFile').onchange=onEventFile;
+}
+
+/* ================= nav ================= */
+var SEC={home:'Home',inbox:'Requests',events:'Events & pop-ups',schedule:'Schedule',menu:'Menu',gallery:'Photos',stats:'Stats',settings:'Settings'};
+function openDrawer(){ $('drawer').classList.add('show'); $('drawerScrim').classList.add('show'); }
+function closeDrawer(){ $('drawer').classList.remove('show'); $('drawerScrim').classList.remove('show'); }
+function navTo(sec){
+  Object.keys(SEC).forEach(function(k){ var e=$('sec-'+k); if(e) e.classList.toggle('hidden',k!==sec); });
+  document.querySelectorAll('.drawer a[data-sec]').forEach(function(a){ a.classList.toggle('on',a.getAttribute('data-sec')===sec); });
+  $('topTitle').innerHTML=esc(SEC[sec])+"<small>RIAH'S FAV'S ADMIN</small>";
+  closeDrawer(); scrollTo(0,0);
+}
+function renderBadges(){
+  var pend=REQS.filter(function(r){return r.status==='pending';}).length;
+  $('drawerInboxBadge').textContent=pend?String(pend):'';
+  var b=$('bellCount'); b.textContent=pend?String(pend):''; b.style.display=pend?'flex':'none';
+  var up=upcomingEvents().length;
+  $('drawerEvBadge').textContent=up?String(up):'';
+}
+
+/* ================= HOME ================= */
+function renderHome(){
+  if(!sched) return;
+  var wkId=isoD(startOfWeek(new Date()));
+  var bookedNow=REQS.filter(function(r){ return r.weekId===wkId && (r.status==='confirmed'||r.status==='completed'); }).length;
+  $('homeWeekBadge').innerHTML=bookedNow+' / '+(sched.weeklyCapacity||3)+'<br>this week';
+
+  var att=$('homeAttention'); att.innerHTML='';
+  var pending=REQS.filter(function(r){return r.status==='pending';});
+  var quoted =REQS.filter(function(r){return r.status==='quoted';});
+  var todayISO=isoD(new Date());
+  var todayJobs=REQS.filter(function(r){ return r.dayISO===todayISO && (r.status==='confirmed'||r.status==='quoted'); });
+  var nextEv=upcomingEvents()[0];
+
+  if(pending.length) att.appendChild(attCard('🔴',pending.length+' request'+(pending.length===1?'':'s')+' need a quote',
+    'Oldest: '+(pending[0].name||'—')+' · '+(pending[0].dayLabel||''),'Open requests',function(){ filter='pending'; renderFilters(); renderList(); navTo('inbox'); }));
+  if(quoted.length) att.appendChild(attCard('⏳',quoted.length+' quote'+(quoted.length===1?'':'s')+' waiting on a deposit',
+    'Follow up if it’s been a couple of days.','See quoted',function(){ filter='quoted'; renderFilters(); renderList(); navTo('inbox'); }));
+  if(todayJobs.length) att.appendChild(attCard('🍗',todayJobs.length+' job'+(todayJobs.length===1?'':'s')+' today',
+    todayJobs.map(function(r){return r.name+' · '+(r.window||'');}).join(' · '),'Open',function(){ navTo('inbox'); }));
+  if(!menu.packages.length) att.appendChild(attCard('💲','No packages or prices set',
+    'The site is quoting by head count instead. Add packages any time.','Open menu',function(){ navTo('menu'); }));
+  if(!upcomingEvents().length) att.appendChild(attCard('📣','No pop-ups posted',
+    'The site shows an empty state. Add your next market or truck stop.','Add an event',function(){ navTo('events'); openEvent(null); }));
+  else if(nextEv) att.appendChild(attCard('📣','Next pop-up: '+(nextEv.title||''),
+    fmtEvDate(nextEv)+(nextEv.venue?' · '+nextEv.venue:''),'Manage events',function(){ navTo('events'); }));
+  if(!att.children.length) att.innerHTML='<div class="att" style="cursor:default"><div class="ai">✅</div><div><div class="att-t">All clear</div><div class="att-d">Nothing needs you right now.</div></div></div>';
+
+  var revenue=REQS.filter(function(r){return r.status==='completed';}).reduce(function(s,r){ return s+(r.quote||0)+(r.travelFee||0); },0);
+  $('homeQuick').innerHTML=
+    hq(String(pending.length),'Need quote')+
+    hq(String(REQS.filter(function(r){return r.status==='confirmed';}).length),'Confirmed')+
+    hq(String(upcomingEvents().length),'Pop-ups')+
+    hq(money(revenue),'Earned');
+
+  var soon=new Date(); soon.setDate(soon.getDate()+14);
+  var soonISO=isoD(soon);
+  var up=REQS.filter(function(r){ return r.dayISO && r.dayISO>=todayISO && r.dayISO<=soonISO && r.status!=='declined' && r.status!=='cancelled'; });
+  var el=$('homeUpcoming'); el.innerHTML='';
+  if(!up.length){ el.innerHTML='<div class="card"><div class="sub">Nothing booked in the next two weeks.</div></div>'; return; }
+  up.forEach(function(r){
+    var d=document.createElement('div'); d.className='att';
+    d.innerHTML='<div class="ai">'+statusDot(r.status)+'</div><div style="flex:1"><div class="att-t">'+esc(r.name)+' · '+esc(r.dayLabel||'')+'</div>'+
+      '<div class="att-d">'+(r.guests||'?')+' guests · '+esc((r.styles||[]).join(' + ')||'')+' · '+esc(r.window||'')+'</div></div>';
+    d.onclick=function(){ filter='all'; renderFilters(); renderList(); navTo('inbox'); };
+    el.appendChild(d);
+  });
+}
+function statusDot(s){ return s==='pending'?'🔴':s==='quoted'?'🔵':s==='confirmed'?'🟢':'⚪'; }
+function hq(v,k){ return '<div class="hq"><div class="hq-v">'+esc(v)+'</div><div class="hq-k">'+esc(k)+'</div></div>'; }
+function attCard(icon,title,desc,actLabel,fn){
+  var d=document.createElement('div'); d.className='att';
+  d.innerHTML='<div class="ai">'+icon+'</div><div style="flex:1"><div class="att-t">'+esc(title)+'</div><div class="att-d">'+esc(desc)+'</div>'+
+    (actLabel?'<button class="att-a">'+esc(actLabel)+'</button>':'')+'</div>';
+  if(fn) d.onclick=fn;
+  return d;
+}
+
+/* ================= REQUESTS ================= */
+var STATUSES=[['pending','Need quote'],['quoted','Quoted'],['confirmed','Confirmed'],['completed','Done'],['declined','Declined'],['cancelled','Cancelled'],['all','All']];
+function renderFilters(){
+  var el=$('filters'); el.innerHTML='';
+  STATUSES.forEach(function(s){
+    var n=s[0]==='all'?REQS.length:REQS.filter(function(r){return r.status===s[0];}).length;
+    var b=document.createElement('button');
+    b.className=filter===s[0]?'on':''; b.textContent=s[1]+(n?' '+n:'');
+    b.onclick=function(){ filter=s[0]; renderFilters(); renderList(); };
+    el.appendChild(b);
+  });
+}
+function renderList(){
+  var el=$('reqList'); el.innerHTML='';
+  var list=filter==='all'?REQS.slice():REQS.filter(function(r){return r.status===filter;});
+  if(!list.length){ el.innerHTML='<div class="card"><div class="sub">Nothing here.</div></div>'; return; }
+  list.forEach(function(r){ el.appendChild(reqCard(r)); });
+}
+function reqCard(r){
+  var c=document.createElement('div'); c.className='req '+(r.status||'pending');
+  var total=(r.quote||0)+(r.travelFee||0), bal=Math.max(0,total-(r.depositPaid||0));
+
+  var head=document.createElement('div'); head.className='req-h';
+  head.innerHTML='<div class="req-top"><div style="min-width:0">'+
+    '<div class="req-n">'+esc(r.name||'—')+(r.shortNotice?'<span class="rush">⏱ RUSH</span>':'')+'</div>'+
+    '<div class="req-m">'+esc(r.dayLabel||'')+' · '+esc(r.window||'')+' · '+(r.guests||'?')+' guests</div>'+
+    '<div class="req-m">'+esc((r.styles||[]).join(' + ')||'—')+' · '+esc(r.serviceLabel||'')+'</div>'+
+    '</div><span class="pill p-'+esc(r.status||'pending')+'">'+esc(r.status||'pending')+'</span></div>';
+  head.onclick=function(){ c.classList.toggle('open'); };
+  c.appendChild(head);
+
+  var body=document.createElement('div'); body.className='req-b';
+  body.innerHTML=
+    det('Phone',r.phone||'—')+
+    (r.email?det('Email',r.email):'')+
+    det('Occasion',r.occasion||'—')+
+    det('Guests',String(r.guests||'—'))+
+    det('Chicken',(r.styles||[]).join(' + ')||'—')+
+    (r.packageLabel?det('Package',r.packageLabel+(r.perPerson?' · '+money(r.perPerson)+'/guest':'')):'')+
+    det('Service',r.serviceLabel||'—')+
+    ((r.sides||[]).length?det('Sides',r.sides.join(', ')):'')+
+    ((r.addons||[]).length?det('Add-ons',r.addons.map(function(a){return a.label;}).join(', ')):'')+
+    det('Where',[r.venue,r.address].filter(Boolean).join(' · ')||'—')+
+    (r.notes?det('Notes',r.notes):'')+
+    det('Their estimate', r.estimate?money(r.estimate):'none — quote by head count')+
+    (r.quote?det('Your quote',money(r.quote)+(r.travelFee?' + '+money(r.travelFee)+' travel':'')):'')+
+    (r.depositPaid?det('Deposit paid',money(r.depositPaid)+' · '+(r.paymentMethod||'')):'')+
+    (r.quote?det('Balance due',money(bal)):'');
+
+  var acts=document.createElement('div'); acts.className='actions';
+  if(r.phone) acts.appendChild(link('a-ghost','📞 Call','tel:'+phoneLink(r.phone)));
+  if(r.status==='pending'){
+    acts.appendChild(btn('a-go','💲 Quote',function(){ openQuote(r); }));
+    acts.appendChild(btn('a-warn','Decline',function(){ setStatus(r,'declined'); }));
+  }else if(r.status==='quoted'){
+    acts.appendChild(link('a-soft','💬 Text quote',smsHref(r,quoteMsg(r))));
+    acts.appendChild(btn('a-ok','✅ Deposit in',function(){ confirmPaid(r); }));
+    acts.appendChild(btn('a-soft','Re-quote',function(){ openQuote(r); }));
+    acts.appendChild(btn('a-warn','Cancel',function(){ cancelOrder(r); }));
+  }else if(r.status==='confirmed'){
+    acts.appendChild(link('a-soft','💬 Day-of text',smsHref(r,readyMsg(r))));
+    acts.appendChild(btn('a-ok','🏁 Mark done',function(){ setStatus(r,'completed'); }));
+    acts.appendChild(btn('a-warn','Cancel',function(){ cancelOrder(r); }));
+  }else{
+    acts.appendChild(btn('a-warn','🗑 Delete',function(){ deleteReq(r); }));
+  }
+  body.appendChild(acts); c.appendChild(body);
+  return c;
+}
+function det(k,v){ return '<div class="detail"><span>'+esc(k)+'</span><span>'+esc(v)+'</span></div>'; }
+function btn(cls,label,fn){ var b=document.createElement('button'); b.className=cls; b.textContent=label; b.onclick=fn; return b; }
+function link(cls,label,href){ var a=document.createElement('a'); a.className=cls; a.textContent=label; a.href=href; return a; }
+function phoneLink(p){ var d=String(p||'').replace(/\D/g,''); return d.length===10?'+1'+d:'+'+d; }
+function smsHref(r,body){ return 'sms:'+phoneLink(r.phone)+'&body='+encodeURIComponent(body); }
+function firstName(r){ return (r.name||'').split(' ')[0]; }
+function depositFor(total){
+  if(policy.payInFullUnder && total>0 && total<policy.payInFullUnder) return total;
+  return Math.round(total*(policy.depositPercent||50)/100);
+}
+function quoteMsg(r){
+  var total=(r.quote||0)+(r.travelFee||0), dep=depositFor(total);
+  return "Hi "+firstName(r)+"! Riah's Fav's here 🍗 Your "+(r.dayLabel||'')+" catering comes to "+money(total)+
+    " for "+(r.guests||'')+" guests"+(r.travelFee?" (travel included)":"")+". "+
+    (dep>=total ? "Paid in full to lock the date: "+money(dep)+"." : "A "+money(dep)+" deposit locks your date, balance due the day of.")+
+    " Let me know and I'll send payment info!";
+}
+function readyMsg(r){
+  return "Hi "+firstName(r)+"! We're all set for today — arriving for your "+(r.window||'')+" window at "+
+    (r.venue||r.address||'your address')+". See you soon! 🍗";
+}
+
+var quoteFor=null;
+function openQuote(r){
+  quoteFor=r;
+  var suggested=r.estimate || 0;
+  $('qBody').innerHTML=
+    '<div class="card"><div class="sub">'+esc(r.name)+' · '+esc(r.dayLabel||'')+' · '+(r.guests||'?')+' guests</div>'+
+    '<div class="detail"><span>Chicken</span><span>'+esc((r.styles||[]).join(' + ')||'—')+'</span></div>'+
+    '<div class="detail"><span>Their estimate</span><span>'+(r.estimate?money(r.estimate):'none — you quote it')+'</span></div></div>'+
+    '<label class="fl">Food + service total ($)</label><input class="inp" id="qAmt" inputmode="decimal" value="'+(r.quote||(suggested?Math.round(suggested):''))+'" placeholder="0">'+
+    '<label class="fl">Travel / setup fee ($)</label><input class="inp" id="qFee" inputmode="decimal" value="'+(r.travelFee||'')+'" placeholder="0">'+
+    '<div class="card" id="qPreview"></div>'+
+    '<button class="btn" onclick="saveQuote()">Save quote</button><div class="status" id="qStatus"></div>';
+  ['qAmt','qFee'].forEach(function(id){ $(id).oninput=qPreview; });
+  qPreview();
+  $('qVeil').classList.add('show'); $('qSheet').classList.add('show');
+}
+function qPreview(){
+  var a=parseFloat($('qAmt').value)||0, f=parseFloat($('qFee').value)||0, t=a+f, d=depositFor(t);
+  $('qPreview').innerHTML='<div class="detail"><span>Total</span><span>'+money(t)+'</span></div>'+
+    '<div class="detail"><span>Deposit to hold</span><span>'+money(d)+'</span></div>'+
+    '<div class="detail"><span>Balance day-of</span><span>'+money(t-d)+'</span></div>';
+}
+function closeQuote(){ quoteFor=null; $('qVeil').classList.remove('show'); $('qSheet').classList.remove('show'); }
+async function saveQuote(){
+  var r=quoteFor; if(!r) return;
+  var a=parseFloat($('qAmt').value)||0, f=parseFloat($('qFee').value)||0;
+  if(a<=0){ err('qStatus','enter a total above $0'); return; }
+  try{
+    await FS.updateDoc(FS.doc(db,'requests',r.id),{status:'quoted',quote:a,travelFee:f||null,quotedAt:FS.serverTimestamp()});
+    ok('qStatus','Saved ✓ — text them the quote from the request card');
+    setTimeout(closeQuote,900);
+  }catch(e){ err('qStatus',e); }
+}
+async function setStatus(r,status){
+  if(status==='declined' && !confirm('Decline this request?')) return;
+  try{ var p={status:status}; p[status+'At']=FS.serverTimestamp(); await FS.updateDoc(FS.doc(db,'requests',r.id),p); }
+  catch(e){ alert(e.message); }
+}
+async function confirmPaid(r){
+  var total=(r.quote||0)+(r.travelFee||0), dep=depositFor(total);
+  var method=prompt('How did they pay the '+money(dep)+' deposit? (Venmo / Cash / Zelle / Card)','Venmo');
+  if(method===null) return;
+  try{
+    await FS.updateDoc(FS.doc(db,'requests',r.id),{status:'confirmed',paymentMethod:method,depositPaid:dep,confirmedAt:FS.serverTimestamp()});
+    if(r.weekId) await FS.setDoc(FS.doc(db,'weeks',r.weekId),{booked:FS.increment(1)},{merge:true});
+    await refreshWeeks();
+  }catch(e){ alert(e.message); }
+}
+async function cancelOrder(r){
+  if(!confirm('Cancel this booking? If it was confirmed, the week slot is freed.')) return;
+  try{
+    var was=r.status==='confirmed';
+    await FS.updateDoc(FS.doc(db,'requests',r.id),{status:'cancelled',cancelledAt:FS.serverTimestamp()});
+    if(was && r.weekId) await FS.setDoc(FS.doc(db,'weeks',r.weekId),{booked:FS.increment(-1)},{merge:true});
+    await refreshWeeks();
+  }catch(e){ alert(e.message); }
+}
+async function deleteReq(r){
+  if(!confirm('Delete this request permanently?')) return;
+  try{ await FS.deleteDoc(FS.doc(db,'requests',r.id)); }catch(e){ alert(e.message); }
+}
+
+/* ================= EVENTS ================= */
+var EV_KIND={market:'Farmers market',popup:'Pop-up',truck:'Food truck stop',festival:'Festival',fundraiser:'Fundraiser',private:'Private event'};
+function fmtEvDate(e){
+  if(!e.dateISO) return '';
+  var d=new Date(e.dateISO+'T12:00:00');
+  var s=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  if(e.endDateISO && e.endDateISO!==e.dateISO) s+=' – '+new Date(e.endDateISO+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  var t=[e.startTime,e.endTime].filter(Boolean).join(' – ');
+  return s+(t?' · '+t:'');
+}
+function upcomingEvents(){
+  var t=isoD(new Date());
+  return EVENTS.filter(function(e){ return e.active!==false && e.dateISO && (e.endDateISO||e.dateISO)>=t; });
+}
+function renderEventList(){
+  var t=isoD(new Date()), up=[], past=[];
+  EVENTS.forEach(function(e){ if(e.dateISO && (e.endDateISO||e.dateISO)>=t) up.push(e); else past.push(e); });
+  past.reverse();
+  fillEvents('evUpcoming',up,'No upcoming events. The site shows an empty state until you add one.');
+  fillEvents('evPast',past,'Nothing past yet.');
+}
+function fillEvents(id,list,empty){
+  var el=$(id); el.innerHTML='';
+  if(!list.length){ el.innerHTML='<div class="card"><div class="sub">'+esc(empty)+'</div></div>'; return; }
+  list.forEach(function(e){
+    var d=document.createElement('div');
+    d.className='evrow'+(id==='evPast'?' past':'')+(e.active===false?' off':'');
+    d.innerHTML='<div class="evrow-t">'+esc(e.title||'Untitled')+(e.active===false?' · <span style="color:#FF8A80">hidden</span>':'')+'</div>'+
+      '<div class="evrow-m">'+esc(EV_KIND[e.kind]||'Pop-up')+' · '+esc(fmtEvDate(e))+'</div>'+
+      (e.host?'<div class="evrow-host">Hosted by '+esc(e.host)+'</div>':'')+
+      (e.venue||e.address?'<div class="evrow-m">'+esc([e.venue,e.address].filter(Boolean).join(' · '))+'</div>':'')+
+      (e.note?'<div class="evrow-m">'+esc(e.note)+'</div>':'')+
+      (e.img?'<img src="'+esc(e.img)+'" alt="">':'');
+    d.onclick=function(){ openEvent(e); };
+    el.appendChild(d);
+  });
+}
+var evEditing=null, evImg=null, evActive=true;
+function openEvent(e){
+  evEditing=e||null; evImg=e?(e.img||null):null; evActive=e?(e.active!==false):true;
+  $('evSheetTitle').textContent=e?'Edit event':'New event';
+  $('evKind').value    = e?(e.kind||'market'):'market';
+  $('evTitle').value   = e?(e.title||''):'';
+  $('evHost').value    = e?(e.host||''):'';
+  $('evVenue').value   = e?(e.venue||''):'';
+  $('evAddress').value = e?(e.address||''):'';
+  $('evDate').value    = e?(e.dateISO||''):'';
+  $('evEnd').value     = e?(e.endDateISO||''):'';
+  $('evStart').value   = e?(e.startTime||''):'';
+  $('evEndTime').value = e?(e.endTime||''):'';
+  $('evNote').value    = e?(e.note||''):'';
+  $('evMap').value     = e?(e.mapUrl||''):'';
+  $('evSheetStatus').textContent='';
+  $('evDeleteBtn').style.display=e?'block':'none';
+  paintEvImg(); paintEvActive();
+  $('evVeil').classList.add('show'); $('evSheet').classList.add('show');
+}
+function closeEvent(){ evEditing=null; evImg=null; $('evVeil').classList.remove('show'); $('evSheet').classList.remove('show'); }
+function paintEvImg(){
+  $('evImgPrev').innerHTML=evImg?'<img src="'+esc(evImg)+'" style="width:100%;border-radius:12px;margin-top:8px;display:block">':'';
+  $('evImgClear').style.display=evImg?'block':'none';
+}
+function clearEvImg(){ evImg=null; paintEvImg(); }
+function toggleEvActive(){ evActive=!evActive; paintEvActive(); }
+function paintEvActive(){
+  var b=$('evActiveBtn');
+  b.textContent=evActive?'✅ Visible on the site':'🚫 Hidden';
+  b.className=evActive?'a-ok':'a-warn';
+}
+async function onEventFile(ev){
+  var f=ev.target.files&&ev.target.files[0]; if(!f) return;
+  ev.target.value='';
+  $('evSheetStatus').className='status'; $('evSheetStatus').textContent='Compressing photo…';
+  try{ evImg=await fileToCompressedDataUrl(f); paintEvImg(); ok('evSheetStatus','Photo ready — remember to save.'); }
+  catch(e){ err('evSheetStatus',e); }
+}
+async function saveEvent(){
+  var date=$('evDate').value;
+  if(!date){ err('evSheetStatus','pick a date'); return; }
+  var title=$('evTitle').value.trim();
+  if(!title){ err('evSheetStatus','give it a name'); return; }
+  var endD=$('evEnd').value||null;
+  if(endD && endD<date){ err('evSheetStatus','the end date is before the start date'); return; }
+  var rec={
+    kind:$('evKind').value, title:title,
+    host:$('evHost').value.trim()||null,
+    venue:$('evVenue').value.trim()||null,
+    address:$('evAddress').value.trim()||null,
+    dateISO:date, endDateISO:endD,
+    startTime:$('evStart').value.trim()||null,
+    endTime:$('evEndTime').value.trim()||null,
+    note:$('evNote').value.trim()||null,
+    mapUrl:$('evMap').value.trim()||null,
+    img:evImg||null, active:evActive, updatedAt:FS.serverTimestamp()
+  };
+  $('evSheetStatus').className='status'; $('evSheetStatus').textContent='Saving…';
+  try{
+    if(evEditing) await FS.updateDoc(FS.doc(db,'events',evEditing.id),rec);
+    else { rec.createdAt=FS.serverTimestamp(); await FS.addDoc(FS.collection(db,'events'),rec); }
+    ok('evSheetStatus','Saved ✓ — live on the site now');
+    setTimeout(closeEvent,800);
+  }catch(e){ err('evSheetStatus',e); }
+}
+async function deleteEvent(){
+  if(!evEditing) return;
+  if(!confirm('Delete this event? It disappears from the site immediately.')) return;
+  try{ await FS.deleteDoc(FS.doc(db,'events',evEditing.id)); closeEvent(); }catch(e){ err('evSheetStatus',e); }
+}
+
+/* ================= SCHEDULE ================= */
+function renderSched(){
+  if(!sched) return;
+  ['weeklyCapacity','leadTimeDays','shortNoticeDays','horizonWeeks','minGuests','maxGuests'].forEach(function(k){
+    var el=$('st_'+k); if(el) el.textContent=sched[k];
+  });
+  var cap=sched.weeklyCapacity||0;
+  setEg('eg_cap','Right now: once '+cap+' job'+(cap===1?' is':'s are')+' confirmed in a week, that week shows "fully booked".');
+  var lead=sched.leadTimeDays||0, d=new Date(); d.setDate(d.getDate()+lead);
+  setEg('eg_lead','Right now: the earliest bookable date is '+lead+' days out — around '+d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})+'.');
+  setEg('eg_short','Right now: anything between '+lead+' and '+(sched.shortNoticeDays||0)+' days out gets an ⏱ RUSH flag in your inbox.');
+  var hz=sched.horizonWeeks||0;
+  setEg('eg_horizon','Right now: customers can book up to '+hz+' week'+(hz===1?'':'s')+' ahead — about '+(Math.round(hz*7/30*10)/10)+' months.');
+  setEg('eg_min', sched.minGuests ? 'Right now: parties under '+sched.minGuests+' guests are told to text you instead.' : 'Right now: no minimum — any party size can book.');
+  setEg('eg_max', sched.maxGuests ? 'Right now: parties over '+sched.maxGuests+' guests get flagged as a custom job.' : 'Right now: no maximum — any party size can book.');
+
+  var bl=$('blkList'); bl.innerHTML='';
+  var bd=(sched.blockedDates||[]).slice().sort();
+  $('blkCount').textContent=bd.length?bd.length+' blocked':'none';
+  if(!bd.length) bl.innerHTML='<span class="sub">None blocked</span>';
+  bd.forEach(function(dt){
+    var s=document.createElement('span'); s.className='blk'; s.textContent=dt;
+    var x=document.createElement('b'); x.textContent='✕';
+    x.onclick=function(){ sched.blockedDates=sched.blockedDates.filter(function(v){return v!==dt;}); renderSched(); renderCalendar(); };
+    s.appendChild(x); bl.appendChild(s);
+  });
+}
+function setEg(id,t){ var e=$(id); if(e) e.textContent=t; }
+function stAdj(k,d){
+  if(!sched) return;
+  sched[k]=Math.max(0,(sched[k]||0)+d);
+  if(sched.shortNoticeDays<sched.leadTimeDays) sched.shortNoticeDays=sched.leadTimeDays;
+  renderSched();
+}
+function addBlk(){
+  var v=$('blkDate').value; if(!v) return;
+  sched.blockedDates=sched.blockedDates||[];
+  if(sched.blockedDates.indexOf(v)<0) sched.blockedDates.push(v);
+  $('blkDate').value=''; renderSched(); renderCalendar();
+}
+function renderTw(){
+  var el=$('twList'); el.innerHTML='';
+  var tw=sched.timeWindows||[];
+  $('twCount').textContent=tw.length+' windows';
+  tw.forEach(function(t,i){
+    var r=document.createElement('div'); r.className='lrow';
+    r.innerHTML='<div class="ln">'+esc(t)+'</div>';
+    var x=document.createElement('button'); x.className='xbtn'; x.textContent='✕';
+    x.onclick=function(){ sched.timeWindows.splice(i,1); renderTw(); };
+    r.appendChild(x); el.appendChild(r);
+  });
+}
+function addTw(){
+  var v=$('twNew').value.trim(); if(!v) return;
+  sched.timeWindows=sched.timeWindows||[];
+  sched.timeWindows.push(v); $('twNew').value=''; renderTw();
+}
+async function saveSched(){
+  try{
+    await FS.setDoc(FS.doc(db,'settings','schedule'),Object.assign({},sched,{updatedAt:FS.serverTimestamp()}));
+    ok('schedStatus','Saved ✓ — live on the site now'); ok('twStatus','Saved ✓'); ok('blkStatus','Saved ✓');
+    renderCalendar();
+  }catch(e){ err('schedStatus',e); }
+}
+async function refreshWeeks(){
+  try{
+    var s=await FS.getDocs(FS.collection(db,'weeks'));
+    WEEKDOCS={}; s.forEach(function(d){ WEEKDOCS[d.id]=d.data(); });
+    renderCalendar(); renderHome();
+  }catch(e){ console.error(e); }
+}
+function renderCalendar(){
+  var el=$('calRoot'); if(!el||!sched) return;
+  el.innerHTML='';
+  var mon=startOfWeek(new Date());
+  for(var w=0; w<(sched.horizonWeeks||12); w++){
+    var m=new Date(mon); m.setDate(m.getDate()+w*7);
+    var id=isoD(m), wk=WEEKDOCS[id]||{};
+    var cap=(wk.capacityOverride!=null?wk.capacityOverride:(sched.weeklyCapacity||3));
+    var booked=REQS.filter(function(r){ return r.weekId===id && (r.status==='confirmed'||r.status==='completed'); }).length;
+
+    var box=document.createElement('div'); box.className='calweek';
+    var head=document.createElement('div'); head.className='calweek-h';
+    head.innerHTML='<div class="cw-t">Week of '+m.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</div>'+
+      '<div class="cw-c">'+booked+' / '+cap+' booked</div>';
+    box.appendChild(head);
+
+    for(var k=0;k<7;k++){
+      (function(){
+        var d=new Date(m); d.setDate(d.getDate()+k);
+        var dISO=isoD(d);
+        var blocked=(sched.blockedDates||[]).indexOf(dISO)>=0;
+        var jobs=REQS.filter(function(r){ return r.dayISO===dISO && ['pending','quoted','confirmed','completed'].indexOf(r.status)>=0; });
+        var row=document.createElement('div'); row.className='calday'+(blocked?' blocked':'');
+        var bodyHtml=jobs.length
+          ? jobs.map(function(r){ return '<div class="calcake"><i style="background:'+colorFor(r.status)+'"></i>'+esc(r.name)+' · '+(r.guests||'?')+'g · '+esc(r.window||'')+'</div>'; }).join('')
+          : '<div class="calday-empty">'+(blocked?'blocked':'—')+'</div>';
+        row.innerHTML='<div class="calday-d">'+d.toLocaleDateString('en-US',{weekday:'short',day:'numeric'})+'</div>'+
+          '<div class="calday-b">'+bodyHtml+'<button class="calblk">'+(blocked?'unblock this day':'block this day')+'</button></div>';
+        row.querySelector('.calblk').onclick=function(){
+          sched.blockedDates=sched.blockedDates||[];
+          var at=sched.blockedDates.indexOf(dISO);
+          if(at>=0) sched.blockedDates.splice(at,1); else sched.blockedDates.push(dISO);
+          saveSched(); renderSched();
+        };
+        box.appendChild(row);
+      })();
+    }
+    el.appendChild(box);
+  }
+}
+function colorFor(s){ return s==='pending'?'#E01B12':s==='quoted'?'#3B79E0':s==='confirmed'?'#5FA86F':'#5A4F4B'; }
+
+/* ================= MENU EDITORS ================= */
+function renderMenuEditors(){
+  renderStyleEdit(); renderPkgEdit();
+  renderSimpleList('sides','sideEdit','sideCount');
+  renderAddonEdit();
+}
+function renderStyleEdit(){
+  var el=$('styleEdit'); el.innerHTML='';
+  $('styleCount').textContent=menu.styles.length+' styles';
+  menu.styles.forEach(function(s,i){
+    var r=document.createElement('div'); r.className='lrow';
+    r.innerHTML='<div class="ln">'+esc(s.label)+'<div class="lm">'+esc(s.kicker||'')+(s.desc?' · '+esc(s.desc):'')+'</div></div>';
+    var t=document.createElement('div'); t.className='tgl'+(s.active!==false?' on':''); t.innerHTML='<i></i>';
+    t.onclick=function(){ s.active=(s.active===false); renderStyleEdit(); };
+    var x=document.createElement('button'); x.className='xbtn'; x.textContent='✕';
+    x.onclick=function(){ if(confirm('Remove "'+s.label+'"?')){ menu.styles.splice(i,1); renderStyleEdit(); } };
+    r.appendChild(t); r.appendChild(x); el.appendChild(r);
+  });
+}
+function addStyle(){
+  var v=$('newStyleLabel').value.trim(); if(!v) return;
+  menu.styles.push({ id:slug(v), label:v, kicker:$('newStyleKicker').value.trim()||'', desc:$('newStyleDesc').value.trim()||'', active:true });
+  $('newStyleLabel').value=''; $('newStyleKicker').value=''; $('newStyleDesc').value='';
+  renderStyleEdit();
+}
+function renderPkgEdit(){
+  var el=$('pkgEdit'); el.innerHTML='';
+  $('pkgCount').textContent=menu.packages.length?menu.packages.length+' packages':'none — quoting by head count';
+  if(!menu.packages.length){ el.innerHTML='<div class="sub">No packages. The site tells customers you quote by head count.</div>'; return; }
+  menu.packages.forEach(function(p){
+    var r=document.createElement('div'); r.className='lrow';
+    r.innerHTML='<div class="ln">'+esc(p.label)+'<div class="lm">'+money(p.perPerson)+'/guest'+(p.minGuests?' · min '+p.minGuests:'')+'</div></div>';
+    var t=document.createElement('div'); t.className='tgl'+(p.active!==false?' on':''); t.innerHTML='<i></i>';
+    t.onclick=function(ev){ ev.stopPropagation(); p.active=(p.active===false); renderPkgEdit(); saveList('packages','pkgStatus'); };
+    var e=document.createElement('button'); e.className='xbtn'; e.textContent='✎';
+    e.onclick=function(ev){ ev.stopPropagation(); openPkg(p); };
+    r.appendChild(t); r.appendChild(e); el.appendChild(r);
+  });
+}
+function renderSimpleList(key,elId,countId){
+  var el=$(elId); el.innerHTML='';
+  $(countId).textContent=menu[key].length?menu[key].length+' items':'none';
+  if(!menu[key].length){ el.innerHTML='<div class="sub">Empty — this section is hidden on the site.</div>'; return; }
+  menu[key].forEach(function(x,i){
+    var r=document.createElement('div'); r.className='lrow';
+    r.innerHTML='<div class="ln">'+esc(x.label)+'</div>';
+    var t=document.createElement('div'); t.className='tgl'+(x.active!==false?' on':''); t.innerHTML='<i></i>';
+    t.onclick=function(){ x.active=(x.active===false); renderSimpleList(key,elId,countId); };
+    var b=document.createElement('button'); b.className='xbtn'; b.textContent='✕';
+    b.onclick=function(){ if(confirm('Remove "'+x.label+'"?')){ menu[key].splice(i,1); renderSimpleList(key,elId,countId); } };
+    r.appendChild(t); r.appendChild(b); el.appendChild(r);
+  });
+}
+function renderAddonEdit(){
+  var el=$('addonEdit'); el.innerHTML='';
+  $('addonCount').textContent=menu.addons.length?menu.addons.length+' items':'none';
+  if(!menu.addons.length){ el.innerHTML='<div class="sub">Empty — this section is hidden on the site.</div>'; return; }
+  menu.addons.forEach(function(a,i){
+    var r=document.createElement('div'); r.className='lrow';
+    r.innerHTML='<div class="ln">'+esc(a.label)+'<div class="lm">'+money(a.price)+(a.unit==='perPerson'?' per guest':' flat')+'</div></div>';
+    var t=document.createElement('div'); t.className='tgl'+(a.active!==false?' on':''); t.innerHTML='<i></i>';
+    t.onclick=function(){ a.active=(a.active===false); renderAddonEdit(); };
+    var b=document.createElement('button'); b.className='xbtn'; b.textContent='✕';
+    b.onclick=function(){ if(confirm('Remove "'+a.label+'"?')){ menu.addons.splice(i,1); renderAddonEdit(); } };
+    r.appendChild(t); r.appendChild(b); el.appendChild(r);
+  });
+}
+function addSide(){
+  var v=$('newSide').value.trim(); if(!v) return;
+  menu.sides.push({id:slug(v),label:v,active:true});
+  $('newSide').value=''; renderSimpleList('sides','sideEdit','sideCount');
+}
+function addAddon(){
+  var v=$('newAddon').value.trim(); if(!v) return;
+  var p=parseFloat($('newAddonPrice').value);
+  if(isNaN(p)){ err('addonStatus','add a price'); return; }
+  menu.addons.push({id:slug(v),label:v,price:p,unit:$('newAddonUnit').value,active:true});
+  $('newAddon').value=''; $('newAddonPrice').value=''; renderAddonEdit();
+}
+async function saveList(key,statusId){
+  try{
+    await FS.setDoc(FS.doc(db,'menu',key),{list:menu[key],updatedAt:FS.serverTimestamp()});
+    ok(statusId,'Saved ✓ — live on the site now');
+  }catch(e){ err(statusId,e); }
+}
+
+var pkgEditing=null;
+function openPkg(p){
+  pkgEditing=p||null;
+  $('pkgSheetTitle').textContent=p?'Edit package':'New package';
+  $('pkName').value  = p?(p.label||''):'';
+  $('pkPrice').value = p?(p.perPerson||''):'';
+  $('pkMin').value   = p?(p.minGuests||''):'';
+  $('pkDesc').value  = p?(p.desc||''):'';
+  $('pkInc').value   = p?(p.includes||[]).join('\n'):'';
+  $('pkDeleteBtn').style.display=p?'block':'none';
+  $('pkgSheetStatus').textContent='';
+  $('pkgVeil').classList.add('show'); $('pkgSheet').classList.add('show');
+}
+function closePkg(){ pkgEditing=null; $('pkgVeil').classList.remove('show'); $('pkgSheet').classList.remove('show'); }
+async function savePkg(){
+  var label=$('pkName').value.trim(), price=parseFloat($('pkPrice').value);
+  if(!label){ err('pkgSheetStatus','give it a name'); return; }
+  if(isNaN(price)||price<=0){ err('pkgSheetStatus','add a per-guest price'); return; }
+  var rec={
+    id: pkgEditing?pkgEditing.id:slug(label), label:label, perPerson:price,
+    minGuests: parseInt($('pkMin').value,10)||0,
+    desc: $('pkDesc').value.trim(),
+    includes: $('pkInc').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
+    active: pkgEditing?(pkgEditing.active!==false):true
+  };
+  if(pkgEditing){
+    var i=menu.packages.findIndex(function(x){ return x.id===pkgEditing.id; });
+    if(i>=0) menu.packages[i]=rec;
+  } else menu.packages.push(rec);
+  try{
+    await FS.setDoc(FS.doc(db,'menu','packages'),{list:menu.packages,updatedAt:FS.serverTimestamp()});
+    renderPkgEdit(); renderHome(); ok('pkgSheetStatus','Saved ✓'); setTimeout(closePkg,700);
+  }catch(e){ err('pkgSheetStatus',e); }
+}
+async function deletePkg(){
+  if(!pkgEditing) return;
+  if(!confirm('Delete "'+pkgEditing.label+'"? Past requests keep their record.')) return;
+  menu.packages=menu.packages.filter(function(x){ return x.id!==pkgEditing.id; });
+  try{
+    await FS.setDoc(FS.doc(db,'menu','packages'),{list:menu.packages,updatedAt:FS.serverTimestamp()});
+    renderPkgEdit(); renderHome(); closePkg();
+  }catch(e){ err('pkgSheetStatus',e); }
+}
+
+/* ================= IMAGES =================
+   Firestore caps a document at 1 MB, so every image is scaled and
+   re-encoded until it fits well under that before it's stored. */
+function loadImg(src){ return new Promise(function(res,rej){ var i=new Image(); i.onload=function(){res(i);}; i.onerror=rej; i.src=src; }); }
+function drawScaled(img,maxW){
+  var s=Math.min(1,maxW/img.width);
+  var c=document.createElement('canvas');
+  c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return c;
+}
+function compressToLimit(img){
+  var LIMIT=780000, widths=[1200,1000,900,800,700,600], quals=[0.82,0.72,0.62,0.5,0.4];
+  for(var wi=0;wi<widths.length;wi++){
+    var c=drawScaled(img,widths[wi]);
+    for(var qi=0;qi<quals.length;qi++){
+      var u=c.toDataURL('image/jpeg',quals[qi]);
+      if(u.length<=LIMIT) return u;
+    }
+  }
+  return null;
+}
+function fileToCompressedDataUrl(file){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=async function(){
+      try{
+        var img=await loadImg(fr.result);
+        var out=compressToLimit(img);
+        if(!out) return rej(new Error('that photo is too large even after compressing — try a smaller one'));
+        res(out);
+      }catch(e){ rej(e); }
+    };
+    fr.onerror=function(){ rej(new Error('couldn’t read that file')); };
+    fr.readAsDataURL(file);
+  });
+}
+function renderGalleryGrid(){
+  var el=$('gGrid'); el.innerHTML='';
+  GAL.slice().sort(function(a,b){ return (b.createdAtMs||0)-(a.createdAtMs||0); }).forEach(function(g){
+    var c=document.createElement('div'); c.className='gcell';
+    c.innerHTML='<img src="'+esc(g.img)+'" alt="">';
+    var x=document.createElement('button'); x.className='gx'; x.textContent='✕';
+    x.onclick=function(){ removePhoto(g); };
+    c.appendChild(x); el.appendChild(c);
+  });
+  var add=document.createElement('button'); add.className='gadd'; add.textContent='＋';
+  add.onclick=function(){ $('gFile').click(); };
+  el.appendChild(add);
+}
+async function onGalleryFile(ev){
+  var f=ev.target.files&&ev.target.files[0]; if(!f) return;
+  ev.target.value='';
+  $('gStatus').className='status'; $('gStatus').textContent='Compressing and uploading…';
+  try{
+    var url=await fileToCompressedDataUrl(f);
+    await FS.addDoc(FS.collection(db,'gallery'),{img:url,caption:null,createdAt:FS.serverTimestamp(),createdAtMs:Date.now()});
+    ok('gStatus','Added ✓');
+  }catch(e){ err('gStatus',e); }
+}
+async function removePhoto(g){
+  if(!confirm('Remove this photo from the site?')) return;
+  try{ await FS.deleteDoc(FS.doc(db,'gallery',g.id)); ok('gStatus','Removed ✓'); }catch(e){ err('gStatus',e); }
+}
+
+/* ================= SETTINGS ================= */
+function renderSettings(){
+  $('setTagline').value=business.tagline||'';
+  $('setArea').value=business.serviceArea||'';
+  $('setIg').value=business.instagram||'';
+  $('setTt').value=business.tiktok||'';
+  $('setFb').value=business.facebook||'';
+  $('setPhone').value=business.phone||'';
+  $('setEmail').value=business.email||'';
+  $('st_depositPercent').textContent=policy.depositPercent;
+  $('st_payInFullUnder').textContent=policy.payInFullUnder;
+  setEg('eg_dep','Right now: a $1,000 quote would need a '+money(Math.round(1000*(policy.depositPercent||50)/100))+' deposit to hold the date.');
+  setEg('eg_pif', policy.payInFullUnder ? 'Right now: any job under '+money(policy.payInFullUnder)+' is paid in full up front instead of a deposit.' : 'Right now: every job takes a deposit, no matter how small.');
+  $('causeHeading').value=cause.heading||'';
+  $('causeBody').value=cause.body||'';
+  $('causeLinkLabel').value=cause.linkLabel||'';
+  $('causeLinkUrl').value=cause.linkUrl||'';
+  paintCause();
+}
+function polAdj(k,d){ policy[k]=Math.max(0,(policy[k]||0)+d); renderSettings(); }
+async function saveBusiness(){
+  var rec={
+    tagline:$('setTagline').value.trim()||null,
+    serviceArea:$('setArea').value.trim()||null,
+    instagram:$('setIg').value.trim()||null,
+    tiktok:$('setTt').value.trim()||null,
+    facebook:$('setFb').value.trim()||null,
+    phone:$('setPhone').value.trim()||null,
+    email:$('setEmail').value.trim()||null,
+    updatedAt:FS.serverTimestamp()
+  };
+  try{
+    await FS.setDoc(FS.doc(db,'settings','business'),rec,{merge:true});
+    business=Object.assign({},business,rec);
+    ok('bizStatus','Saved ✓'); ok('socStatus','Saved ✓');
+  }catch(e){ err('bizStatus',e); err('socStatus',e); }
+}
+async function savePolicy(){
+  try{ await FS.setDoc(FS.doc(db,'settings','policy'),Object.assign({},policy,{updatedAt:FS.serverTimestamp()})); ok('polStatus','Saved ✓'); }
+  catch(e){ err('polStatus',e); }
+}
+function toggleCause(){ cause.active=!cause.active; paintCause(); }
+function paintCause(){
+  var b=$('causeToggle');
+  b.textContent=cause.active?'✅ Showing on the site':'🚫 Hidden';
+  b.className=cause.active?'a-ok':'a-warn';
+}
+async function saveCause(){
+  var rec={
+    active: !!cause.active,
+    heading:$('causeHeading').value.trim()||'',
+    body:$('causeBody').value.trim()||'',
+    linkLabel:$('causeLinkLabel').value.trim()||'',
+    linkUrl:$('causeLinkUrl').value.trim()||'',
+    updatedAt:FS.serverTimestamp()
+  };
+  if(rec.active && !rec.body){ err('causeStatus','write something first — the section stays hidden while it’s empty'); return; }
+  try{
+    await FS.setDoc(FS.doc(db,'settings','cause'),rec,{merge:true});
+    cause=Object.assign({},cause,rec);
+    ok('causeStatus', rec.active?'Saved ✓ — showing on the site':'Saved ✓ — hidden');
+  }catch(e){ err('causeStatus',e); }
+}
+
+/* ================= STATS ================= */
+function renderStats(){
+  var done=REQS.filter(function(r){return r.status==='completed';});
+  var revenue=done.reduce(function(s,r){ return s+(r.quote||0)+(r.travelFee||0); },0);
+  var guests=done.reduce(function(s,r){ return s+(r.guests||0); },0);
+  var avg=done.length?revenue/done.length:0;
+  $('statTiles').innerHTML=
+    hq(String(REQS.length),'Requests')+hq(String(done.length),'Completed')+
+    hq(money(revenue),'Revenue')+hq(money(Math.round(avg)),'Avg job')+
+    hq(String(guests),'Guests fed')+hq(String(REQS.filter(function(r){return r.status==='confirmed';}).length),'On the books')+
+    hq(String(EVENTS.length),'Events posted')+hq(String(REQS.filter(function(r){return r.shortNotice;}).length),'Rush jobs');
+  bars('statStyle',tally(REQS,function(r){ return r.styles; }));
+  bars('statOcc',  tally(REQS,function(r){ return r.occasion; }));
+}
+function tally(list,pick){
+  var m={};
+  list.forEach(function(r){
+    var v=pick(r); if(!v) return;
+    (Array.isArray(v)?v:[v]).forEach(function(x){ m[x]=(m[x]||0)+1; });
+  });
+  return Object.keys(m).map(function(k){ return {k:k,n:m[k]}; }).sort(function(a,b){ return b.n-a.n; }).slice(0,8);
+}
+function bars(id,rows){
+  var el=$(id); el.innerHTML='';
+  if(!rows.length){ el.innerHTML='<div class="sub">Not enough data yet.</div>'; return; }
+  var max=rows[0].n;
+  rows.forEach(function(r){
+    el.insertAdjacentHTML('beforeend','<div class="bar"><div class="bar-t"><span>'+esc(r.k)+'</span><span>'+r.n+'</span></div>'+
+      '<div class="bar-r"><i style="width:'+Math.round(r.n/max*100)+'%"></i></div></div>');
+  });
+}
+function csvCell(v){ v=String(v==null?'':v); return '"'+v.replace(/"/g,'""')+'"'; }
+function exportCSV(){
+  var cols=['dayISO','dayLabel','window','status','name','phone','email','guests','occasion','styles','packageLabel','perPerson',
+    'serviceLabel','sides','addons','estimate','quote','travelFee','depositPaid','paymentMethod','venue','address','notes','shortNotice'];
+  var lines=[cols.map(csvCell).join(',')];
+  REQS.forEach(function(r){
+    lines.push(cols.map(function(c){
+      var v=r[c];
+      if(Array.isArray(v)) v=v.map(function(x){ return x&&x.label?x.label:x; }).join(' | ');
+      return csvCell(v);
+    }).join(','));
+  });
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));
+  a.download='riahsfavs-requests-'+isoD(new Date())+'.csv';
+  a.click();
+}
+
+/* ================= SEED ================= */
+async function seedAll(){
+  if(!confirm('Write the starting structure into the database? This overwrites your booking rules, serving windows, deposit policy and chicken styles. It does NOT touch packages, sides, add-ons, requests, events or photos.')) return;
+  $('seedStatus').className='status'; $('seedStatus').textContent='Writing…';
+  try{
+    await FS.setDoc(FS.doc(db,'settings','schedule'),Object.assign({},STARTER.schedule,{updatedAt:FS.serverTimestamp()}));
+    await FS.setDoc(FS.doc(db,'settings','policy'),  Object.assign({},STARTER.policy,  {updatedAt:FS.serverTimestamp()}));
+    await FS.setDoc(FS.doc(db,'settings','business'),Object.assign({},STARTER.business,{updatedAt:FS.serverTimestamp()}),{merge:true});
+    await FS.setDoc(FS.doc(db,'menu','styles'),{list:STARTER.styles,updatedAt:FS.serverTimestamp()});
+    sched=Object.assign({},STARTER.schedule);
+    policy=Object.assign({},STARTER.policy);
+    business=Object.assign({},STARTER.business,business);
+    menu.styles=STARTER.styles.slice();
+    renderSched(); renderTw(); renderMenuEditors(); renderSettings(); renderCalendar();
+    ok('seedStatus','Done ✓ — booking rules and chicken styles are live. Packages stay empty until you add them.');
+  }catch(e){ err('seedStatus',e); }
+}
+</script>
+</body>
+</html>

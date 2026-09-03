@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// Riah's Fav's — Firestore security rules, Version 1.1
+//
+// Paste into Firebase console → Firestore Database → Rules → Publish.
+// REPLACE the addresses in isAdmin() with the same list as ADMIN_EMAILS
+// in admin.html. The two must stay in sync: admin.html only controls what
+// the UI shows, these rules control what the database actually allows.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+             'kasaha01@gmail.com'
+             // , 'riah@example.com'   ← add Riah's Google account here
+           ];
+    }
+
+    // Menu, settings, events and photos: the public site reads them,
+    // only an admin can change them.
+    match /menu/{doc}     { allow read: if true; allow write: if isAdmin(); }
+    match /settings/{doc} { allow read: if true; allow write: if isAdmin(); }
+    match /events/{doc}   { allow read: if true; allow write: if isAdmin(); }
+    match /gallery/{doc}  { allow read: if true; allow write: if isAdmin(); }
+
+    // Week counters drive the availability strip, so they must be readable.
+    match /weeks/{doc}    { allow read: if true; allow write: if isAdmin(); }
+
+    // Requests: anyone may submit one, but nobody may read, edit or delete
+    // them except an admin. This keeps customer names, phone numbers and
+    // addresses out of public reach.
+    match /requests/{doc} {
+      allow create: if request.resource.data.status == 'pending';
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Anything not named above is closed.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

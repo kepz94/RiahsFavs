@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Riah's Fav's — Korean Fried Chicken Catering</title>
+<meta name="description" content="Family-run Korean fried chicken catering serving Salt Lake County, Davis County and parts of Utah County. Two weeks' notice. Catch us at markets and pop-ups too.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="logo.png">
+<meta name="theme-color" content="#141010">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   Riah's Fav's — public site — Version 1.1
+   Palette pulled straight off the logo:
+     gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
+     ribbon blue #1B4FA8 · plumeria cream #FFF3D6
+   The logo's "FAV'S" is white with a thin outline, so the site
+   commits to a warm near-black ground everywhere. Never place
+   the brandmark on a light surface.
+   ========================================================= */
+:root{
+  --ink:#141010;--ink-2:#1F1917;--ink-3:#2A2220;--line:rgba(255,243,214,.12);
+  --gold:#F7A81B;--orange:#F26522;--red:#E01B12;--red-deep:#A50D0A;
+  --blue:#1B4FA8;--blue-lite:#3B79E0;
+  --petal:#FFF3D6;--cream:#F6EFE4;--muted:#A3948C;
+  --ok:#5FA86F;
+  --grad:linear-gradient(180deg,var(--gold) 0%,var(--orange) 48%,var(--red) 100%);
+  --grad-h:linear-gradient(100deg,var(--gold) 0%,var(--orange) 52%,var(--red) 100%);
+  --shadow:0 14px 38px rgba(0,0,0,.5);--radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+html,body{overflow-x:hidden;max-width:100%}
+body{font-family:'Nunito Sans',sans-serif;background:var(--ink);color:var(--cream);line-height:1.55}
+.display{font-family:'Archivo Black','Nunito Sans',sans-serif;font-weight:400;letter-spacing:-.015em}
+.script{font-family:'Kaushan Script',cursive;font-weight:400}
+.grad-t{background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{max-width:480px;margin:0 auto;padding:0 20px}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+a{color:inherit}
+.eyebrow{font-size:.68rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.title{font-size:1.75rem;line-height:1.12;margin-top:8px}
+.sub{font-size:.88rem;color:var(--muted);font-weight:600;margin-top:10px}
+
+/* ===== BRANDMARK ===== */
+.brand{display:inline-flex;flex-direction:column;line-height:1;text-decoration:none}
+.brand img{display:block;height:var(--bh,42px);width:auto}
+.brand .fallback{display:none}
+.brand.nologo img{display:none}
+.brand.nologo .fallback{display:block}
+.fallback .f1,.fallback .f2{display:block;text-align:center;white-space:nowrap}
+.fallback .f1{font-family:'Kaushan Script',cursive;font-size:calc(var(--bh,42px)*.72);background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+.fallback .f2{font-family:'Archivo Black',sans-serif;font-size:calc(var(--bh,42px)*.3);letter-spacing:.18em;color:#fff;margin-top:calc(var(--bh,42px)*.02);line-height:1}
+
+/* ===== HEADER ===== */
+header{position:fixed;top:0;left:0;right:0;z-index:40;padding-top:env(safe-area-inset-top);background:transparent;border-bottom:1px solid transparent;transition:background .35s,border-color .35s,backdrop-filter .35s}
+header.scrolled{background:rgba(20,16,16,.9);backdrop-filter:blur(12px);border-bottom-color:var(--line)}
+#notchbar{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top);background:var(--ink);z-index:45;pointer-events:none}
+.hbar{display:flex;align-items:center;justify-content:space-between;max-width:480px;margin:0 auto;padding:11px 20px}
+.hlinks{display:flex;gap:15px;font-size:.74rem;font-weight:800}
+.hlinks a{text-decoration:none;color:var(--cream);opacity:.85}
+.hlinks a:hover{opacity:1;color:var(--gold)}
+
+/* ===== HERO ===== */
+.hero{position:relative;padding:104px 0 60px;text-align:center;overflow:hidden}
+.hero:before{content:'';position:absolute;top:-14%;left:50%;transform:translateX(-50%);width:150%;height:74%;
+  background:radial-gradient(ellipse at center, rgba(242,101,34,.28) 0%, rgba(224,27,18,.14) 38%, transparent 70%);pointer-events:none}
+.hero:after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 84% 84%, rgba(27,79,168,.14), transparent 46%);pointer-events:none}
+.hero .wrap{position:relative;z-index:5}
+.hero .brand{--bh:112px;margin:0 auto}
+.hero-treats{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.hero-treat{position:absolute;bottom:-40px;opacity:0;will-change:transform}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0) rotate(0) scale(.7)}14%{opacity:.5}100%{opacity:0;transform:translateY(-440px) rotate(var(--spin)) scale(1)}}
+.hero h1{font-size:clamp(1.6rem,7vw,2.1rem);margin-top:22px;line-height:1.2}
+.hero p{color:var(--muted);font-weight:600;margin:12px auto 0;max-width:33ch;font-size:.94rem}
+.ribbon-line{display:inline-flex;align-items:center;gap:9px;margin-top:20px;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:11px 15px;font-size:.85rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(247,168,27,.16);animation:pulse 2.2s infinite;flex:none}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(247,168,27,.04)}}
+.ribbon-line b{color:var(--petal)}
+.tag{display:inline-flex;align-items:center;gap:7px;margin-top:14px;border:1.5px solid rgba(247,168,27,.45);color:var(--gold);
+  font-weight:800;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;padding:8px 14px;border-radius:999px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* ===== BUTTONS ===== */
+.btn{background:var(--grad-h);color:#fff;font-weight:800;padding:15px 22px;border-radius:13px;font-size:.94rem;
+  box-shadow:0 10px 26px rgba(224,27,18,.32);display:inline-block;text-decoration:none;text-align:center}
+.btn:disabled{opacity:.42;box-shadow:none}
+.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--cream);box-shadow:none}
+.btn-soft{background:var(--ink-3);color:var(--cream);box-shadow:none}
+.btn-block{display:block;width:100%}
+
+section{padding:46px 0;scroll-margin-top:72px}
+#top{scroll-margin-top:0}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:14px}
+
+/* ===== AVAILABILITY ===== */
+.strip{display:flex;gap:10px;overflow-x:auto;padding:4px 20px 8px;margin:16px -20px 0;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.week{flex:none;width:132px;background:var(--ink-2);border:1px solid var(--line);border-radius:15px;padding:14px;text-align:center}
+.week.full{opacity:.42}
+.wk-l{font-size:.58rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.wk-d{font-weight:800;font-size:.95rem;margin-top:3px}
+.pips{display:flex;gap:4px;justify-content:center;margin:9px 0}
+.pip{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.pip.taken{background:rgba(255,243,214,.15)}
+.wk-s{font-size:.71rem;font-weight:800;color:var(--gold)}
+
+/* ===== STYLES (the two chicken options) ===== */
+.styles{display:grid;gap:12px;margin-top:16px}
+.style{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden}
+.style:before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--grad)}
+.style.plain:before{background:linear-gradient(180deg,var(--petal),#C9B58E)}
+.style-n{font-family:'Archivo Black';font-size:1.12rem}
+.style-k{font-size:.66rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.style.plain .style-k{color:var(--petal)}
+.style-d{font-size:.86rem;color:var(--muted);font-weight:600;margin-top:7px}
+
+/* ===== PACKAGES ===== */
+.pkg{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:17px;margin-top:12px}
+.pkg-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pkg-n{font-weight:800;font-size:1.02rem}
+.pkg-p{font-family:'Archivo Black';font-size:1.1rem;white-space:nowrap;background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pkg-p span{font-family:'Nunito Sans';font-size:.66rem;font-weight:800;color:var(--muted);display:block;text-align:right;-webkit-text-fill-color:var(--muted)}
+.pkg-d{font-size:.84rem;color:var(--muted);font-weight:600;margin-top:6px}
+.pkg-inc{list-style:none;margin-top:11px;display:flex;flex-direction:column;gap:5px}
+.pkg-inc li{font-size:.82rem;font-weight:700;padding-left:19px;position:relative;color:var(--cream)}
+.pkg-inc li:before{content:'';position:absolute;left:0;top:.52em;width:7px;height:7px;border-radius:50%;background:var(--grad)}
+.pkg-min{font-size:.7rem;font-weight:800;color:var(--gold);margin-top:11px;text-transform:uppercase;letter-spacing:.09em}
+.empty{background:var(--ink-2);border:1.5px dashed var(--line);border-radius:var(--radius);padding:24px 18px;margin-top:14px;text-align:center}
+.empty b{display:block;font-size:.98rem}
+.empty p{font-size:.85rem;color:var(--muted);font-weight:600;margin-top:7px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{background:var(--ink-2);border:1.5px solid var(--line);border-radius:999px;padding:9px 15px;font-size:.82rem;font-weight:800;color:var(--cream)}
+.chip.sel{background:var(--grad-h);border-color:transparent;color:#fff}
+.chip:disabled{opacity:.35}
+.chip .meta{font-size:.7rem;opacity:.6;margin-left:6px}
+
+/* ===== EVENTS ===== */
+.ev{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:15px;margin-top:12px;display:flex;gap:14px;align-items:flex-start}
+.ev.next{border-color:rgba(247,168,27,.5);background:linear-gradient(180deg,rgba(247,168,27,.09),transparent)}
+.ev-date{flex:none;width:58px;text-align:center;border-radius:12px;padding:9px 4px;background:var(--ink-3);border:1px solid var(--line)}
+.ev.next .ev-date{background:var(--grad);border-color:transparent;color:#fff}
+.ev-mo{font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.ev-dy{font-family:'Archivo Black';font-size:1.4rem;line-height:1.05}
+.ev-body{flex:1;min-width:0}
+.ev-k{font-size:.58rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.ev-t{font-weight:800;font-size:1rem;margin-top:4px}
+.ev-host{font-size:.78rem;color:var(--petal);font-weight:700;margin-top:4px}
+.ev-w{font-size:.81rem;color:var(--muted);margin-top:3px;font-weight:600}
+.ev-time{font-size:.79rem;font-weight:800;color:var(--gold);margin-top:6px}
+.ev-note{font-size:.8rem;color:var(--muted);margin-top:7px;line-height:1.45;font-weight:600}
+.ev-map{display:inline-block;margin-top:9px;font-size:.75rem;font-weight:800;color:var(--gold);text-decoration:none;border-bottom:1.5px solid rgba(247,168,27,.45)}
+.ev-img{width:100%;border-radius:12px;margin-top:11px;display:block}
+
+/* ===== CAUSE / RIBBON ===== */
+#cause{background:linear-gradient(180deg,rgba(27,79,168,.16),transparent 70%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#cause .eyebrow{color:var(--blue-lite)}
+.cause-card{background:var(--ink-2);border:1px solid rgba(59,121,224,.3);border-radius:var(--radius);padding:20px;margin-top:14px}
+.cause-card p{font-size:.9rem;color:var(--cream);font-weight:600;line-height:1.65;white-space:pre-line}
+.cause-link{display:inline-block;margin-top:14px;background:var(--blue);color:#fff;font-weight:800;font-size:.84rem;padding:12px 18px;border-radius:12px;text-decoration:none}
+
+/* ===== STEPS ===== */
+.stepbox{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:16px 16px 16px 56px;position:relative;margin-top:12px}
+.stepbox:before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:16px;width:27px;height:27px;border-radius:50%;
+  background:var(--grad);color:#fff;font-family:'Archivo Black';font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.steps{counter-reset:s;margin-top:14px}
+.stepbox b{display:block;font-size:.97rem}
+.stepbox p{font-size:.84rem;color:var(--muted);font-weight:600;margin-top:4px}
+
+/* ===== GALLERY ===== */
+.gal{display:flex;gap:10px;overflow-x:auto;padding:4px 20px 8px;margin:16px -20px 0;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal img{flex:none;width:168px;height:168px;object-fit:cover;border-radius:15px;border:1px solid var(--line)}
+
+/* ===== FOOTER ===== */
+footer{border-top:1px solid var(--line);padding:38px 0 calc(100px + env(safe-area-inset-bottom));text-align:center}
+footer .brand{--bh:64px;margin:0 auto}
+footer p{font-size:.85rem;color:var(--muted);margin-top:12px;font-weight:600}
+.area{background:var(--ink-2);border:1px solid var(--line);border-radius:13px;padding:13px 16px;margin-top:16px;font-size:.83rem;font-weight:700}
+.area b{color:var(--gold);display:block;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:5px}
+.flinks{display:flex;gap:18px;justify-content:center;margin-top:18px;font-size:.84rem;font-weight:800}
+.flinks a{color:var(--gold);text-decoration:none}
+.ver{font-size:.63rem;color:#4E4340;margin-top:22px;letter-spacing:.12em}
+
+/* ===== STICKY CTA ===== */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:35;padding:12px 20px calc(12px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top,var(--ink) 62%,transparent);transform:translateY(130%);transition:transform .3s;pointer-events:none}
+.sticky.show{transform:none;pointer-events:auto}
+.sticky .btn{max-width:440px;margin:0 auto;display:block}
+
+/* ===== SHEET / WIZARD ===== */
+.veil{position:fixed;inset:0;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .3s;z-index:50}
+body.sheet-open .veil{opacity:1;pointer-events:auto}
+.sheet{position:fixed;inset:0;z-index:51;background:var(--ink);transform:translateY(100%);
+  transition:transform .34s cubic-bezier(.3,.8,.3,1);overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+body.sheet-open .sheet{transform:none}
+.sheet-top{position:sticky;top:0;z-index:5;background:var(--ink);padding:calc(14px + env(safe-area-inset-top)) 20px 12px;
+  border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.sheet-x{background:var(--ink-3);width:34px;height:34px;border-radius:50%;font-size:1.05rem;flex:none;line-height:1}
+.prog{flex:1;height:5px;background:var(--ink-3);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--grad-h);border-radius:99px;transition:width .3s}
+.pstep{font-size:.71rem;font-weight:800;color:var(--muted);flex:none}
+.wstep{display:none;padding:20px}
+.wstep.on{display:block}
+.wstep h2{font-size:1.4rem;line-height:1.2}
+.lbl{font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:22px;display:block}
+.field{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:.95rem;font-family:inherit;
+  font-weight:700;background:var(--ink-2);color:var(--cream);margin-top:8px}
+.field:focus{outline:none;border-color:var(--gold)}
+.field::placeholder{color:#6A5C57}
+textarea.field{min-height:88px;resize:vertical;line-height:1.5}
+.date-opt{display:block;width:100%;text-align:left;background:var(--ink-2);border:1.5px solid var(--line);border-radius:14px;
+  padding:14px;margin-top:9px;font-weight:800;font-size:.92rem;color:var(--cream)}
+.date-opt small{display:block;font-weight:700;font-size:.76rem;color:var(--muted);margin-top:2px}
+.date-opt.sel{border-color:var(--gold);background:rgba(247,168,27,.09)}
+.date-opt:disabled{opacity:.35}
+.daychip{background:var(--ink-2);border:1.5px solid var(--line);border-radius:12px;padding:10px 13px;font-size:.79rem;font-weight:800;color:var(--cream)}
+.daychip.sel{background:var(--grad-h);border-color:transparent;color:#fff}
+.daychip:disabled{opacity:.3}
+.note{background:var(--ink-2);border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;font-size:.82rem;
+  font-weight:700;color:var(--petal);margin-top:12px;display:none}
+.note.on{display:block}
+.note.warn{border-left-color:var(--red)}
+.stylecard{display:block;width:100%;text-align:left;background:var(--ink-2);border:1.5px solid var(--line);border-radius:16px;padding:15px;margin-top:10px;color:var(--cream)}
+.stylecard.sel{border-color:var(--gold);background:rgba(247,168,27,.09)}
+.stylecard:disabled{opacity:.35}
+.est{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:20px}
+.est-row{display:flex;justify-content:space-between;font-size:.86rem;font-weight:700;padding:5px 0;gap:12px}
+.est-row.total{border-top:1px solid var(--line);margin-top:7px;padding-top:11px;font-size:1rem;font-weight:800}
+.est-row.total b{font-family:'Archivo Black';background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
+.est-note{font-size:.75rem;color:var(--muted);margin-top:9px;line-height:1.5;font-weight:600}
+.nav-row{display:flex;gap:10px;margin-top:26px}
+.nav-row .btn{flex:1}
+.status{font-size:.84rem;font-weight:700;margin-top:12px;min-height:1.2em}
+.status.err{color:#FF6B60}
+.status.ok{color:var(--ok)}
+.summary{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0;text-align:left}
+.summary div{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;padding:7px 0;border-bottom:1px solid var(--line)}
+.summary div:last-child{border:none}
+.summary span{color:var(--muted);font-weight:700;flex:none}
+.summary b{text-align:right}
+.confirm{text-align:center;padding-top:10px}
+.check-wrap{width:96px;height:96px;margin:0 auto 14px}
+.check-wrap svg{width:100%;height:100%}
+.check-ring{fill:none;stroke:var(--gold);stroke-width:5;stroke-dasharray:283;stroke-dashoffset:283}
+.check-tick{fill:none;stroke:var(--gold);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60}
+.check-wrap.go .check-ring{animation:ringIn .6s ease forwards}
+.check-wrap.go .check-tick{animation:tickIn .4s .45s ease forwards}
+@keyframes ringIn{to{stroke-dashoffset:0}}
+@keyframes tickIn{to{stroke-dashoffset:0}}
+#confetti{position:fixed;inset:0;z-index:60;pointer-events:none;display:none}
+
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s,transform .55s}
+.rv.in{opacity:1;transform:none}
+
+@media(min-width:760px){
+  .wrap,.hbar{max-width:900px}
+  .hero .brand{--bh:148px}
+  .hero h1{font-size:2.4rem}
+  .title{font-size:2.1rem}
+  .strip,.gal{padding-left:0;padding-right:0;margin-left:0;margin-right:0;flex-wrap:wrap}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .grid2>*{margin-top:0}
+  .styles{grid-template-columns:1fr 1fr}
+  .sheet{max-width:560px;left:50%;right:auto;width:100%;transform:translate(-50%,100%)}
+  body.sheet-open .sheet{transform:translate(-50%,0)}
+}
+</style>
+</head>
+<body>
+
+<div id="notchbar"></div>
+<header>
+  <div class="hbar">
+    <a href="#top" class="brand" style="--bh:38px">
+      <img src="logo.png" alt="Riah's Fav's" onerror="this.closest('.brand').classList.add('nologo')">
+      <span class="fallback"><span class="f1">Riah's</span><span class="f2">FAV'S</span></span>
+    </a>
+    <nav class="hlinks">
+      <a href="#menu">Menu</a>
+      <a href="#events">Pop-ups</a>
+      <a href="#how">Catering</a>
+    </nav>
+  </div>
+</header>
+
+<div id="top" class="hero">
+  <div class="hero-treats" id="heroTreats"></div>
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <img src="logo.png" alt="Riah's Fav's — Korean fried chicken catering" onerror="this.closest('.brand').classList.add('nologo')">
+      <span class="fallback"><span class="f1">Riah's</span><span class="f2">FAV'S</span></span>
+    </a>
+    <h1 class="display">Korean fried chicken,<br><span class="grad-t">catered by our family.</span></h1>
+    <p id="heroTagline">Fried fresh for your party, office lunch, wedding or fundraiser.</p>
+    <div class="ribbon-line"><i class="dot"></i><span id="heroSlots"><b>Loading availability…</b></span></div>
+    <div class="tag" id="heroNotice">⏳ 2 weeks' notice minimum</div>
+    <div class="cta-row">
+      <button class="btn" id="ctaBtn" onclick="openSheet()">Request catering</button>
+      <a class="btn btn-ghost" href="#events">Find our pop-ups</a>
+    </div>
+  </div>
+</div>
+
+<!-- next pop-up banner -->
+<section id="nextWrap" style="display:none;padding:0">
+  <div class="wrap"><div class="card" style="border-left:4px solid var(--gold)">
+    <div class="eyebrow">Catch us next</div><div id="nextBody"></div>
+  </div></div>
+</section>
+
+<!-- availability -->
+<section class="rv">
+  <div class="wrap">
+    <span class="eyebrow">Booking calendar</span>
+    <h2 class="title display">Open catering weeks</h2>
+    <p class="sub">Every job needs at least two weeks so we can source and prep properly. Here's what's still open.</p>
+  </div>
+  <div class="strip" id="weeksStrip"></div>
+</section>
+
+<!-- menu -->
+<section id="menu" class="rv">
+  <div class="wrap">
+    <span class="eyebrow">How we fry it</span>
+    <h2 class="title display">Two ways, both original</h2>
+    <p class="sub">That's the whole lineup. We keep it simple and do it right.</p>
+    <div class="styles" id="styleList"></div>
+
+    <div id="pkgWrap">
+      <span class="eyebrow" style="display:block;margin-top:38px">The spread</span>
+      <h2 class="title display">Catering packages</h2>
+      <div id="pkgList" class="grid2"></div>
+    </div>
+
+    <div id="sidesWrap" style="display:none">
+      <span class="eyebrow" style="display:block;margin-top:38px">Sides</span>
+      <h2 class="title display">Round it out</h2>
+      <div class="chips" id="sideList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- events -->
+<section id="events" class="rv">
+  <div class="wrap">
+    <span class="eyebrow">Out in the wild</span>
+    <h2 class="title display">Markets &amp; pop-ups</h2>
+    <p class="sub">No order needed — just come find us. Dates go up the moment we lock them in.</p>
+    <div id="evList" class="grid2"></div>
+  </div>
+</section>
+
+<!-- cause / ribbon -->
+<section id="cause" class="rv" style="display:none">
+  <div class="wrap">
+    <span class="eyebrow">Why we do this</span>
+    <h2 class="title display" id="causeHeading">The ribbon</h2>
+    <div class="cause-card">
+      <p id="causeBody"></p>
+      <a class="cause-link" id="causeLink" style="display:none"></a>
+    </div>
+  </div>
+</section>
+
+<!-- how it works -->
+<section id="how" class="rv">
+  <div class="wrap">
+    <span class="eyebrow">How catering works</span>
+    <h2 class="title display">Four steps, no surprises</h2>
+    <div class="steps">
+      <div class="stepbox"><b>Send your request</b><p>Date, guest count, how you want it fried. Takes two minutes. Requests must be at least <b id="howLead">14</b> days out.</p></div>
+      <div class="stepbox"><b>We confirm &amp; quote</b><p>You get a text within 24 hours with the exact total — food, travel and any extras itemized.</p></div>
+      <div class="stepbox"><b>Deposit locks the date</b><p>A <b id="howDeposit">50</b>% deposit holds your slot. The balance is due the day of.</p></div>
+      <div class="stepbox"><b>We show up hot</b><p>Delivered in insulated trays timed to your serving window, or fried on-site. Sauce stays on the side.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- gallery -->
+<section class="rv" id="gallerySec" style="display:none">
+  <div class="wrap"><span class="eyebrow">Recent jobs</span><h2 class="title display">From the fryer</h2></div>
+  <div class="gal" id="galStrip"></div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <img src="logo.png" alt="Riah's Fav's" onerror="this.closest('.brand').classList.add('nologo')">
+      <span class="fallback"><span class="f1">Riah's</span><span class="f2">FAV'S</span></span>
+    </a>
+    <p id="footTagline"></p>
+    <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
+    <div class="flinks" id="footLinks"></div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.1</div>
+  </div>
+</footer>
+
+<div class="sticky"><button class="btn" onclick="openSheet()">Request catering</button></div>
+<canvas id="confetti"></canvas>
+<div class="veil" onclick="closeSheet()"></div>
+
+<!-- ================= WIZARD ================= -->
+<div class="sheet" id="sheet">
+  <div class="sheet-top">
+    <button class="sheet-x" onclick="closeSheet()">✕</button>
+    <div class="prog"><i id="progBar" style="width:20%"></i></div>
+    <div class="pstep" id="progTxt">1 / 5</div>
+  </div>
+
+  <div class="wstep on" id="step1">
+    <h2 class="display">When &amp; how many?</h2>
+    <p class="sub">We need <b id="leadCopy">two weeks</b> minimum. Weeks that are full or too soon aren't shown.</p>
+    <span class="lbl">Guest count</span>
+    <input class="field" id="fGuests" type="number" inputmode="numeric" min="1" placeholder="e.g. 60" oninput="onGuests()">
+    <div class="note warn" id="guestNote"></div>
+    <span class="lbl">Event week</span>
+    <div id="weekOpts"></div>
+    <div id="dayWrap" style="display:none">
+      <span class="lbl">Event day</span>
+      <div class="chips" id="dayChips"></div>
+    </div>
+    <div class="note" id="shortNote">⏱️ That's a tight turnaround — still inside our window, but we'll confirm we can source enough before quoting.</div>
+    <span class="lbl">Serving time</span>
+    <div class="chips" id="timeChips"></div>
+    <div class="nav-row"><button class="btn btn-block" id="next1" disabled onclick="goStep(2)">Continue</button></div>
+  </div>
+
+  <div class="wstep" id="step2">
+    <h2 class="display">How do you want it?</h2>
+    <p class="sub">Pick one, or both and we'll split the trays.</p>
+    <div id="styleOpts"></div>
+    <div id="pkgSection">
+      <span class="lbl">Package</span>
+      <div id="pkgOpts"></div>
+    </div>
+    <span class="lbl">Service style</span>
+    <div class="chips" id="serviceChips"></div>
+    <div class="nav-row">
+      <button class="btn btn-soft" onclick="goStep(1)">Back</button>
+      <button class="btn" id="next2" disabled onclick="goStep(3)">Continue</button>
+    </div>
+  </div>
+
+  <div class="wstep" id="step3">
+    <h2 class="display">Sides &amp; extras</h2>
+    <p class="sub">Optional. Anything you don't see, ask for it in the notes.</p>
+    <div id="sidesSection">
+      <span class="lbl">Sides</span>
+      <div class="chips" id="sideOpts"></div>
+    </div>
+    <div id="addonSection">
+      <span class="lbl">Add-ons</span>
+      <div class="chips" id="addonOpts"></div>
+    </div>
+    <div id="step3Empty"></div>
+    <div class="est" id="estBox"></div>
+    <div class="nav-row">
+      <button class="btn btn-soft" onclick="goStep(2)">Back</button>
+      <button class="btn" onclick="goStep(4)">Continue</button>
+    </div>
+  </div>
+
+  <div class="wstep" id="step4">
+    <h2 class="display">Where do we bring it?</h2>
+    <p class="sub">We text your exact quote — usually within a few hours, always within 24.</p>
+    <span class="lbl">Your name</span>
+    <input class="field" id="fName" placeholder="First and last">
+    <span class="lbl">Phone</span>
+    <input class="field" id="fPhone" type="tel" inputmode="tel" placeholder="(801) 555-0134">
+    <span class="lbl">Email (optional)</span>
+    <input class="field" id="fEmail" type="email" placeholder="you@email.com">
+    <span class="lbl">Occasion</span>
+    <div class="chips" id="occChips"></div>
+    <span class="lbl">Venue name</span>
+    <input class="field" id="fVenue" placeholder="e.g. Liberty Park pavilion, our office">
+    <span class="lbl">Address</span>
+    <input class="field" id="fAddress" placeholder="Street, city">
+    <div class="note" id="areaNote"></div>
+    <span class="lbl">Anything else?</span>
+    <textarea class="field" id="fNotes" placeholder="Allergies, spice level, parking or power situation, timing…"></textarea>
+    <div class="est" id="estBox2"></div>
+    <div class="nav-row">
+      <button class="btn btn-soft" onclick="goStep(3)">Back</button>
+      <button class="btn" id="submitBtn" onclick="sendReq()">Send request</button>
+    </div>
+    <div class="status" id="submitStatus"></div>
+  </div>
+
+  <div class="wstep" id="step5">
+    <div class="confirm">
+      <div class="check-wrap" id="checkWrap">
+        <svg viewBox="0 0 100 100"><circle class="check-ring" cx="50" cy="50" r="45"></circle><path class="check-tick" d="M28 52 L44 66 L72 34"></path></svg>
+      </div>
+      <h2 class="display">Request sent!</h2>
+      <div class="summary" id="sumBox"></div>
+      <p class="sub">Every request gets read personally. You'll get a text within 24 hours with your exact quote. Your date locks once the deposit is in.</p>
+      <button class="btn btn-block" style="margin-top:18px" onclick="closeSheet()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= Riah's Fav's — live site · Version 1.1 ================= */
+var RF_VERSION = '1.1';
+var dynImport = new Function('u','return import(u)');
+
+/* ---------------------------------------------------------------
+   FIREBASE CONFIG — paste the config from the Riah's Fav's Firebase
+   project here (Project settings → Your apps → Web app → Config).
+   admin.html has an identical block that must match.
+   Until it's real, the site runs on the FALLBACK data below.
+   --------------------------------------------------------------- */
+var CFG = {
+  apiKey: "REPLACE_ME",
+  authDomain: "REPLACE_ME.firebaseapp.com",
+  projectId: "REPLACE_ME",
+  storageBucket: "REPLACE_ME.firebasestorage.app",
+  messagingSenderId: "REPLACE_ME",
+  appId: "REPLACE_ME"
+};
+var CFG_READY = CFG.projectId.indexOf('REPLACE_ME') < 0;
+
+/* ---- fallback data ----
+   NOTE: packages, sides and add-ons ship EMPTY on purpose. Nothing is
+   priced until Riah enters real numbers in the admin. The two chicken
+   styles are the only menu content hard-coded here, because they're
+   the actual lineup.                                              */
+var FALLBACK = {
+  schedule: {
+    weeklyCapacity: 3,
+    leadTimeDays: 14,        // TWO-WEEK MINIMUM NOTICE
+    shortNoticeDays: 21,     // 14–21 days out gets a rush flag
+    horizonWeeks: 12,
+    minGuests: 0,
+    maxGuests: 0,
+    blockedDates: [],
+    timeWindows: ['11am – 1pm','1pm – 3pm','4pm – 6pm','6pm – 8pm','Late night']
+  },
+  policy: { depositPercent: 50, payInFullUnder: 0 },
+  styles: [
+    { id:'sauced', label:'Original Korean Style', kicker:'Sauced', desc:'Our original, tossed in sauce and served hot.', active:true },
+    { id:'plain',  label:'Original',              kicker:'No sauce', desc:'Same chicken, no sauce. Crispy straight through.', active:true }
+  ],
+  packages: [], sides: [], addons: [],
+  services: [
+    { id:'dropoff', label:'Drop-off',         desc:'Trays delivered hot' },
+    { id:'setup',   label:'Delivery + setup', desc:'We set the buffet' },
+    { id:'onsite',  label:'Served on-site',   desc:'We stay and serve' }
+  ],
+  occasions: ['Birthday','Wedding','Office lunch','Graduation','Church / community','Fundraiser','Block party','Other'],
+  business: {
+    tagline: 'Fried fresh for your party, office lunch, wedding or fundraiser.',
+    serviceArea: 'Salt Lake County, Davis County, and parts of Utah County.',
+    instagram: null, tiktok: null, facebook: null, phone: null, email: null
+  },
+  cause: { active:false, heading:'', body:'', linkLabel:'', linkUrl:'' },
+  events: []
+};
+
+var db=null, FS=null;
+var data = {
+  schedule:FALLBACK.schedule, policy:FALLBACK.policy, styles:FALLBACK.styles,
+  packages:[], sides:[], addons:[], services:FALLBACK.services, occasions:FALLBACK.occasions,
+  business:FALLBACK.business, cause:FALLBACK.cause, weeks:{}, events:[], gallery:[]
+};
+
+var order = {
+  guests:null, weekId:null, weekLabel:null, dayISO:null, dayLabel:null, shortNotice:false, window:null,
+  styles:[], packageId:null, packageLabel:null, perPerson:null,
+  service:'dropoff', serviceLabel:'Drop-off', sides:[], addons:[], occasion:null
+};
+
+/* ================= boot ================= */
+(async function boot(){
+  try{
+    if(!CFG_READY) throw new Error('Firebase config is still a placeholder — showing fallback content');
+    var appM = await dynImport('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+    FS = await dynImport('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    db = FS.getFirestore(appM.initializeApp(CFG));
+
+    function gd(c,i){ return FS.getDoc(FS.doc(db,c,i)).then(function(s){ return s.exists()?s.data():null; }).catch(function(){ return null; }); }
+    var r = await Promise.all([
+      gd('settings','schedule'), gd('settings','policy'), gd('settings','business'), gd('settings','cause'),
+      gd('menu','styles'), gd('menu','packages'), gd('menu','sides'), gd('menu','addons'),
+      FS.getDocs(FS.collection(db,'weeks')).catch(function(){return null;}),
+      FS.getDocs(FS.query(FS.collection(db,'events'), FS.orderBy('dateISO','asc'), FS.limit(40))).catch(function(){return null;}),
+      FS.getDocs(FS.query(FS.collection(db,'gallery'), FS.orderBy('createdAtMs','desc'), FS.limit(24))).catch(function(){return null;})
+    ]);
+    if(r[0]) data.schedule = Object.assign({}, FALLBACK.schedule, r[0]);
+    if(r[1]) data.policy   = Object.assign({}, FALLBACK.policy, r[1]);
+    if(r[2]) data.business = Object.assign({}, FALLBACK.business, r[2]);
+    if(r[3]) data.cause    = Object.assign({}, FALLBACK.cause, r[3]);
+    if(r[4] && r[4].list && r[4].list.length) data.styles = r[4].list;
+    if(r[5] && r[5].list) data.packages = r[5].list;
+    if(r[6] && r[6].list) data.sides    = r[6].list;
+    if(r[7] && r[7].list) data.addons   = r[7].list;
+    if(r[8]) r[8].forEach(function(d){ data.weeks[d.id] = d.data(); });
+    if(r[9]) r[9].forEach(function(d){ data.events.push(Object.assign({id:d.id}, d.data())); });
+    if(r[10]) r[10].forEach(function(d){ data.gallery.push(Object.assign({id:d.id}, d.data())); });
+  }catch(e){
+    console.warn('[Riah’s Fav’s] fallback mode:', e.message);
+  }
+  renderAll();
+})();
+
+function renderAll(){
+  buildWeeks(); updateHero(); renderWeekStrip(); renderWeekOpts();
+  renderStyles(); renderPackages(); renderSidesPublic();
+  renderEvents(); renderCause(); renderGallery();
+  renderTimeWindows(); renderServices(); renderOccasions();
+  renderStyleOpts(); renderPkgOpts(); renderSideOpts(); renderAddonOpts();
+  applyCopy(); refreshEst(); gateStep2();
+}
+
+function applyCopy(){
+  var s = data.schedule, p = data.policy, b = data.business;
+  var wks = Math.round((s.leadTimeDays||14)/7);
+  setTxt('heroNotice','⏳ ' + (wks>=1 ? wks + ' week' + (wks===1?'':'s') + '’' : s.leadTimeDays + ' days’') + ' notice minimum');
+  setTxt('leadCopy', wks===2 ? 'two weeks' : (s.leadTimeDays + ' days'));
+  setTxt('howLead', String(s.leadTimeDays||14));
+  setTxt('howDeposit', String(p.depositPercent||50));
+  setTxt('heroTagline', b.tagline || FALLBACK.business.tagline);
+  setTxt('footTagline', b.tagline || FALLBACK.business.tagline);
+  setTxt('footArea', b.serviceArea || FALLBACK.business.serviceArea);
+  var note = document.getElementById('areaNote');
+  if(b.serviceArea){ note.textContent = '📍 We cater ' + b.serviceArea + ' Outside that? Send it anyway and we’ll tell you what travel costs.'; note.classList.add('on'); }
+
+  var fl = document.getElementById('footLinks'); fl.innerHTML='';
+  if(b.instagram) fl.appendChild(mkA('Instagram', b.instagram));
+  if(b.tiktok)    fl.appendChild(mkA('TikTok', b.tiktok));
+  if(b.facebook)  fl.appendChild(mkA('Facebook', b.facebook));
+  if(b.phone)     fl.appendChild(mkA('Text us', 'sms:' + String(b.phone).replace(/\D/g,'')));
+  if(b.email)     fl.appendChild(mkA('Email', 'mailto:' + b.email));
+}
+function mkA(t,h){ var a=document.createElement('a'); a.textContent=t; a.href=h; a.target='_blank'; a.rel='noopener'; return a; }
+function setTxt(id,t){ var e=document.getElementById(id); if(e) e.textContent=t; }
+function escH(t){ return String(t==null?'':t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function sTo(el){ if(el) setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'center'}); },60); }
+function activeOnly(l){ return (l||[]).filter(function(x){ return x.active !== false; }); }
+
+/* ================= date & availability math ================= */
+var WEEKS=[];
+function iso(d){ return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+function fmtDay(d){ return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+function fmtWeek(d){ return 'Week of ' + d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+
+function buildWeeks(){
+  WEEKS=[];
+  var s=data.schedule;
+  var today=new Date(); today.setHours(0,0,0,0);
+  var minDate=new Date(today);   minDate.setDate(minDate.getDate()+(s.leadTimeDays||14));
+  var shortDate=new Date(today); shortDate.setDate(shortDate.getDate()+(s.shortNoticeDays||21));
+  var monday=new Date(today);    monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
+
+  for(var w=0; w<(s.horizonWeeks||12)+3; w++){
+    var mon=new Date(monday); mon.setDate(mon.getDate()+w*7);
+    var wk=data.weeks[iso(mon)]||{};
+    var cap=(wk.capacityOverride!=null?wk.capacityOverride:(s.weeklyCapacity||3));
+    var open=Math.max(0,cap-(wk.booked||0));
+    var days=[];
+    for(var k=0;k<7;k++){
+      var d=new Date(mon); d.setDate(d.getDate()+k);
+      var dISO=iso(d);
+      var blocked=(s.blockedDates||[]).indexOf(dISO)>=0 || (wk.blockedDays||[]).indexOf(dISO)>=0;
+      days.push({iso:dISO,label:fmtDay(d),ok:!(d<minDate)&&!blocked&&!wk.closed,shortNotice:d<shortDate});
+    }
+    if(!days.some(function(x){return x.ok;})) continue;
+    WEEKS.push({id:iso(mon),label:fmtWeek(mon),cap:cap,open:open,closed:!!wk.closed,days:days});
+    if(WEEKS.length>=(s.horizonWeeks||12)) break;
+  }
+}
+function firstOpenWeek(){ for(var i=0;i<WEEKS.length;i++){ if(!WEEKS[i].closed&&WEEKS[i].open>0) return WEEKS[i]; } return null; }
+
+function updateHero(){
+  var w=firstOpenWeek(), hero=document.getElementById('heroSlots'), cta=document.getElementById('ctaBtn');
+  if(w){
+    hero.innerHTML='<b>'+w.open+(w.open===1?' date':' dates')+' open</b> · '+w.label.toLowerCase();
+    cta.textContent='Request catering · '+w.open+' open';
+  }else{
+    hero.innerHTML='<b>Booking ahead</b> — send a request for a later week';
+    cta.textContent='Request catering';
+  }
+}
+function renderWeekStrip(){
+  var el=document.getElementById('weeksStrip'); el.innerHTML='';
+  WEEKS.slice(0,6).forEach(function(w){
+    var full=w.closed||w.open<=0, pips='', shown=Math.min(w.cap,7);
+    for(var i=0;i<shown;i++) pips+='<i class="pip'+(i<(w.cap-w.open)?' taken':'')+'"></i>';
+    var c=document.createElement('div'); c.className='week'+(full?' full':'');
+    c.innerHTML='<div class="wk-l">'+(w.closed?'Closed':'Week of')+'</div><div class="wk-d">'+escH(w.label.replace('Week of ',''))+
+      '</div><div class="pips">'+pips+'</div><div class="wk-s">'+(w.closed?'Unavailable':(w.open>0?w.open+' open':'Fully booked'))+'</div>';
+    el.appendChild(c);
+  });
+}
+
+/* ================= public menu ================= */
+function renderStyles(){
+  var el=document.getElementById('styleList'); el.innerHTML='';
+  activeOnly(data.styles).forEach(function(s){
+    var d=document.createElement('div');
+    d.className='style'+(s.id==='plain'?' plain':'');
+    d.innerHTML='<div class="style-k">'+escH(s.kicker||'')+'</div><div class="style-n">'+escH(s.label)+'</div>'+
+      (s.desc?'<div class="style-d">'+escH(s.desc)+'</div>':'');
+    el.appendChild(d);
+  });
+}
+function renderPackages(){
+  var list=activeOnly(data.packages), el=document.getElementById('pkgList');
+  el.innerHTML='';
+  if(!list.length){
+    el.className='';
+    el.innerHTML='<div class="empty"><b>Pricing is by the head count</b><p>Tell us your date and how many people you’re feeding and we’ll send an exact quote — no packages to decode.</p></div>';
+    return;
+  }
+  el.className='grid2';
+  list.forEach(function(p){
+    var d=document.createElement('div'); d.className='pkg';
+    d.innerHTML='<div class="pkg-h"><div class="pkg-n">'+escH(p.label)+'</div><div class="pkg-p">$'+p.perPerson+'<span>per guest</span></div></div>'+
+      (p.desc?'<div class="pkg-d">'+escH(p.desc)+'</div>':'')+
+      '<ul class="pkg-inc">'+(p.includes||[]).map(function(i){return '<li>'+escH(i)+'</li>';}).join('')+'</ul>'+
+      (p.minGuests?'<div class="pkg-min">'+p.minGuests+' guest minimum</div>':'');
+    el.appendChild(d);
+  });
+}
+function renderSidesPublic(){
+  var list=activeOnly(data.sides);
+  document.getElementById('sidesWrap').style.display = list.length?'block':'none';
+  var el=document.getElementById('sideList'); el.innerHTML='';
+  list.forEach(function(s){ var b=document.createElement('span'); b.className='chip'; b.textContent=s.label; el.appendChild(b); });
+}
+
+/* ================= events / pop-ups ================= */
+var EV_KIND={market:'Farmers market',popup:'Pop-up',truck:'Food truck stop',festival:'Festival',fundraiser:'Fundraiser',private:'Private event'};
+function evDate(e){ return e.dateISO ? new Date(e.dateISO+'T12:00:00') : null; }
+function upcomingEvents(){
+  var t=iso(new Date());
+  return (data.events||[])
+    .filter(function(e){ return e.active!==false && e.dateISO && (e.endDateISO||e.dateISO)>=t; })
+    .sort(function(a,b){ return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0; });
+}
+function eventCard(e,isNext){
+  var d=evDate(e);
+  var range='';
+  if(e.endDateISO && e.endDateISO!==e.dateISO){
+    range=' – '+new Date(e.endDateISO+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  }
+  var time=[e.startTime,e.endTime].filter(Boolean).join(' – ');
+  var w=document.createElement('div'); w.className='ev'+(isNext?' next':'');
+  w.innerHTML=
+    '<div class="ev-date"><div class="ev-mo">'+(d?d.toLocaleDateString('en-US',{month:'short'}).toUpperCase():'')+'</div>'+
+      '<div class="ev-dy">'+(d?d.getDate():'')+'</div></div>'+
+    '<div class="ev-body">'+
+      '<div class="ev-k">'+escH(EV_KIND[e.kind]||'Pop-up')+(range?' · multi-day':'')+'</div>'+
+      '<div class="ev-t">'+escH(e.title||'Riah’s Fav’s pop-up')+'</div>'+
+      (e.host?'<div class="ev-host">Hosted by '+escH(e.host)+'</div>':'')+
+      (e.venue||e.address?'<div class="ev-w">'+escH([e.venue,e.address].filter(Boolean).join(' · '))+'</div>':'')+
+      '<div class="ev-time">'+escH(d?d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'}):'')+range+(time?' · '+escH(time):'')+'</div>'+
+      (e.note?'<div class="ev-note">'+escH(e.note)+'</div>':'')+
+      (e.mapUrl?'<a class="ev-map" href="'+escH(e.mapUrl)+'" target="_blank" rel="noopener">Open in maps →</a>':'')+
+      (e.img?'<img class="ev-img" src="'+escH(e.img)+'" alt="">':'')+
+    '</div>';
+  return w;
+}
+function renderEvents(){
+  var list=upcomingEvents(), el=document.getElementById('evList'); el.innerHTML='';
+  if(!list.length){
+    el.className='';
+    el.innerHTML='<div class="empty"><b>Nothing on the books right now</b><p>No markets or pop-ups scheduled yet — check back soon, or book us privately.</p></div>';
+    document.getElementById('nextWrap').style.display='none';
+    return;
+  }
+  el.className='grid2';
+  list.forEach(function(e,i){ el.appendChild(eventCard(e,i===0)); });
+
+  var n=list[0], d=evDate(n), time=[n.startTime,n.endTime].filter(Boolean).join(' – ');
+  document.getElementById('nextBody').innerHTML=
+    '<div style="font-weight:800;font-size:1.05rem;margin-top:5px">'+escH(n.title||'Pop-up')+'</div>'+
+    '<div class="sub" style="margin-top:5px">'+escH(d?d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):'')+
+    (time?' · '+escH(time):'')+(n.host?'<br>Hosted by '+escH(n.host):'')+(n.venue?'<br>'+escH(n.venue):'')+'</div>'+
+    '<a class="btn btn-soft" style="margin-top:14px" href="#events">See all pop-ups</a>';
+  document.getElementById('nextWrap').style.display='block';
+}
+
+function renderCause(){
+  var c=data.cause||{};
+  if(!c.active || !c.body){ document.getElementById('cause').style.display='none'; return; }
+  document.getElementById('cause').style.display='block';
+  setTxt('causeHeading', c.heading || 'Why we do this');
+  setTxt('causeBody', c.body);
+  var a=document.getElementById('causeLink');
+  if(c.linkUrl){ a.href=c.linkUrl; a.textContent=c.linkLabel||'Learn more'; a.target='_blank'; a.rel='noopener'; a.style.display='inline-block'; }
+  else a.style.display='none';
+}
+
+function renderGallery(){
+  var g=(data.gallery||[]).filter(function(x){ return x.img; });
+  if(!g.length) return;
+  document.getElementById('gallerySec').style.display='block';
+  var el=document.getElementById('galStrip'); el.innerHTML='';
+  g.forEach(function(x){ var i=document.createElement('img'); i.src=x.img; i.loading='lazy'; i.alt=x.caption||''; el.appendChild(i); });
+}
+
+/* ================= wizard step 1 ================= */
+function renderWeekOpts(){
+  var el=document.getElementById('weekOpts'); el.innerHTML='';
+  if(!WEEKS.length){ el.innerHTML='<div class="note on">No weeks are open right now. Text us and we’ll see what we can do.</div>'; return; }
+  WEEKS.forEach(function(w){
+    var full=w.closed||w.open<=0;
+    var b=document.createElement('button'); b.type='button'; b.className='date-opt'; b.disabled=full;
+    b.innerHTML=escH(w.label)+' <small>'+(w.closed?'Closed':(full?'Fully booked':w.open+' date'+(w.open===1?'':'s')+' open'))+'</small>';
+    b.onclick=function(){ pickWeek(b,w); };
+    el.appendChild(b);
+  });
+}
+function pickWeek(el,w){
+  document.querySelectorAll('#weekOpts .date-opt').forEach(function(d){ d.classList.remove('sel'); });
+  el.classList.add('sel');
+  order.weekId=w.id; order.weekLabel=w.label; order.dayISO=null; order.dayLabel=null;
+  var chips=document.getElementById('dayChips'); chips.innerHTML='';
+  w.days.forEach(function(d){
+    var b=document.createElement('button'); b.type='button'; b.className='daychip';
+    b.textContent=d.ok?d.label:(d.label+' · n/a'); b.disabled=!d.ok;
+    b.onclick=function(){
+      chips.querySelectorAll('.daychip').forEach(function(c){c.classList.remove('sel');});
+      b.classList.add('sel');
+      order.dayISO=d.iso; order.dayLabel=d.label; order.shortNotice=!!d.shortNotice;
+      document.getElementById('shortNote').classList.toggle('on',!!d.shortNotice);
+      gateStep1(); sTo(document.getElementById('timeChips'));
+    };
+    chips.appendChild(b);
+  });
+  document.getElementById('dayWrap').style.display='block';
+  gateStep1(); sTo(document.getElementById('dayWrap'));
+}
+function renderTimeWindows(){
+  var el=document.getElementById('timeChips'); el.innerHTML='';
+  (data.schedule.timeWindows||FALLBACK.schedule.timeWindows).forEach(function(t){
+    var b=document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=t;
+    b.onclick=function(){ selectOne(el,b); order.window=t; gateStep1(); };
+    el.appendChild(b);
+  });
+}
+function selectOne(row,b){ row.querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');}); b.classList.add('sel'); }
+function onGuests(){
+  var v=parseInt(document.getElementById('fGuests').value,10);
+  var s=data.schedule, note=document.getElementById('guestNote');
+  order.guests=(isNaN(v)||v<=0)?null:v;
+  note.classList.remove('on');
+  if(order.guests!=null){
+    if(s.minGuests && order.guests<s.minGuests){
+      note.textContent='Our catering minimum is '+s.minGuests+' guests. Smaller group? Text us — we can usually work something out.';
+      note.classList.add('on'); order.guests=null;
+    }else if(s.maxGuests && order.guests>s.maxGuests){
+      note.textContent='That’s bigger than our standard setup ('+s.maxGuests+' guests). Send it anyway — we’ll quote it as a custom job.';
+      note.classList.add('on');
+    }
+  }
+  renderPkgOpts(); gateStep1(); refreshEst();
+}
+function gateStep1(){
+  var okk=!!(order.guests&&order.weekId&&order.dayISO&&order.window);
+  document.getElementById('next1').disabled=!okk;
+}
+
+/* ================= wizard step 2 ================= */
+function renderStyleOpts(){
+  var el=document.getElementById('styleOpts'); el.innerHTML='';
+  activeOnly(data.styles).forEach(function(s){
+    var b=document.createElement('button'); b.type='button'; b.className='stylecard';
+    b.innerHTML='<div class="style-k">'+escH(s.kicker||'')+'</div><div class="style-n">'+escH(s.label)+'</div>'+
+      (s.desc?'<div class="style-d">'+escH(s.desc)+'</div>':'');
+    b.onclick=function(){
+      var at=order.styles.indexOf(s.label);
+      if(at>=0){ order.styles.splice(at,1); b.classList.remove('sel'); }
+      else{ order.styles.push(s.label); b.classList.add('sel'); }
+      gateStep2();
+    };
+    el.appendChild(b);
+  });
+}
+function renderPkgOpts(){
+  var list=activeOnly(data.packages);
+  document.getElementById('pkgSection').style.display = list.length?'block':'none';
+  var el=document.getElementById('pkgOpts'); if(!el) return; el.innerHTML='';
+  list.forEach(function(p){
+    var tooSmall=!!(order.guests&&p.minGuests&&order.guests<p.minGuests);
+    var b=document.createElement('button'); b.type='button';
+    b.className='stylecard'+(order.packageId===p.id?' sel':''); b.disabled=tooSmall;
+    b.innerHTML='<div class="pkg-h"><div class="pkg-n">'+escH(p.label)+'</div><div class="pkg-p">$'+p.perPerson+'<span>per guest</span></div></div>'+
+      (p.desc?'<div class="pkg-d">'+escH(p.desc)+'</div>':'')+
+      '<ul class="pkg-inc">'+(p.includes||[]).map(function(i){return '<li>'+escH(i)+'</li>';}).join('')+'</ul>'+
+      (p.minGuests?'<div class="pkg-min">'+(tooSmall?'Needs '+p.minGuests+'+ guests':p.minGuests+' guest minimum')+'</div>':'');
+    b.onclick=function(){
+      document.querySelectorAll('#pkgOpts .stylecard').forEach(function(t){t.classList.remove('sel');});
+      b.classList.add('sel');
+      order.packageId=p.id; order.packageLabel=p.label; order.perPerson=p.perPerson;
+      gateStep2(); refreshEst();
+    };
+    el.appendChild(b);
+  });
+}
+function renderServices(){
+  var el=document.getElementById('serviceChips'); el.innerHTML='';
+  (data.services||FALLBACK.services).forEach(function(s,i){
+    var b=document.createElement('button'); b.type='button'; b.className='chip'+(i===0?' sel':'');
+    b.innerHTML=escH(s.label)+'<span class="meta">'+escH(s.desc||'')+'</span>';
+    b.onclick=function(){ selectOne(el,b); order.service=s.id; order.serviceLabel=s.label; gateStep2(); };
+    el.appendChild(b);
+  });
+}
+function gateStep2(){
+  var needPkg = activeOnly(data.packages).length > 0;
+  var okk = order.styles.length>0 && !!order.service && (!needPkg || !!order.packageId);
+  var n=document.getElementById('next2'); if(n) n.disabled=!okk;
+}
+
+/* ================= wizard step 3 ================= */
+function renderSideOpts(){
+  var list=activeOnly(data.sides);
+  document.getElementById('sidesSection').style.display=list.length?'block':'none';
+  var el=document.getElementById('sideOpts'); el.innerHTML='';
+  list.forEach(function(s){
+    var b=document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=s.label;
+    b.onclick=function(){
+      var at=order.sides.indexOf(s.label);
+      if(at>=0){ order.sides.splice(at,1); b.classList.remove('sel'); }
+      else{ order.sides.push(s.label); b.classList.add('sel'); }
+    };
+    el.appendChild(b);
+  });
+  step3Empty();
+}
+function renderAddonOpts(){
+  var list=activeOnly(data.addons);
+  document.getElementById('addonSection').style.display=list.length?'block':'none';
+  var el=document.getElementById('addonOpts'); el.innerHTML='';
+  list.forEach(function(a){
+    var b=document.createElement('button'); b.type='button'; b.className='chip';
+    b.innerHTML=escH(a.label)+'<span class="meta">+$'+a.price+(a.unit==='perPerson'?'/guest':'')+'</span>';
+    b.onclick=function(){
+      var at=order.addons.findIndex(function(x){ return x.id===a.id; });
+      if(at>=0){ order.addons.splice(at,1); b.classList.remove('sel'); }
+      else{ order.addons.push({id:a.id,label:a.label,price:a.price,unit:a.unit}); b.classList.add('sel'); }
+      refreshEst();
+    };
+    el.appendChild(b);
+  });
+  step3Empty();
+}
+function step3Empty(){
+  var none = !activeOnly(data.sides).length && !activeOnly(data.addons).length;
+  document.getElementById('step3Empty').innerHTML = none
+    ? '<div class="empty" style="margin-top:18px"><b>Nothing to add here yet</b><p>Tell us what you’d like on the side in the notes on the next step and we’ll price it into your quote.</p></div>'
+    : '';
+}
+
+/* ================= estimate ================= */
+function money(n){ return '$'+(Math.round((n||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function addonTotal(){
+  var g=order.guests||0;
+  return order.addons.reduce(function(s,a){ return s+(a.unit==='perPerson'?a.price*g:a.price); },0);
+}
+function estimateTotal(){ return (order.perPerson||0)*(order.guests||0)+addonTotal(); }
+function depositFor(total){
+  var p=data.policy;
+  if(p.payInFullUnder && total>0 && total<p.payInFullUnder) return total;
+  return Math.round(total*(p.depositPercent||50)/100);
+}
+function refreshEst(){
+  var html;
+  if(!order.guests || !order.perPerson){
+    html='<div class="est-note"><b style="color:var(--petal)">No online pricing yet.</b><br>Send the request and you’ll get an exact quote by text within 24 hours — food, travel and extras all itemized.</div>';
+  }else{
+    var g=order.guests, base=order.perPerson*g, total=base+addonTotal();
+    html='<div class="est-row"><span>'+escH(order.packageLabel)+' × '+g+' guests</span><span>'+money(base)+'</span></div>';
+    order.addons.forEach(function(a){
+      html+='<div class="est-row"><span>'+escH(a.label)+(a.unit==='perPerson'?' × '+g:'')+'</span><span>'+
+        money(a.unit==='perPerson'?a.price*g:a.price)+'</span></div>';
+    });
+    html+='<div class="est-row total"><span>Estimate</span><b>'+money(total)+'</b></div>'+
+      '<div class="est-note">Estimate only — travel and any custom asks get itemized in your real quote. Deposit to hold the date would be about '+money(depositFor(total))+'.</div>';
+  }
+  ['estBox','estBox2'].forEach(function(id){ var e=document.getElementById(id); if(e) e.innerHTML=html; });
+}
+
+function renderOccasions(){
+  var el=document.getElementById('occChips'); el.innerHTML='';
+  (data.occasions||FALLBACK.occasions).forEach(function(o){
+    var b=document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=o;
+    b.onclick=function(){ selectOne(el,b); order.occasion=o; };
+    el.appendChild(b);
+  });
+}
+
+/* ================= nav ================= */
+function openSheet(){ document.body.classList.add('sheet-open'); }
+function closeSheet(){ document.body.classList.remove('sheet-open'); setTimeout(function(){ goStep(1); },360); }
+function goStep(n){
+  for(var i=1;i<=5;i++) document.getElementById('step'+i).classList.toggle('on', i===n);
+  document.getElementById('progBar').style.width=(n*20)+'%';
+  document.getElementById('progTxt').textContent=n+' / 5';
+  document.getElementById('sheet').scrollTop=0;
+  if(n===3||n===4) refreshEst();
+}
+
+/* ================= submit ================= */
+function digits(s){ return (s||'').replace(/\D/g,''); }
+async function sendReq(){
+  var st=document.getElementById('submitStatus');
+  st.className='status'; st.textContent='';
+  var name=document.getElementById('fName').value.trim();
+  var phone=digits(document.getElementById('fPhone').value);
+  var email=document.getElementById('fEmail').value.trim();
+  var venue=document.getElementById('fVenue').value.trim();
+  var addr=document.getElementById('fAddress').value.trim();
+  var notes=document.getElementById('fNotes').value.trim();
+
+  if(!name){ st.className='status err'; st.textContent='Please add your name.'; return; }
+  if(phone.length<10){ st.className='status err'; st.textContent='Please add a valid phone number — we text your quote.'; return; }
+  if(!addr){ st.className='status err'; st.textContent='Please add the event address so we can price travel.'; return; }
+
+  var btn=document.getElementById('submitBtn');
+  btn.disabled=true; st.textContent='Sending…';
+  var total=estimateTotal();
+
+  var req={
+    status:'pending', createdAt: FS?FS.serverTimestamp():new Date().toISOString(), siteVersion:RF_VERSION,
+    name:name, phone:phone, email:email||null, guests:order.guests,
+    weekId:order.weekId, weekLabel:order.weekLabel, dayISO:order.dayISO, dayLabel:order.dayLabel,
+    shortNotice:order.shortNotice, window:order.window,
+    styles:order.styles.slice(),
+    packageId:order.packageId, packageLabel:order.packageLabel, perPerson:order.perPerson,
+    service:order.service, serviceLabel:order.serviceLabel,
+    sides:order.sides.slice(),
+    addons:order.addons.map(function(a){ return {id:a.id,label:a.label,price:a.price,unit:a.unit}; }),
+    estimate: total || null, occasion:order.occasion||null,
+    venue:venue||null, address:addr, notes:notes||null,
+    quote:null, travelFee:null, depositPaid:null, paymentMethod:null
+  };
+
+  try{
+    if(!db) throw new Error('offline');
+    await FS.addDoc(FS.collection(db,'requests'), req);
+    try{
+      fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name:name,phone:phone,guests:order.guests,dayLabel:order.dayLabel,window:order.window,
+          styles:order.styles,packageLabel:order.packageLabel,serviceLabel:order.serviceLabel,sides:order.sides,
+          addons:order.addons.map(function(a){return a.label;}),estimate:total,occasion:order.occasion,
+          venue:venue,address:addr,notes:notes,shortNotice:order.shortNotice})
+      }).catch(function(){});
+    }catch(e){}
+
+    document.getElementById('sumBox').innerHTML=
+      row('Event day',order.dayLabel)+row('Serving',order.window)+row('Guests',String(order.guests))+
+      row('Chicken',order.styles.join(' + ')||'—')+
+      (order.packageLabel?row('Package',order.packageLabel):'')+
+      row('Service',order.serviceLabel)+
+      (order.sides.length?row('Sides',order.sides.join(', ')):'')+
+      (order.addons.length?row('Add-ons',order.addons.map(function(a){return a.label;}).join(', ')):'')+
+      row('Where',venue?venue+' · '+addr:addr)+
+      row('Estimate', total?money(total):'Quoted by text');
+    goStep(5);
+    try{ celebrate(); }catch(_e){}
+  }catch(e){
+    console.error(e);
+    st.className='status err';
+    st.textContent='That didn’t go through. Check your connection and try again — or message us on Instagram.';
+    btn.disabled=false;
+  }
+}
+function row(k,v){ return '<div><span>'+escH(k)+'</span><b>'+escH(v)+'</b></div>'; }
+</script>
+
+<script>
+/* header solidify */
+(function(){
+  var h=document.querySelector('header');
+  function s(){ h.classList.toggle('scrolled', window.scrollY>40); }
+  addEventListener('scroll',s,{passive:true}); s();
+})();
+/* sticky cta */
+(function(){
+  var st=document.querySelector('.sticky'), hc=document.querySelector('.hero .cta-row');
+  if(!st||!hc) return;
+  if(!('IntersectionObserver' in window)){ st.classList.add('show'); return; }
+  new IntersectionObserver(function(en){ en.forEach(function(e){ st.classList.toggle('show', !e.isIntersecting); }); },{threshold:0}).observe(hc);
+})();
+/* hero drift — plumeria + chicken, the logo's own motifs */
+(function(){
+  var host=document.getElementById('heroTreats'); if(!host) return;
+  var EMO=['🌺','🍗','✨','🌺','🔥'];
+  function spawn(){
+    var e=document.createElement('div'); e.className='hero-treat';
+    e.textContent=EMO[(Math.random()*EMO.length)|0];
+    e.style.left=(Math.random()<.5?(Math.random()*20):(80+Math.random()*18))+'%';
+    e.style.fontSize=(.9+Math.random()*1)+'rem';
+    e.style.setProperty('--spin',(Math.random()*120-60)+'deg');
+    e.style.animation='floatUp '+(6+Math.random()*3)+'s ease-in forwards';
+    host.appendChild(e);
+    setTimeout(function(){ if(e.parentNode) e.remove(); },9500);
+  }
+  for(var i=0;i<4;i++) setTimeout(spawn,i*700);
+  setInterval(spawn,1100);
+})();
+/* scroll reveal */
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); return; }
+  var io=new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+  els.forEach(function(e){ io.observe(e); });
+})();
+/* confetti in the brand gradient */
+var _cv=document.getElementById('confetti'), _cx=_cv?_cv.getContext('2d'):null;
+var _cW,_cH,_cD=Math.min(devicePixelRatio||1,2),_cP=[],_cR=null;
+function _cSize(){ _cW=innerWidth;_cH=innerHeight;_cv.width=_cW*_cD;_cv.height=_cH*_cD;_cv.style.width=_cW+'px';_cv.style.height=_cH+'px';_cx.setTransform(_cD,0,0,_cD,0,0); }
+var _cC=['#F7A81B','#F26522','#E01B12','#FFF3D6','#1B4FA8','#ffffff'];
+function _cL(){
+  _cx.clearRect(0,0,_cW,_cH);
+  _cP.forEach(function(p){ p.vy+=.28;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;
+    _cx.save();_cx.translate(p.x,p.y);_cx.rotate(p.rot);_cx.fillStyle=p.c;_cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);_cx.restore(); });
+  _cP=_cP.filter(function(p){ return p.y<_cH+60; });
+  if(_cP.length) _cR=requestAnimationFrame(_cL); else { _cv.style.display='none'; _cR=null; }
+}
+function confettiBurst(){
+  if(!_cx) return;
+  _cv.style.display='block'; _cSize();
+  for(var i=0;i<130;i++) _cP.push({x:_cW/2+(Math.random()*160-80),y:_cH*.36,vx:Math.random()*8-4,vy:Math.random()*-13-4,
+    w:5+Math.random()*6,h:8+Math.random()*8,rot:Math.random()*6,vr:Math.random()*.3-.15,c:_cC[(Math.random()*_cC.length)|0]});
+  if(!_cR) _cR=requestAnimationFrame(_cL);
+}
+function celebrate(){
+  var w=document.getElementById('checkWrap');
+  if(w){ w.classList.remove('go'); void w.offsetWidth; w.classList.add('go'); }
+  setTimeout(confettiBurst,260);
+}
+addEventListener('resize',function(){ if(_cR) _cSize(); });
+</script>
+</body>
+</html>
