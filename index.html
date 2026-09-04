@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Riah's Fav's">
 <title>Riah's Fav's — Korean Fried Chicken Catering</title>
 <meta name="description" content="Family-run Korean fried chicken catering serving Salt Lake County, Davis County and parts of Utah County. Two weeks' notice. Catch us at markets and pop-ups too.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +33,10 @@
   --grad:linear-gradient(180deg,var(--gold) 0%,var(--orange) 48%,var(--red) 100%);
   --grad-h:linear-gradient(100deg,var(--gold) 0%,var(--orange) 52%,var(--red) 100%);
   --shadow:0 14px 38px rgba(0,0,0,.5);--radius:18px;
+  /* LOAD-BEARING. iOS zooms the page when a form control under 16px is focused,
+     and in an installed PWA that zoom sticks with no address bar to undo it.
+     Enforced by tools/check-ios-zoom.mjs — do not lower this. */
+  --t-control:16px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
@@ -226,11 +232,13 @@ body.sheet-open .sheet{transform:none}
 .wstep.on{display:block}
 .wstep h2{font-size:1.4rem;line-height:1.2}
 .lbl{font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:22px;display:block}
-.field{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:.95rem;font-family:inherit;
+.field{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:var(--t-control);font-family:inherit;
   font-weight:700;background:var(--ink-2);color:var(--cream);margin-top:8px}
 .field:focus{outline:none;border-color:var(--gold)}
 .field::placeholder{color:#6A5C57}
 textarea.field{min-height:88px;resize:vertical;line-height:1.5}
+/* Floor for every form control, including any added later. See --t-control. */
+input,select,textarea{font-size:var(--t-control)}
 .date-opt{display:block;width:100%;text-align:left;background:var(--ink-2);border:1.5px solid var(--line);border-radius:14px;
   padding:14px;margin-top:9px;font-weight:800;font-size:.92rem;color:var(--cream)}
 .date-opt small{display:block;font-weight:700;font-size:.76rem;color:var(--muted);margin-top:2px}

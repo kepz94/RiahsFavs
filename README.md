@@ -130,3 +130,28 @@ function. Nothing to build, nothing to install.
 On Vercel: import `kepz94/RiahsFavs`, leave the root directory at the default,
 leave the framework preset as "Other", and deploy. `api/notify.js` is picked up
 automatically.
+
+---
+
+## Dev checks
+
+`tools/` holds checks that must be run, not trusted. It has its own
+`package.json` on purpose — the repo root stays zero-config static so Vercel
+never tries to build the site.
+
+```bash
+cd tools && npm install
+npm run check              # iOS sticky-zoom guard
+npm run check:self-test    # proves the check can actually fail
+```
+
+**The iOS sticky-zoom guard.** iOS zooms the page when a form control under
+16px is focused, and in an installed PWA there is no address bar, so the zoom
+sticks and the whole screen stays magnified. The guard asserts every
+input/select/textarea computes to at least 16px, and that no page suppresses
+the symptom with `maximum-scale` or `user-scalable=no` (which would disable
+pinch-zoom for everyone, including people who need it).
+
+The size lives in one token, `--t-control`, defined in both files. Don't lower
+it, and don't let a type-scale pass sweep it up with the other sizes — that is
+exactly how this bug comes back.

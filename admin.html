@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Riah's Fav's admin">
 <meta name="robots" content="noindex,nofollow">
 <title>Riah's Fav's — Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +20,10 @@
   --petal:#FFF3D6;--cream:#F6EFE4;--muted:#A3948C;--ok:#5FA86F;
   --grad:linear-gradient(100deg,var(--gold) 0%,var(--orange) 52%,var(--red) 100%);
   --shadow:0 10px 28px rgba(0,0,0,.45);--radius:16px;
+  /* LOAD-BEARING. iOS zooms the page when a form control under 16px is focused,
+     and in an installed PWA that zoom sticks with no address bar to undo it.
+     Enforced by tools/check-ios-zoom.mjs — do not lower this. */
+  --t-control:16px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Nunito Sans',sans-serif;background:var(--ink);color:var(--cream);line-height:1.5;padding-bottom:80px}
@@ -77,11 +83,13 @@ button{cursor:pointer;border:none;color:inherit}
 .a-warn{background:rgba(224,27,18,.18);color:#FF8A80}
 .a-ghost{background:transparent;border:1.5px solid var(--line);color:var(--muted)}
 
-.inp{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);font-size:.89rem;font-weight:700;
+.inp{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);font-size:var(--t-control);font-weight:700;
   background:var(--ink);color:var(--cream);margin-top:8px}
 .inp:focus{outline:none;border-color:var(--gold)}
 .inp::placeholder{color:#6A5C57}
 textarea.inp{min-height:76px;resize:vertical;line-height:1.5}
+/* Floor for every form control, including any added later. See --t-control. */
+input,select,textarea{font-size:var(--t-control)}
 label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);display:block;margin-top:14px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .hint{font-size:.74rem;color:var(--muted);font-weight:600;margin-top:6px;line-height:1.45}
@@ -218,7 +226,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 .dayrow{background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:11px;margin-top:9px;
   display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
 .dayrow-in{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;min-width:0}
-.dayrow .inp{margin-top:0;font-size:.82rem;padding:9px 10px}
+.dayrow .inp{margin-top:0;padding:9px 10px}
 .dayrow-x{background:none;color:#FF8A80;font-weight:800;font-size:1rem;padding:6px 4px}
 .evdays{margin-top:8px;display:flex;flex-direction:column;gap:1px}
 .evday{display:flex;justify-content:space-between;gap:10px;padding:5px 8px;border-radius:6px;

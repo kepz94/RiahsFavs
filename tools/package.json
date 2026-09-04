@@ -1,0 +1,11 @@
+{
+  "name": "riahsfavs-tools",
+  "private": true,
+  "type": "module",
+  "description": "Dev checks. Deliberately NOT at the repo root — the site is zero-config static on Vercel and must stay that way.",
+  "scripts": {
+    "check": "node check-ios-zoom.mjs",
+    "check:self-test": "node check-ios-zoom.mjs --self-test"
+  },
+  "devDependencies": { "playwright": "^1.49.0" }
+}
