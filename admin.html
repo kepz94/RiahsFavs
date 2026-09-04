@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#141010">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
-/* ================= Riah's Fav's Admin — Version 1.3 ================= */
+/* ================= Riah's Fav's Admin — Version 1.4 ================= */
 :root{
   --ink:#141010;--ink-2:#1F1917;--ink-3:#2A2220;--ink-4:#352B28;--line:rgba(255,243,214,.12);
   --gold:#F7A81B;--orange:#F26522;--red:#E01B12;--blue:#1B4FA8;--blue-lite:#3B79E0;
@@ -147,6 +147,11 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 .evrow-m{font-size:.75rem;color:var(--muted);font-weight:700;margin-top:3px}
 .evrow-host{font-size:.75rem;color:var(--petal);font-weight:700;margin-top:3px}
 .evrow img{width:100%;border-radius:10px;margin-top:9px;display:block}
+
+.paned{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:13px;margin-top:10px}
+.paned-h{font-size:.86rem;margin-bottom:4px}
+.paned-f{display:flex;align-items:center;gap:12px;margin-top:11px}
+.paned-f .xbtn{margin-left:auto;font-size:.76rem}
 
 .lrow{display:flex;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--line)}
 .lrow:last-child{border:none}
@@ -333,7 +338,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
       <div class="hqgrid" id="homeQuick"></div>
       <h3 class="title display" style="font-size:1.05rem;margin-top:26px">Next 14 days</h3>
       <div id="homeUpcoming"></div>
-      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.3</div>
+      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.4</div>
     </div>
 
     <!-- ============ REQUESTS ============ -->
@@ -398,22 +403,6 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
             <div class="setrow-eg" id="eg_horizon"></div>
           </div>
 
-          <div class="setrow">
-            <div class="setrow-head">
-              <div><div class="setrow-t">👥 Minimum guests</div><div class="setrow-d">Smallest party you'll cater. 0 = no minimum</div></div>
-              <div class="stepbtns"><button onclick="stAdj('minGuests',-5)">−</button><span class="n" id="st_minGuests">0</span><button onclick="stAdj('minGuests',5)">+</button></div>
-            </div>
-            <div class="setrow-eg" id="eg_min"></div>
-          </div>
-
-          <div class="setrow">
-            <div class="setrow-head">
-              <div><div class="setrow-t">👥 Maximum guests</div><div class="setrow-d">Above this it's flagged custom. 0 = no maximum</div></div>
-              <div class="stepbtns"><button onclick="stAdj('maxGuests',-25)">−</button><span class="n" id="st_maxGuests">0</span><button onclick="stAdj('maxGuests',25)">+</button></div>
-            </div>
-            <div class="setrow-eg" id="eg_max"></div>
-          </div>
-
           <button class="btn" onclick="saveSched()">Save booking rules</button>
           <div class="status" id="schedStatus"></div>
         </div>
@@ -473,22 +462,30 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
         </div>
       </details>
 
-      <details class="drop">
-        <summary><span class="di">📦</span><div>Packages<div class="dsub">Per-guest pricing tiers</div></div><span class="dmeta"><span class="dcount" id="pkgCount"></span><span class="chev">▸</span></span></summary>
+      <details class="drop" open>
+        <summary><span class="di">🍱</span><div>Pan sizes &amp; prices<div class="dsub">What a pan costs</div></div><span class="dmeta"><span class="dcount" id="panCount"></span><span class="chev">▸</span></span></summary>
         <div class="dbody">
-          <p class="sub">Optional. With no packages, the site tells customers you quote by head count and the request form skips pricing entirely — nothing fake is ever shown.</p>
-          <div id="pkgEdit"></div>
-          <button class="btn secondary" onclick="openPkg(null)">+ Add a package</button>
-          <div class="status" id="pkgStatus"></div>
+          <p class="sub">Catering is priced by the pan, not per guest. These prices apply to the chicken; each side carries its own prices below.</p>
+          <div id="panEdit"></div>
+          <label class="fl">Add a pan size</label>
+          <input class="inp" id="newPanLabel" placeholder="Name (e.g. Quarter pan)">
+          <div class="row2">
+            <input class="inp" id="newPanPrice" inputmode="decimal" placeholder="Price">
+            <input class="inp" id="newPanServes" placeholder="Feeds about…">
+          </div>
+          <button class="btn secondary" onclick="addPan()">+ Add pan size</button>
+          <button class="btn" onclick="saveList('pans','panStatus')">Save pan prices</button>
+          <div class="status" id="panStatus"></div>
         </div>
       </details>
 
       <details class="drop">
         <summary><span class="di">🍚</span><div>Sides<div class="dsub">What comes alongside</div></div><span class="dmeta"><span class="dcount" id="sideCount"></span><span class="chev">▸</span></span></summary>
         <div class="dbody">
-          <p class="sub">Leave empty and the whole sides section stays hidden on the site.</p>
+          <p class="sub">Each side is priced by the pan too. Leave a price blank and that pan size simply isn't offered for that side. Leave the whole list empty and the sides section stays hidden on the site.</p>
           <div id="sideEdit"></div>
-          <input class="inp" id="newSide" placeholder="New side name">
+          <label class="fl">Add a side</label>
+          <input class="inp" id="newSide" placeholder="Name (e.g. Steamed Rice)">
           <button class="btn secondary" onclick="addSide()">+ Add side</button>
           <button class="btn" onclick="saveList('sides','sideStatus')">Save sides</button>
           <div class="status" id="sideStatus"></div>
@@ -501,10 +498,8 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
           <div id="addonEdit"></div>
           <label class="fl">New add-on</label>
           <input class="inp" id="newAddon" placeholder="Name">
-          <div class="row2">
-            <input class="inp" id="newAddonPrice" inputmode="decimal" placeholder="Price">
-            <select class="inp" id="newAddonUnit"><option value="flat">flat fee</option><option value="perPerson">per guest</option></select>
-          </div>
+          <input class="inp" id="newAddonPrice" inputmode="decimal" placeholder="Price">
+          <div class="hint">Flat price. Per-guest pricing was removed along with the guest count.</div>
           <button class="btn secondary" onclick="addAddon()">+ Add add-on</button>
           <button class="btn" onclick="saveList('addons','addonStatus')">Save add-ons</button>
           <div class="status" id="addonStatus"></div>
@@ -611,7 +606,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
         <div class="status" id="causeStatus"></div>
       </div>
 
-      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.3</div>
+      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.4</div>
     </div>
 
   </div>
@@ -735,30 +730,6 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
   </div>
 </div>
 
-<!-- ============ PACKAGE EDITOR ============ -->
-<div class="sheet-veil" id="pkgVeil" onclick="closePkg()"></div>
-<div class="esheet" id="pkgSheet">
-  <div class="esheet-top">
-    <button class="a-ghost" style="padding:8px 12px;border-radius:10px;font-weight:800;font-size:.78rem" onclick="closePkg()">‹ Cancel</button>
-    <b id="pkgSheetTitle">New package</b>
-  </div>
-  <div class="esheet-body">
-    <label class="fl">Package name</label>
-    <input class="inp" id="pkName" placeholder="e.g. The Classic">
-    <label class="fl">Price per guest ($)</label>
-    <input class="inp" id="pkPrice" inputmode="decimal" placeholder="16">
-    <label class="fl">Minimum guests (0 for none)</label>
-    <input class="inp" id="pkMin" inputmode="numeric" placeholder="0">
-    <label class="fl">Short description</label>
-    <textarea class="inp" id="pkDesc"></textarea>
-    <label class="fl">What's included (one per line)</label>
-    <textarea class="inp" id="pkInc" style="min-height:120px"></textarea>
-    <button class="btn" onclick="savePkg()">Save package</button>
-    <button class="btn ghost" id="pkDeleteBtn" onclick="deletePkg()">🗑 Delete this package</button>
-    <div class="status" id="pkgSheetStatus"></div>
-  </div>
-</div>
-
 <!-- ============ QUOTE SHEET ============ -->
 <div class="sheet-veil" id="qVeil" onclick="closeQuote()"></div>
 <div class="esheet" id="qSheet">
@@ -770,8 +741,8 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 </div>
 
 <script>
-/* ================= Riah's Fav's Admin — Version 1.3 ================= */
-var RF_VERSION = '1.3';
+/* ================= Riah's Fav's Admin — Version 1.4 ================= */
+var RF_VERSION = '1.4';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -795,7 +766,7 @@ var sched=null, policy={depositPercent:50,payInFullUnder:0}, business={}, cause=
 var hero={ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0} };
 var heroDraft=null;   // edits live here until Save; Cancel drops it
 var evDayRows=[];     // [{dateISO,startTime,endTime}] for the open event
-var menu={ styles:[], packages:[], sides:[], addons:[] };
+var menu={ styles:[], pans:[], sides:[], addons:[] };
 var filter='pending';
 
 /* Starting structure for a brand-new database.
@@ -803,14 +774,19 @@ var filter='pending';
    deliberately empty — no prices are invented anywhere. */
 var STARTER = {
   schedule: { weeklyCapacity:3, leadTimeDays:14, shortNoticeDays:21, horizonWeeks:12,
-    minGuests:0, maxGuests:0, blockedDates:[],
+    blockedDates:[],
     timeWindows:['11am – 1pm','1pm – 3pm','4pm – 6pm','6pm – 8pm','Late night'] },
   policy: { depositPercent:50, payInFullUnder:0 },
   styles: [
     { id:'sauced', label:'Original Korean Style', kicker:'Sauced',   desc:'Our original, tossed in sauce and served hot.', active:true },
     { id:'plain',  label:'Original',              kicker:'No sauce', desc:'Same chicken, no sauce. Crispy straight through.', active:true }
   ],
-  packages: [], sides: [], addons: [],
+  /* Catering is priced BY THE PAN. These two are real prices, given by the owner. */
+  pans: [
+    { id:'half', label:'Half pan', price:85,  serves:'Feeds 8–10 as the main, 12–15 alongside sides',  active:true },
+    { id:'full', label:'Full pan', price:140, serves:'Feeds 15–20 as the main, 25–30 alongside sides', active:true }
+  ],
+  sides: [], addons: [],
   business: {
     tagline:'Fried fresh for your party, office lunch, wedding or fundraiser.',
     serviceArea:'Salt Lake County, Davis County, and parts of Utah County.',
@@ -875,7 +851,7 @@ async function startAdmin(user){
   var p=await Promise.all([
     getDoc('settings','schedule'), getDoc('settings','policy'), getDoc('settings','business'), getDoc('settings','cause'),
     getDoc('settings','hero'),
-    getDoc('menu','styles'), getDoc('menu','packages'), getDoc('menu','sides'), getDoc('menu','addons')
+    getDoc('menu','styles'), getDoc('menu','pans'), getDoc('menu','sides'), getDoc('menu','addons')
   ]);
   sched   = Object.assign({}, STARTER.schedule, p[0]||{});
   policy  = Object.assign({}, STARTER.policy,  p[1]||{});
@@ -883,7 +859,7 @@ async function startAdmin(user){
   cause   = Object.assign({}, STARTER.cause,   p[3]||{});
   hero          = Object.assign({ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0} }, p[4]||{});
   menu.styles   = (p[5]&&p[5].list) || STARTER.styles.slice();
-  menu.packages = (p[6]&&p[6].list) || [];
+  menu.pans     = (p[6]&&p[6].list && p[6].list.length) ? p[6].list : STARTER.pans.slice();
   menu.sides    = (p[7]&&p[7].list) || [];
   menu.addons   = (p[8]&&p[8].list) || [];
 
@@ -951,8 +927,8 @@ function renderHome(){
     'Follow up if it’s been a couple of days.','See quoted',function(){ filter='quoted'; renderFilters(); renderList(); navTo('inbox'); }));
   if(todayJobs.length) att.appendChild(attCard('🍗',todayJobs.length+' job'+(todayJobs.length===1?'':'s')+' today',
     todayJobs.map(function(r){return r.name+' · '+(r.window||'');}).join(' · '),'Open',function(){ navTo('inbox'); }));
-  if(!menu.packages.length) att.appendChild(attCard('💲','No packages or prices set',
-    'The site is quoting by head count instead. Add packages any time.','Open menu',function(){ navTo('menu'); }));
+  if(!menu.pans.length) att.appendChild(attCard('💲','No pan prices set',
+    'The site says pricing is on request. Add pan sizes and prices.','Open menu',function(){ navTo('menu'); }));
   if(!upcomingEvents().length) att.appendChild(attCard('📣','No pop-ups posted',
     'The site shows an empty state. Add your next market or truck stop.','Add an event',function(){ navTo('events'); openEvent(null); }));
   else if(nextEv) att.appendChild(attCard('📣','Next pop-up: '+(nextEv.title||''),
@@ -974,7 +950,7 @@ function renderHome(){
   up.forEach(function(r){
     var d=document.createElement('div'); d.className='att';
     d.innerHTML='<div class="ai">'+statusDot(r.status)+'</div><div style="flex:1"><div class="att-t">'+esc(r.name)+' · '+esc(r.dayLabel||'')+'</div>'+
-      '<div class="att-d">'+(r.guests||'?')+' guests · '+esc((r.styles||[]).join(' + ')||'')+' · '+esc(r.window||'')+'</div></div>';
+      '<div class="att-d">'+esc(reqPans(r))+' · '+esc(r.window||'')+'</div></div>';
     d.onclick=function(){ filter='all'; renderFilters(); renderList(); navTo('inbox'); };
     el.appendChild(d);
   });
@@ -1014,8 +990,8 @@ function reqCard(r){
   var head=document.createElement('div'); head.className='req-h';
   head.innerHTML='<div class="req-top"><div style="min-width:0">'+
     '<div class="req-n">'+esc(r.name||'—')+(r.shortNotice?'<span class="rush">⏱ RUSH</span>':'')+'</div>'+
-    '<div class="req-m">'+esc(r.dayLabel||'')+' · '+esc(r.window||'')+' · '+(r.guests||'?')+' guests</div>'+
-    '<div class="req-m">'+esc((r.styles||[]).join(' + ')||'—')+' · '+esc(r.serviceLabel||'')+'</div>'+
+    '<div class="req-m">'+esc(r.dayLabel||'')+' · '+esc(r.window||'')+'</div>'+
+    '<div class="req-m">'+esc(reqPans(r))+' · '+esc(r.serviceLabel||'')+'</div>'+
     '</div><span class="pill p-'+esc(r.status||'pending')+'">'+esc(r.status||'pending')+'</span></div>';
   head.onclick=function(){ c.classList.toggle('open'); };
   c.appendChild(head);
@@ -1025,12 +1001,8 @@ function reqCard(r){
     det('Phone',r.phone||'—')+
     (r.email?det('Email',r.email):'')+
     det('Occasion',r.occasion||'—')+
-    det('Guests',String(r.guests||'—'))+
-    det('Chicken',(r.styles||[]).join(' + ')||'—')+
-    (r.packageLabel?det('Package',r.packageLabel+(r.perPerson?' · '+money(r.perPerson)+'/guest':'')):'')+
+    orderLinesHtml(r)+
     det('Service',r.serviceLabel||'—')+
-    ((r.sides||[]).length?det('Sides',r.sides.join(', ')):'')+
-    ((r.addons||[]).length?det('Add-ons',r.addons.map(function(a){return a.label;}).join(', ')):'')+
     det('Where',[r.venue,r.address].filter(Boolean).join(' · ')||'—')+
     (r.notes?det('Notes',r.notes):'')+
     det('Their estimate', r.estimate?money(r.estimate):'none — quote by head count')+
@@ -1059,6 +1031,31 @@ function reqCard(r){
   return c;
 }
 function det(k,v){ return '<div class="detail"><span>'+esc(k)+'</span><span>'+esc(v)+'</span></div>'; }
+
+/* Requests placed before pan pricing carry guests/styles/packageLabel rather
+   than lines[]. Render whichever shape the record actually has, so old
+   requests stay readable instead of showing blanks. */
+function reqPans(r){
+  if(r.panSummary) return r.panSummary;
+  if(Array.isArray(r.lines) && r.lines.length){
+    return r.lines.filter(function(l){ return l.kind!=='addon'; })
+                  .map(function(l){ return l.qty+'× '+l.pan+' '+l.label; }).join(', ');
+  }
+  return [(r.styles||[]).join(' + '), r.packageLabel, r.guests?r.guests+' guests':null]
+         .filter(Boolean).join(' · ') || '—';
+}
+function orderLinesHtml(r){
+  if(Array.isArray(r.lines) && r.lines.length){
+    return r.lines.map(function(l){
+      return det(l.qty+'× '+(l.pan?l.pan+' ':'')+l.label, money(l.total));
+    }).join('');
+  }
+  return (r.guests?det('Guests',String(r.guests)):'')+
+    ((r.styles||[]).length?det('Chicken',r.styles.join(' + ')):'')+
+    (r.packageLabel?det('Package',r.packageLabel):'')+
+    ((r.sides||[]).length?det('Sides',r.sides.join(', ')):'')+
+    ((r.addons||[]).length?det('Add-ons',r.addons.map(function(a){return a.label;}).join(', ')):'');
+}
 function btn(cls,label,fn){ var b=document.createElement('button'); b.className=cls; b.textContent=label; b.onclick=fn; return b; }
 function link(cls,label,href){ var a=document.createElement('a'); a.className=cls; a.textContent=label; a.href=href; return a; }
 function phoneLink(p){ var d=String(p||'').replace(/\D/g,''); return d.length===10?'+1'+d:'+'+d; }
@@ -1071,7 +1068,7 @@ function depositFor(total){
 function quoteMsg(r){
   var total=(r.quote||0)+(r.travelFee||0), dep=depositFor(total);
   return "Hi "+firstName(r)+"! Riah's Fav's here 🍗 Your "+(r.dayLabel||'')+" catering comes to "+money(total)+
-    " for "+(r.guests||'')+" guests"+(r.travelFee?" (travel included)":"")+". "+
+    " for "+reqPans(r)+(r.travelFee?" (travel included)":"")+". "+
     (dep>=total ? "Paid in full to lock the date: "+money(dep)+"." : "A "+money(dep)+" deposit locks your date, balance due the day of.")+
     " Let me know and I'll send payment info!";
 }
@@ -1085,8 +1082,8 @@ function openQuote(r){
   quoteFor=r;
   var suggested=r.estimate || 0;
   $('qBody').innerHTML=
-    '<div class="card"><div class="sub">'+esc(r.name)+' · '+esc(r.dayLabel||'')+' · '+(r.guests||'?')+' guests</div>'+
-    '<div class="detail"><span>Chicken</span><span>'+esc((r.styles||[]).join(' + ')||'—')+'</span></div>'+
+    '<div class="card"><div class="sub">'+esc(r.name)+' · '+esc(r.dayLabel||'')+'</div>'+
+    '<div class="detail"><span>Order</span><span>'+esc(reqPans(r))+'</span></div>'+
     '<div class="detail"><span>Their estimate</span><span>'+(r.estimate?money(r.estimate):'none — you quote it')+'</span></div></div>'+
     '<label class="fl">Food + service total ($)</label><input class="inp" id="qAmt" inputmode="decimal" value="'+(r.quote||(suggested?Math.round(suggested):''))+'" placeholder="0">'+
     '<label class="fl">Travel / setup fee ($)</label><input class="inp" id="qFee" inputmode="decimal" value="'+(r.travelFee||'')+'" placeholder="0">'+
@@ -1496,7 +1493,7 @@ async function saveHero(){
 /* ================= SCHEDULE ================= */
 function renderSched(){
   if(!sched) return;
-  ['weeklyCapacity','leadTimeDays','shortNoticeDays','horizonWeeks','minGuests','maxGuests'].forEach(function(k){
+  ['weeklyCapacity','leadTimeDays','shortNoticeDays','horizonWeeks'].forEach(function(k){
     var el=$('st_'+k); if(el) el.textContent=sched[k];
   });
   var cap=sched.weeklyCapacity||0;
@@ -1506,8 +1503,6 @@ function renderSched(){
   setEg('eg_short','Right now: anything between '+lead+' and '+(sched.shortNoticeDays||0)+' days out gets an ⏱ RUSH flag in your inbox.');
   var hz=sched.horizonWeeks||0;
   setEg('eg_horizon','Right now: customers can book up to '+hz+' week'+(hz===1?'':'s')+' ahead — about '+(Math.round(hz*7/30*10)/10)+' months.');
-  setEg('eg_min', sched.minGuests ? 'Right now: parties under '+sched.minGuests+' guests are told to text you instead.' : 'Right now: no minimum — any party size can book.');
-  setEg('eg_max', sched.maxGuests ? 'Right now: parties over '+sched.maxGuests+' guests get flagged as a custom job.' : 'Right now: no maximum — any party size can book.');
 
   var bl=$('blkList'); bl.innerHTML='';
   var bd=(sched.blockedDates||[]).slice().sort();
@@ -1588,7 +1583,7 @@ function renderCalendar(){
         var jobs=REQS.filter(function(r){ return r.dayISO===dISO && ['pending','quoted','confirmed','completed'].indexOf(r.status)>=0; });
         var row=document.createElement('div'); row.className='calday'+(blocked?' blocked':'');
         var bodyHtml=jobs.length
-          ? jobs.map(function(r){ return '<div class="calcake"><i style="background:'+colorFor(r.status)+'"></i>'+esc(r.name)+' · '+(r.guests||'?')+'g · '+esc(r.window||'')+'</div>'; }).join('')
+          ? jobs.map(function(r){ return '<div class="calcake"><i style="background:'+colorFor(r.status)+'"></i>'+esc(r.name)+' · '+esc(r.window||'')+'</div>'; }).join('')
           : '<div class="calday-empty">'+(blocked?'blocked':'—')+'</div>';
         row.innerHTML='<div class="calday-d">'+d.toLocaleDateString('en-US',{weekday:'short',day:'numeric'})+'</div>'+
           '<div class="calday-b">'+bodyHtml+'<button class="calblk">'+(blocked?'unblock this day':'block this day')+'</button></div>';
@@ -1608,9 +1603,7 @@ function colorFor(s){ return s==='pending'?'#E01B12':s==='quoted'?'#3B79E0':s===
 
 /* ================= MENU EDITORS ================= */
 function renderMenuEditors(){
-  renderStyleEdit(); renderPkgEdit();
-  renderSimpleList('sides','sideEdit','sideCount');
-  renderAddonEdit();
+  renderStyleEdit(); renderPanEdit(); renderSideEdit(); renderAddonEdit();
 }
 function renderStyleEdit(){
   var el=$('styleEdit'); el.innerHTML='';
@@ -1631,33 +1624,77 @@ function addStyle(){
   $('newStyleLabel').value=''; $('newStyleKicker').value=''; $('newStyleDesc').value='';
   renderStyleEdit();
 }
-function renderPkgEdit(){
-  var el=$('pkgEdit'); el.innerHTML='';
-  $('pkgCount').textContent=menu.packages.length?menu.packages.length+' packages':'none — quoting by head count';
-  if(!menu.packages.length){ el.innerHTML='<div class="sub">No packages. The site tells customers you quote by head count.</div>'; return; }
-  menu.packages.forEach(function(p){
-    var r=document.createElement('div'); r.className='lrow';
-    r.innerHTML='<div class="ln">'+esc(p.label)+'<div class="lm">'+money(p.perPerson)+'/guest'+(p.minGuests?' · min '+p.minGuests:'')+'</div></div>';
+function renderPanEdit(){
+  var el=$('panEdit'); el.innerHTML='';
+  $('panCount').textContent=menu.pans.length+' sizes';
+  menu.pans.forEach(function(p,i){
+    var row=document.createElement('div'); row.className='paned';
+    row.innerHTML='<div class="paned-h"><b>'+esc(p.label)+'</b></div>';
+    var lab=document.createElement('input'); lab.className='inp'; lab.value=p.label||''; lab.placeholder='Name';
+    var pr=document.createElement('input'); pr.className='inp'; pr.inputMode='decimal'; pr.value=p.price||''; pr.placeholder='Price';
+    var sv=document.createElement('input'); sv.className='inp'; sv.value=p.serves||''; sv.placeholder='Feeds about…';
+    lab.oninput=function(){ p.label=lab.value; };
+    pr.oninput =function(){ p.price=parseFloat(pr.value)||0; };
+    sv.oninput =function(){ p.serves=sv.value; };
+    var grid=document.createElement('div'); grid.className='row2'; grid.appendChild(pr); grid.appendChild(sv);
+    row.appendChild(lab); row.appendChild(grid);
+    var foot=document.createElement('div'); foot.className='paned-f';
     var t=document.createElement('div'); t.className='tgl'+(p.active!==false?' on':''); t.innerHTML='<i></i>';
-    t.onclick=function(ev){ ev.stopPropagation(); p.active=(p.active===false); renderPkgEdit(); saveList('packages','pkgStatus'); };
-    var e=document.createElement('button'); e.className='xbtn'; e.textContent='✎';
-    e.onclick=function(ev){ ev.stopPropagation(); openPkg(p); };
-    r.appendChild(t); r.appendChild(e); el.appendChild(r);
+    t.onclick=function(){ p.active=(p.active===false); renderPanEdit(); };
+    var x=document.createElement('button'); x.className='xbtn'; x.textContent='✕ remove';
+    x.onclick=function(){ if(confirm('Remove "'+p.label+'"? Orders already placed keep their record.')){ menu.pans.splice(i,1); renderPanEdit(); } };
+    foot.appendChild(t); foot.appendChild(x);
+    row.appendChild(foot);
+    el.appendChild(row);
+  });
+  if(!menu.pans.length) el.innerHTML='<div class="sub">No pan sizes. The site will say pricing is on request.</div>';
+}
+function addPan(){
+  var v=$('newPanLabel').value.trim(); if(!v) return;
+  var p=parseFloat($('newPanPrice').value);
+  if(isNaN(p)){ err('panStatus','add a price'); return; }
+  menu.pans.push({ id:slug(v), label:v, price:p, serves:$('newPanServes').value.trim()||'', active:true });
+  $('newPanLabel').value=''; $('newPanPrice').value=''; $('newPanServes').value='';
+  renderPanEdit();
+}
+
+/* Each side carries a price PER PAN SIZE. A blank price means that size
+   simply isn't offered for that side, and the site hides it. */
+function renderSideEdit(){
+  var el=$('sideEdit'); el.innerHTML='';
+  $('sideCount').textContent=menu.sides.length?menu.sides.length+' sides':'none';
+  if(!menu.sides.length){ el.innerHTML='<div class="sub">Empty — the sides section is hidden on the site.</div>'; return; }
+  menu.sides.forEach(function(sd,i){
+    if(!sd.prices) sd.prices={};
+    var row=document.createElement('div'); row.className='paned';
+    row.innerHTML='<div class="paned-h"><b>'+esc(sd.label)+'</b></div>';
+    var grid=document.createElement('div'); grid.className='row2';
+    menu.pans.forEach(function(p){
+      var wrap=document.createElement('div');
+      wrap.innerHTML='<label class="fl" style="margin-top:0">'+esc(p.label)+' price</label>';
+      var inp=document.createElement('input'); inp.className='inp'; inp.inputMode='decimal';
+      inp.value=sd.prices[p.id]||''; inp.placeholder='—';
+      inp.oninput=function(){
+        var v=parseFloat(inp.value);
+        if(isNaN(v)||v<=0) delete sd.prices[p.id]; else sd.prices[p.id]=v;
+      };
+      wrap.appendChild(inp); grid.appendChild(wrap);
+    });
+    row.appendChild(grid);
+    var foot=document.createElement('div'); foot.className='paned-f';
+    var t=document.createElement('div'); t.className='tgl'+(sd.active!==false?' on':''); t.innerHTML='<i></i>';
+    t.onclick=function(){ sd.active=(sd.active===false); renderSideEdit(); };
+    var x=document.createElement('button'); x.className='xbtn'; x.textContent='✕ remove';
+    x.onclick=function(){ if(confirm('Remove "'+sd.label+'"?')){ menu.sides.splice(i,1); renderSideEdit(); } };
+    foot.appendChild(t); foot.appendChild(x);
+    row.appendChild(foot);
+    el.appendChild(row);
   });
 }
-function renderSimpleList(key,elId,countId){
-  var el=$(elId); el.innerHTML='';
-  $(countId).textContent=menu[key].length?menu[key].length+' items':'none';
-  if(!menu[key].length){ el.innerHTML='<div class="sub">Empty — this section is hidden on the site.</div>'; return; }
-  menu[key].forEach(function(x,i){
-    var r=document.createElement('div'); r.className='lrow';
-    r.innerHTML='<div class="ln">'+esc(x.label)+'</div>';
-    var t=document.createElement('div'); t.className='tgl'+(x.active!==false?' on':''); t.innerHTML='<i></i>';
-    t.onclick=function(){ x.active=(x.active===false); renderSimpleList(key,elId,countId); };
-    var b=document.createElement('button'); b.className='xbtn'; b.textContent='✕';
-    b.onclick=function(){ if(confirm('Remove "'+x.label+'"?')){ menu[key].splice(i,1); renderSimpleList(key,elId,countId); } };
-    r.appendChild(t); r.appendChild(b); el.appendChild(r);
-  });
+function addSide(){
+  var v=$('newSide').value.trim(); if(!v) return;
+  menu.sides.push({ id:slug(v), label:v, prices:{}, active:true });
+  $('newSide').value=''; renderSideEdit();
 }
 function renderAddonEdit(){
   var el=$('addonEdit'); el.innerHTML='';
@@ -1665,7 +1702,7 @@ function renderAddonEdit(){
   if(!menu.addons.length){ el.innerHTML='<div class="sub">Empty — this section is hidden on the site.</div>'; return; }
   menu.addons.forEach(function(a,i){
     var r=document.createElement('div'); r.className='lrow';
-    r.innerHTML='<div class="ln">'+esc(a.label)+'<div class="lm">'+money(a.price)+(a.unit==='perPerson'?' per guest':' flat')+'</div></div>';
+    r.innerHTML='<div class="ln">'+esc(a.label)+'<div class="lm">'+money(a.price)+' flat</div></div>';
     var t=document.createElement('div'); t.className='tgl'+(a.active!==false?' on':''); t.innerHTML='<i></i>';
     t.onclick=function(){ a.active=(a.active===false); renderAddonEdit(); };
     var b=document.createElement('button'); b.className='xbtn'; b.textContent='✕';
@@ -1673,16 +1710,11 @@ function renderAddonEdit(){
     r.appendChild(t); r.appendChild(b); el.appendChild(r);
   });
 }
-function addSide(){
-  var v=$('newSide').value.trim(); if(!v) return;
-  menu.sides.push({id:slug(v),label:v,active:true});
-  $('newSide').value=''; renderSimpleList('sides','sideEdit','sideCount');
-}
 function addAddon(){
   var v=$('newAddon').value.trim(); if(!v) return;
   var p=parseFloat($('newAddonPrice').value);
   if(isNaN(p)){ err('addonStatus','add a price'); return; }
-  menu.addons.push({id:slug(v),label:v,price:p,unit:$('newAddonUnit').value,active:true});
+  menu.addons.push({id:slug(v),label:v,price:p,active:true});
   $('newAddon').value=''; $('newAddonPrice').value=''; renderAddonEdit();
 }
 async function saveList(key,statusId){
@@ -1690,50 +1722,6 @@ async function saveList(key,statusId){
     await FS.setDoc(FS.doc(db,'menu',key),{list:menu[key],updatedAt:FS.serverTimestamp()});
     ok(statusId,'Saved ✓ — live on the site now');
   }catch(e){ err(statusId,e); }
-}
-
-var pkgEditing=null;
-function openPkg(p){
-  pkgEditing=p||null;
-  $('pkgSheetTitle').textContent=p?'Edit package':'New package';
-  $('pkName').value  = p?(p.label||''):'';
-  $('pkPrice').value = p?(p.perPerson||''):'';
-  $('pkMin').value   = p?(p.minGuests||''):'';
-  $('pkDesc').value  = p?(p.desc||''):'';
-  $('pkInc').value   = p?(p.includes||[]).join('\n'):'';
-  $('pkDeleteBtn').style.display=p?'block':'none';
-  $('pkgSheetStatus').textContent='';
-  $('pkgVeil').classList.add('show'); $('pkgSheet').classList.add('show');
-}
-function closePkg(){ pkgEditing=null; $('pkgVeil').classList.remove('show'); $('pkgSheet').classList.remove('show'); }
-async function savePkg(){
-  var label=$('pkName').value.trim(), price=parseFloat($('pkPrice').value);
-  if(!label){ err('pkgSheetStatus','give it a name'); return; }
-  if(isNaN(price)||price<=0){ err('pkgSheetStatus','add a per-guest price'); return; }
-  var rec={
-    id: pkgEditing?pkgEditing.id:slug(label), label:label, perPerson:price,
-    minGuests: parseInt($('pkMin').value,10)||0,
-    desc: $('pkDesc').value.trim(),
-    includes: $('pkInc').value.split('\n').map(function(s){return s.trim();}).filter(Boolean),
-    active: pkgEditing?(pkgEditing.active!==false):true
-  };
-  if(pkgEditing){
-    var i=menu.packages.findIndex(function(x){ return x.id===pkgEditing.id; });
-    if(i>=0) menu.packages[i]=rec;
-  } else menu.packages.push(rec);
-  try{
-    await FS.setDoc(FS.doc(db,'menu','packages'),{list:menu.packages,updatedAt:FS.serverTimestamp()});
-    renderPkgEdit(); renderHome(); ok('pkgSheetStatus','Saved ✓'); setTimeout(closePkg,700);
-  }catch(e){ err('pkgSheetStatus',e); }
-}
-async function deletePkg(){
-  if(!pkgEditing) return;
-  if(!confirm('Delete "'+pkgEditing.label+'"? Past requests keep their record.')) return;
-  menu.packages=menu.packages.filter(function(x){ return x.id!==pkgEditing.id; });
-  try{
-    await FS.setDoc(FS.doc(db,'menu','packages'),{list:menu.packages,updatedAt:FS.serverTimestamp()});
-    renderPkgEdit(); renderHome(); closePkg();
-  }catch(e){ err('pkgSheetStatus',e); }
 }
 
 /* ================= IMAGES =================
@@ -1869,14 +1857,17 @@ async function saveCause(){
 function renderStats(){
   var done=REQS.filter(function(r){return r.status==='completed';});
   var revenue=done.reduce(function(s,r){ return s+(r.quote||0)+(r.travelFee||0); },0);
-  var guests=done.reduce(function(s,r){ return s+(r.guests||0); },0);
+  var pansServed=done.reduce(function(s,r){
+    return s + (Array.isArray(r.lines)?r.lines.filter(function(l){return l.kind!=='addon';})
+                                             .reduce(function(n,l){return n+l.qty;},0):0);
+  },0);
   var avg=done.length?revenue/done.length:0;
   $('statTiles').innerHTML=
     hq(String(REQS.length),'Requests')+hq(String(done.length),'Completed')+
     hq(money(revenue),'Revenue')+hq(money(Math.round(avg)),'Avg job')+
-    hq(String(guests),'Guests fed')+hq(String(REQS.filter(function(r){return r.status==='confirmed';}).length),'On the books')+
+    hq(String(pansServed),'Pans served')+hq(String(REQS.filter(function(r){return r.status==='confirmed';}).length),'On the books')+
     hq(String(EVENTS.length),'Events posted')+hq(String(REQS.filter(function(r){return r.shortNotice;}).length),'Rush jobs');
-  bars('statStyle',tally(REQS,function(r){ return r.styles; }));
+  bars('statStyle',tally(REQS,function(r){ return (r.lines||[]).filter(function(l){return l.kind==='chicken';}).map(function(l){return l.label;}); }));
   bars('statOcc',  tally(REQS,function(r){ return r.occasion; }));
 }
 function tally(list,pick){
@@ -1898,8 +1889,8 @@ function bars(id,rows){
 }
 function csvCell(v){ v=String(v==null?'':v); return '"'+v.replace(/"/g,'""')+'"'; }
 function exportCSV(){
-  var cols=['dayISO','dayLabel','window','status','name','phone','email','guests','occasion','styles','packageLabel','perPerson',
-    'serviceLabel','sides','addons','estimate','quote','travelFee','depositPaid','paymentMethod','venue','address','notes','shortNotice'];
+  var cols=['dayISO','dayLabel','window','status','name','phone','email','occasion','panSummary',
+    'serviceLabel','estimate','quote','travelFee','depositPaid','paymentMethod','venue','address','notes','shortNotice'];
   var lines=[cols.map(csvCell).join(',')];
   REQS.forEach(function(r){
     lines.push(cols.map(function(c){
@@ -1923,10 +1914,12 @@ async function seedAll(){
     await FS.setDoc(FS.doc(db,'settings','policy'),  Object.assign({},STARTER.policy,  {updatedAt:FS.serverTimestamp()}));
     await FS.setDoc(FS.doc(db,'settings','business'),Object.assign({},STARTER.business,{updatedAt:FS.serverTimestamp()}),{merge:true});
     await FS.setDoc(FS.doc(db,'menu','styles'),{list:STARTER.styles,updatedAt:FS.serverTimestamp()});
+    await FS.setDoc(FS.doc(db,'menu','pans'),  {list:STARTER.pans,  updatedAt:FS.serverTimestamp()});
     sched=Object.assign({},STARTER.schedule);
     policy=Object.assign({},STARTER.policy);
     business=Object.assign({},STARTER.business,business);
     menu.styles=STARTER.styles.slice();
+    menu.pans=STARTER.pans.slice();
     renderSched(); renderTw(); renderMenuEditors(); renderSettings(); renderCalendar();
     ok('seedStatus','Done ✓ — booking rules and chicken styles are live. Packages stay empty until you add them.');
   }catch(e){ err('seedStatus',e); }

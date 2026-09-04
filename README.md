@@ -58,18 +58,31 @@ the two chicken styles.
 
 ---
 
-## What's deliberately empty
+## Pricing is by the pan
 
-**No prices are invented anywhere in this codebase.** Packages, sides and
-add-ons all ship empty. With no packages set, the site tells customers that
-pricing is by head count and the request form skips pricing entirely — so
-nothing fake ever reaches a customer. Add real packages in the admin
-(Menu → Packages) whenever you're ready, and the pricing UI appears on its own.
+Catering is priced **per pan**, not per guest. There is no guest count
+anywhere in the request flow.
 
-The chicken styles *are* real and seeded: **Original Korean Style (sauced)**
-and **Original (no sauce)**.
+- `menu/pans` holds the pan sizes and the **chicken** price for each
+  (half pan $85, full pan $140 as set by the owner).
+- The customer picks a quantity for every style x pan-size combination, so
+  "1 full pan sauced + 1 half pan original" is one order with two lines.
+- `menu/sides` — each side carries its **own** price per pan size. Leave a
+  price blank and that size simply isn't offered for that side.
+- `menu/addons` — flat-price extras. Per-guest add-ons were removed along
+  with the guest count; there is nothing to multiply by.
 
----
+Every priced thing becomes a line in `lines[]` on the request, and the
+running total, the confirmation summary, the alert email and the admin card
+all read from that one list — so the number the customer saw and the number
+you quote from cannot disagree.
+
+Requests placed before this change still carry `guests` / `styles` /
+`packageLabel`. The admin detects which shape a record has and renders it
+accordingly, so old requests stay readable.
+
+Sides and add-ons still ship empty. With no sides set, that section hides
+itself on the site and in the request form.
 
 ## The two-week minimum
 

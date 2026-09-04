@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Riah's Fav's — public site — Version 1.3
+   Riah's Fav's — public site — Version 1.4
    Palette pulled straight off the logo:
      gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
      ribbon blue #1B4FA8 · plumeria cream #FFF3D6
@@ -261,6 +261,25 @@ input,select,textarea{font-size:var(--t-control)}
 .stylecard{display:block;width:100%;text-align:left;background:var(--ink-2);border:1.5px solid var(--line);border-radius:16px;padding:15px;margin-top:10px;color:var(--cream)}
 .stylecard.sel{border-color:var(--gold);background:rgba(247,168,27,.09)}
 .stylecard:disabled{opacity:.35}
+/* ===== PAN PICKER ===== */
+.panbox{background:var(--ink-2);border:1.5px solid var(--line);border-radius:16px;padding:15px;margin-top:12px}
+.panbox-k{font-size:.6rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.panbox-n{font-family:'Archivo Black',sans-serif;font-size:1.05rem;margin-top:3px}
+.panbox-d{font-size:.83rem;color:var(--muted);font-weight:600;margin-top:5px}
+.panline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:11px;
+  padding:11px 13px;border-radius:12px;background:var(--ink);border:1.5px solid transparent}
+.panline.on{border-color:var(--gold);background:rgba(247,168,27,.09)}
+.panline-t{min-width:0}
+.panline-n{display:block;font-weight:800;font-size:.9rem}
+.panline-p{display:block;font-size:.78rem;color:var(--muted);font-weight:700;margin-top:2px}
+.panline.on .panline-p{color:var(--gold)}
+.panstep{display:flex;align-items:center;gap:4px;flex:none}
+.panstep button{width:38px;height:38px;border-radius:11px;background:var(--ink-3);color:var(--cream);
+  font-weight:800;font-size:1.15rem;line-height:1}
+.panstep button:active{background:var(--gold);color:var(--ink)}
+.panstep-v{min-width:30px;text-align:center;font-weight:800;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.panline.on .panstep-v{color:var(--gold)}
+
 .est{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:20px}
 .est-row{display:flex;justify-content:space-between;font-size:.86rem;font-weight:700;padding:5px 0;gap:12px}
 .est-row.total{border-top:1px solid var(--line);margin-top:7px;padding-top:11px;font-size:1rem;font-weight:800}
@@ -437,7 +456,7 @@ input,select,textarea{font-size:var(--t-control)}
     <p id="footTagline"></p>
     <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
     <div class="flinks" id="footLinks"></div>
-    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.3</div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.4</div>
   </div>
 </footer>
 
@@ -456,9 +475,6 @@ input,select,textarea{font-size:var(--t-control)}
   <div class="wstep on" id="step1">
     <h2 class="display">When &amp; how many?</h2>
     <p class="sub">We need <b id="leadCopy">two weeks</b> minimum. Weeks that are full or too soon aren't shown.</p>
-    <span class="lbl">Guest count</span>
-    <input class="field" id="fGuests" type="number" inputmode="numeric" min="1" placeholder="e.g. 60" oninput="onGuests()">
-    <div class="note warn" id="guestNote"></div>
     <span class="lbl">Event week</span>
     <div id="weekOpts"></div>
     <div id="dayWrap" style="display:none">
@@ -472,13 +488,10 @@ input,select,textarea{font-size:var(--t-control)}
   </div>
 
   <div class="wstep" id="step2">
-    <h2 class="display">How do you want it?</h2>
-    <p class="sub">Pick one, or both and we'll split the trays.</p>
+    <h2 class="display">How many pans?</h2>
+    <p class="sub">Pick pans of each style. Mix them freely — a full pan sauced and a half pan original is a normal order.</p>
     <div id="styleOpts"></div>
-    <div id="pkgSection">
-      <span class="lbl">Package</span>
-      <div id="pkgOpts"></div>
-    </div>
+    <div class="est" id="estBox3"></div>
     <span class="lbl">Service style</span>
     <div class="chips" id="serviceChips"></div>
     <div class="nav-row">
@@ -489,7 +502,7 @@ input,select,textarea{font-size:var(--t-control)}
 
   <div class="wstep" id="step3">
     <h2 class="display">Sides &amp; extras</h2>
-    <p class="sub">Optional. Anything you don't see, ask for it in the notes.</p>
+    <p class="sub">Optional, and priced by the pan just like the chicken.</p>
     <div id="sidesSection">
       <span class="lbl">Sides</span>
       <div class="chips" id="sideOpts"></div>
@@ -546,8 +559,8 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <script>
-/* ================= Riah's Fav's — live site · Version 1.3 ================= */
-var RF_VERSION = '1.3';
+/* ================= Riah's Fav's — live site · Version 1.4 ================= */
+var RF_VERSION = '1.4';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -577,17 +590,21 @@ var FALLBACK = {
     leadTimeDays: 14,        // TWO-WEEK MINIMUM NOTICE
     shortNoticeDays: 21,     // 14–21 days out gets a rush flag
     horizonWeeks: 12,
-    minGuests: 0,
-    maxGuests: 0,
     blockedDates: [],
     timeWindows: ['11am – 1pm','1pm – 3pm','4pm – 6pm','6pm – 8pm','Late night']
   },
   policy: { depositPercent: 50, payInFullUnder: 0 },
+  /* Catering is priced BY THE PAN, not per guest. Pan prices here are the
+     chicken price; each side carries its own half/full price. */
+  pans: [
+    { id:'half', label:'Half pan', price:85,  serves:'Feeds 8–10 as the main, 12–15 alongside sides',  active:true },
+    { id:'full', label:'Full pan', price:140, serves:'Feeds 15–20 as the main, 25–30 alongside sides', active:true }
+  ],
   styles: [
     { id:'sauced', label:'Original Korean Style', kicker:'Sauced', desc:'Our original, tossed in sauce and served hot.', active:true },
     { id:'plain',  label:'Original',              kicker:'No sauce', desc:'Same chicken, no sauce. Crispy straight through.', active:true }
   ],
-  packages: [], sides: [], addons: [],
+  sides: [], addons: [],
   services: [
     { id:'dropoff', label:'Drop-off',         desc:'Trays delivered hot' },
     { id:'setup',   label:'Delivery + setup', desc:'We set the buffet' },
@@ -607,14 +624,16 @@ var FALLBACK = {
 var db=null, FS=null;
 var data = {
   schedule:FALLBACK.schedule, policy:FALLBACK.policy, styles:FALLBACK.styles,
-  packages:[], sides:[], addons:[], services:FALLBACK.services, occasions:FALLBACK.occasions,
+  pans:FALLBACK.pans, sides:[], addons:[], services:FALLBACK.services, occasions:FALLBACK.occasions,
   business:FALLBACK.business, cause:FALLBACK.cause, hero:FALLBACK.hero, weeks:{}, events:[], gallery:[]
 };
 
+/* qty is keyed "<styleId>|<panId>" for chicken and "<sideId>|<panId>" for sides,
+   so a line is addressable by exactly the two things that define it. */
 var order = {
-  guests:null, weekId:null, weekLabel:null, dayISO:null, dayLabel:null, shortNotice:false, window:null,
-  styles:[], packageId:null, packageLabel:null, perPerson:null,
-  service:'dropoff', serviceLabel:'Drop-off', sides:[], addons:[], occasion:null
+  weekId:null, weekLabel:null, dayISO:null, dayLabel:null, shortNotice:false, window:null,
+  chicken:{}, sideQty:{}, addons:[],
+  service:'dropoff', serviceLabel:'Drop-off', occasion:null
 };
 
 /* ================= boot ================= */
@@ -628,7 +647,7 @@ var order = {
     function gd(c,i){ return FS.getDoc(FS.doc(db,c,i)).then(function(s){ return s.exists()?s.data():null; }).catch(function(){ return null; }); }
     var r = await Promise.all([
       gd('settings','schedule'), gd('settings','policy'), gd('settings','business'), gd('settings','cause'), gd('settings','hero'),
-      gd('menu','styles'), gd('menu','packages'), gd('menu','sides'), gd('menu','addons'),
+      gd('menu','styles'), gd('menu','pans'), gd('menu','sides'), gd('menu','addons'),
       FS.getDocs(FS.collection(db,'weeks')).catch(function(){return null;}),
       FS.getDocs(FS.query(FS.collection(db,'events'), FS.orderBy('dateISO','asc'), FS.limit(40))).catch(function(){return null;}),
       FS.getDocs(FS.query(FS.collection(db,'gallery'), FS.orderBy('createdAtMs','desc'), FS.limit(24))).catch(function(){return null;})
@@ -639,7 +658,7 @@ var order = {
     if(r[3]) data.cause    = Object.assign({}, FALLBACK.cause, r[3]);
     if(r[4]) data.hero     = Object.assign({}, FALLBACK.hero, r[4]);
     if(r[5] && r[5].list && r[5].list.length) data.styles = r[5].list;
-    if(r[6] && r[6].list) data.packages = r[6].list;
+    if(r[6] && r[6].list && r[6].list.length) data.pans = r[6].list;
     if(r[7] && r[7].list) data.sides    = r[7].list;
     if(r[8] && r[8].list) data.addons   = r[8].list;
     if(r[9]) r[9].forEach(function(d){ data.weeks[d.id] = d.data(); });
@@ -653,11 +672,11 @@ var order = {
 
 function renderAll(){
   buildWeeks(); updateHero(); renderWeekStrip(); renderWeekOpts();
-  renderStyles(); renderPackages(); renderSidesPublic();
+  renderStyles(); renderPans(); renderSidesPublic();
   renderEvents(); renderCause(); renderGallery(); applyHero();
   renderTimeWindows(); renderServices(); renderOccasions();
-  renderStyleOpts(); renderPkgOpts(); renderSideOpts(); renderAddonOpts();
-  applyCopy(); refreshEst(); gateStep2();
+  renderChickenOpts(); renderSideOpts(); renderAddonOpts();
+  applyCopy(); refreshEst(); gateStep1(); gateStep2();
 }
 
 function applyCopy(){
@@ -752,32 +771,41 @@ function renderStyles(){
     el.appendChild(d);
   });
 }
-function renderPackages(){
-  var list=activeOnly(data.packages), el=document.getElementById('pkgList');
-  el.innerHTML='';
+function panPrice(p){ return p.price || 0; }
+
+/* ---- public menu: the pan card ---- */
+function renderPans(){
+  var list=activeOnly(data.pans), el=document.getElementById('pkgList');
+  el.className='grid2'; el.innerHTML='';
   if(!list.length){
     el.className='';
-    el.innerHTML='<div class="empty"><b>Pricing is by the head count</b><p>Tell us your date and how many people you’re feeding and we’ll send an exact quote — no packages to decode.</p></div>';
+    el.innerHTML='<div class="empty"><b>Pricing on request</b><p>Send your date and what you need and we’ll quote it.</p></div>';
     return;
   }
-  el.className='grid2';
   list.forEach(function(p){
     var d=document.createElement('div'); d.className='pkg';
-    d.innerHTML='<div class="pkg-h"><div class="pkg-n">'+escH(p.label)+'</div><div class="pkg-p">$'+p.perPerson+'<span>per guest</span></div></div>'+
-      (p.desc?'<div class="pkg-d">'+escH(p.desc)+'</div>':'')+
-      '<ul class="pkg-inc">'+(p.includes||[]).map(function(i){return '<li>'+escH(i)+'</li>';}).join('')+'</ul>'+
-      (p.minGuests?'<div class="pkg-min">'+p.minGuests+' guest minimum</div>':'');
+    d.innerHTML='<div class="pkg-h"><div class="pkg-n">'+escH(p.label)+'</div>'+
+      '<div class="pkg-p">'+money(panPrice(p))+'<span>per pan</span></div></div>'+
+      (p.serves?'<div class="pkg-d">'+escH(p.serves)+'</div>':'');
     el.appendChild(d);
   });
 }
 function renderSidesPublic(){
   var list=activeOnly(data.sides);
-  document.getElementById('sidesWrap').style.display = list.length?'block':'none';
+  document.getElementById('sidesWrap').style.display=list.length?'block':'none';
   var el=document.getElementById('sideList'); el.innerHTML='';
-  list.forEach(function(s){ var b=document.createElement('span'); b.className='chip'; b.textContent=s.label; el.appendChild(b); });
+  list.forEach(function(sd){
+    var bits=activeOnly(data.pans).map(function(p){
+      var pr=sidePrice(sd,p.id);
+      return pr?escH(p.label)+' '+money(pr):null;
+    }).filter(Boolean).join(' · ');
+    var b=document.createElement('span'); b.className='chip';
+    b.innerHTML=escH(sd.label)+(bits?'<span class="meta">'+bits+'</span>':'');
+    el.appendChild(b);
+  });
 }
+function sidePrice(sd,panId){ return (sd.prices && sd.prices[panId]) || 0; }
 
-/* ================= events / pop-ups ================= */
 var EV_KIND={market:'Farmers market',popup:'Pop-up',truck:'Food truck stop',festival:'Festival',fundraiser:'Fundraiser',private:'Private event'};
 
 /* An event is a LIST OF DAYS, not a date range — "Fri, Sat, Mon" is three
@@ -937,7 +965,7 @@ function renderGallery(){
   g.forEach(function(x){ var i=document.createElement('img'); i.src=x.img; i.loading='lazy'; i.alt=x.caption||''; el.appendChild(i); });
 }
 
-/* ================= wizard step 1 ================= */
+/* ---- wizard step 1: date + serving time (no guest count) ---- */
 function renderWeekOpts(){
   var el=document.getElementById('weekOpts'); el.innerHTML='';
   if(!WEEKS.length){ el.innerHTML='<div class="note on">No weeks are open right now. Text us and we’ll see what we can do.</div>'; return; }
@@ -978,92 +1006,81 @@ function renderTimeWindows(){
   });
 }
 function selectOne(row,b){ row.querySelectorAll('.chip').forEach(function(c){c.classList.remove('sel');}); b.classList.add('sel'); }
-function onGuests(){
-  var v=parseInt(document.getElementById('fGuests').value,10);
-  var s=data.schedule, note=document.getElementById('guestNote');
-  order.guests=(isNaN(v)||v<=0)?null:v;
-  note.classList.remove('on');
-  if(order.guests!=null){
-    if(s.minGuests && order.guests<s.minGuests){
-      note.textContent='Our catering minimum is '+s.minGuests+' guests. Smaller group? Text us — we can usually work something out.';
-      note.classList.add('on'); order.guests=null;
-    }else if(s.maxGuests && order.guests>s.maxGuests){
-      note.textContent='That’s bigger than our standard setup ('+s.maxGuests+' guests). Send it anyway — we’ll quote it as a custom job.';
-      note.classList.add('on');
-    }
-  }
-  renderPkgOpts(); gateStep1(); refreshEst();
-}
 function gateStep1(){
-  var okk=!!(order.guests&&order.weekId&&order.dayISO&&order.window);
-  document.getElementById('next1').disabled=!okk;
+  document.getElementById('next1').disabled = !(order.weekId && order.dayISO && order.window);
 }
 
-/* ================= wizard step 2 ================= */
-function renderStyleOpts(){
-  var el=document.getElementById('styleOpts'); el.innerHTML='';
-  activeOnly(data.styles).forEach(function(s){
-    var b=document.createElement('button'); b.type='button'; b.className='stylecard';
-    b.innerHTML='<div class="style-k">'+escH(s.kicker||'')+'</div><div class="style-n">'+escH(s.label)+'</div>'+
-      (s.desc?'<div class="style-d">'+escH(s.desc)+'</div>':'');
-    b.onclick=function(){
-      var at=order.styles.indexOf(s.label);
-      if(at>=0){ order.styles.splice(at,1); b.classList.remove('sel'); }
-      else{ order.styles.push(s.label); b.classList.add('sel'); }
-      gateStep2();
-    };
-    el.appendChild(b);
-  });
+/* ---- the pan stepper, shared by chicken and sides ---- */
+function panLine(label, price, key, bag, onChange){
+  var row=document.createElement('div'); row.className='panline';
+  var n=bag[key]||0;
+  row.innerHTML='<div class="panline-t"><span class="panline-n">'+escH(label)+'</span>'+
+    '<span class="panline-p">'+money(price)+'</span></div>';
+  var st=document.createElement('div'); st.className='panstep';
+  var minus=document.createElement('button'); minus.type='button'; minus.textContent='−';
+  var val=document.createElement('span'); val.className='panstep-v'; val.textContent=n;
+  var plus=document.createElement('button'); plus.type='button'; plus.textContent='+';
+  function set(v){
+    v=Math.max(0,Math.min(99,v));
+    if(v) bag[key]=v; else delete bag[key];
+    val.textContent=v;
+    row.classList.toggle('on', v>0);
+    onChange();
+  }
+  minus.onclick=function(){ set((bag[key]||0)-1); };
+  plus.onclick =function(){ set((bag[key]||0)+1); };
+  st.appendChild(minus); st.appendChild(val); st.appendChild(plus);
+  row.appendChild(st);
+  row.classList.toggle('on', n>0);
+  return row;
 }
-function renderPkgOpts(){
-  var list=activeOnly(data.packages);
-  document.getElementById('pkgSection').style.display = list.length?'block':'none';
-  var el=document.getElementById('pkgOpts'); if(!el) return; el.innerHTML='';
-  list.forEach(function(p){
-    var tooSmall=!!(order.guests&&p.minGuests&&order.guests<p.minGuests);
-    var b=document.createElement('button'); b.type='button';
-    b.className='stylecard'+(order.packageId===p.id?' sel':''); b.disabled=tooSmall;
-    b.innerHTML='<div class="pkg-h"><div class="pkg-n">'+escH(p.label)+'</div><div class="pkg-p">$'+p.perPerson+'<span>per guest</span></div></div>'+
-      (p.desc?'<div class="pkg-d">'+escH(p.desc)+'</div>':'')+
-      '<ul class="pkg-inc">'+(p.includes||[]).map(function(i){return '<li>'+escH(i)+'</li>';}).join('')+'</ul>'+
-      (p.minGuests?'<div class="pkg-min">'+(tooSmall?'Needs '+p.minGuests+'+ guests':p.minGuests+' guest minimum')+'</div>':'');
-    b.onclick=function(){
-      document.querySelectorAll('#pkgOpts .stylecard').forEach(function(t){t.classList.remove('sel');});
-      b.classList.add('sel');
-      order.packageId=p.id; order.packageLabel=p.label; order.perPerson=p.perPerson;
-      gateStep2(); refreshEst();
-    };
-    el.appendChild(b);
+
+/* ---- wizard step 2: chicken, one pan line per style x pan size ---- */
+function renderChickenOpts(){
+  var el=document.getElementById('styleOpts'); el.innerHTML='';
+  var pans=activeOnly(data.pans);
+  activeOnly(data.styles).forEach(function(st){
+    var box=document.createElement('div'); box.className='panbox';
+    box.innerHTML='<div class="panbox-k">'+escH(st.kicker||'')+'</div>'+
+      '<div class="panbox-n">'+escH(st.label)+'</div>'+
+      (st.desc?'<div class="panbox-d">'+escH(st.desc)+'</div>':'');
+    pans.forEach(function(p){
+      box.appendChild(panLine(p.label, panPrice(p), st.id+'|'+p.id, order.chicken, function(){
+        gateStep2(); refreshEst();
+      }));
+    });
+    el.appendChild(box);
   });
 }
 function renderServices(){
   var el=document.getElementById('serviceChips'); el.innerHTML='';
-  (data.services||FALLBACK.services).forEach(function(s,i){
+  (data.services||FALLBACK.services).forEach(function(sv,i){
     var b=document.createElement('button'); b.type='button'; b.className='chip'+(i===0?' sel':'');
-    b.innerHTML=escH(s.label)+'<span class="meta">'+escH(s.desc||'')+'</span>';
-    b.onclick=function(){ selectOne(el,b); order.service=s.id; order.serviceLabel=s.label; gateStep2(); };
+    b.innerHTML=escH(sv.label)+'<span class="meta">'+escH(sv.desc||'')+'</span>';
+    b.onclick=function(){ selectOne(el,b); order.service=sv.id; order.serviceLabel=sv.label; };
     el.appendChild(b);
   });
 }
+function panCount(bag){ return Object.keys(bag).reduce(function(n,k){ return n+bag[k]; },0); }
 function gateStep2(){
-  var needPkg = activeOnly(data.packages).length > 0;
-  var okk = order.styles.length>0 && !!order.service && (!needPkg || !!order.packageId);
-  var n=document.getElementById('next2'); if(n) n.disabled=!okk;
+  var n=document.getElementById('next2');
+  if(n) n.disabled = panCount(order.chicken) === 0;
 }
 
-/* ================= wizard step 3 ================= */
+/* ---- wizard step 3: sides by the pan, plus flat add-ons ---- */
 function renderSideOpts(){
-  var list=activeOnly(data.sides);
+  var list=activeOnly(data.sides), pans=activeOnly(data.pans);
   document.getElementById('sidesSection').style.display=list.length?'block':'none';
   var el=document.getElementById('sideOpts'); el.innerHTML='';
-  list.forEach(function(s){
-    var b=document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=s.label;
-    b.onclick=function(){
-      var at=order.sides.indexOf(s.label);
-      if(at>=0){ order.sides.splice(at,1); b.classList.remove('sel'); }
-      else{ order.sides.push(s.label); b.classList.add('sel'); }
-    };
-    el.appendChild(b);
+  list.forEach(function(sd){
+    var priced=pans.filter(function(p){ return sidePrice(sd,p.id)>0; });
+    if(!priced.length) return;
+    var box=document.createElement('div'); box.className='panbox';
+    box.innerHTML='<div class="panbox-n">'+escH(sd.label)+'</div>';
+    priced.forEach(function(p){
+      box.appendChild(panLine(p.label, sidePrice(sd,p.id), sd.id+'|'+p.id, order.sideQty, refreshEst));
+    });
+    el.appendChild(box);
   });
   step3Empty();
 }
@@ -1073,11 +1090,11 @@ function renderAddonOpts(){
   var el=document.getElementById('addonOpts'); el.innerHTML='';
   list.forEach(function(a){
     var b=document.createElement('button'); b.type='button'; b.className='chip';
-    b.innerHTML=escH(a.label)+'<span class="meta">+$'+a.price+(a.unit==='perPerson'?'/guest':'')+'</span>';
+    b.innerHTML=escH(a.label)+'<span class="meta">+'+money(a.price)+'</span>';
     b.onclick=function(){
       var at=order.addons.findIndex(function(x){ return x.id===a.id; });
       if(at>=0){ order.addons.splice(at,1); b.classList.remove('sel'); }
-      else{ order.addons.push({id:a.id,label:a.label,price:a.price,unit:a.unit}); b.classList.add('sel'); }
+      else{ order.addons.push({id:a.id,label:a.label,price:a.price}); b.classList.add('sel'); }
       refreshEst();
     };
     el.appendChild(b);
@@ -1093,31 +1110,59 @@ function step3Empty(){
 
 /* ================= estimate ================= */
 function money(n){ return '$'+(Math.round((n||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}); }
-function addonTotal(){
-  var g=order.guests||0;
-  return order.addons.reduce(function(s,a){ return s+(a.unit==='perPerson'?a.price*g:a.price); },0);
+
+/* Every priced thing in the order, as one flat list of lines. The summary,
+   the running total and the submitted request all read from this, so the
+   number the customer sees and the number we store cannot disagree. */
+function orderLines(){
+  var lines=[];
+  var pans=activeOnly(data.pans);
+  function panById(id){ for(var i=0;i<pans.length;i++) if(pans[i].id===id) return pans[i]; return null; }
+
+  activeOnly(data.styles).forEach(function(st){
+    pans.forEach(function(p){
+      var q=order.chicken[st.id+'|'+p.id]||0;
+      if(!q) return;
+      lines.push({ kind:'chicken', id:st.id, label:st.label, panId:p.id, pan:p.label,
+                   qty:q, unitPrice:panPrice(p), total:q*panPrice(p) });
+    });
+  });
+  activeOnly(data.sides).forEach(function(sd){
+    pans.forEach(function(p){
+      var q=order.sideQty[sd.id+'|'+p.id]||0;
+      if(!q) return;
+      var pr=sidePrice(sd,p.id);
+      lines.push({ kind:'side', id:sd.id, label:sd.label, panId:p.id, pan:p.label,
+                   qty:q, unitPrice:pr, total:q*pr });
+    });
+  });
+  order.addons.forEach(function(a){
+    lines.push({ kind:'addon', id:a.id, label:a.label, panId:null, pan:null,
+                 qty:1, unitPrice:a.price, total:a.price });
+  });
+  return lines;
 }
-function estimateTotal(){ return (order.perPerson||0)*(order.guests||0)+addonTotal(); }
+function estimateTotal(){ return orderLines().reduce(function(n,l){ return n+l.total; },0); }
 function depositFor(total){
   var p=data.policy;
   if(p.payInFullUnder && total>0 && total<p.payInFullUnder) return total;
   return Math.round(total*(p.depositPercent||50)/100);
 }
 function refreshEst(){
-  var html;
-  if(!order.guests || !order.perPerson){
-    html='<div class="est-note"><b style="color:var(--petal)">No online pricing yet.</b><br>Send the request and you’ll get an exact quote by text within 24 hours — food, travel and extras all itemized.</div>';
+  var lines=orderLines(), html;
+  if(!lines.length){
+    html='<div class="est-note">Add a pan to see your running total. Half and full pan prices are fixed — no per-head maths.</div>';
   }else{
-    var g=order.guests, base=order.perPerson*g, total=base+addonTotal();
-    html='<div class="est-row"><span>'+escH(order.packageLabel)+' × '+g+' guests</span><span>'+money(base)+'</span></div>';
-    order.addons.forEach(function(a){
-      html+='<div class="est-row"><span>'+escH(a.label)+(a.unit==='perPerson'?' × '+g:'')+'</span><span>'+
-        money(a.unit==='perPerson'?a.price*g:a.price)+'</span></div>';
-    });
+    html=lines.map(function(l){
+      return '<div class="est-row"><span>'+escH(l.label)+(l.pan?' · '+escH(l.pan):'')+
+        (l.qty>1?' × '+l.qty:'')+'</span><span>'+money(l.total)+'</span></div>';
+    }).join('');
+    var total=estimateTotal();
     html+='<div class="est-row total"><span>Estimate</span><b>'+money(total)+'</b></div>'+
-      '<div class="est-note">Estimate only — travel and any custom asks get itemized in your real quote. Deposit to hold the date would be about '+money(depositFor(total))+'.</div>';
+      '<div class="est-note">Pan prices are firm. Travel and anything custom gets itemised in your real quote. '+
+      'Deposit to hold the date would be about '+money(depositFor(total))+'.</div>';
   }
-  ['estBox','estBox2'].forEach(function(id){ var e=document.getElementById(id); if(e) e.innerHTML=html; });
+  ['estBox','estBox2','estBox3'].forEach(function(id){ var e=document.getElementById(id); if(e) e.innerHTML=html; });
 }
 
 function renderOccasions(){
@@ -1158,18 +1203,17 @@ async function sendReq(){
 
   var btn=document.getElementById('submitBtn');
   btn.disabled=true; st.textContent='Sending…';
-  var total=estimateTotal();
+  var lines=orderLines(), total=estimateTotal();
 
   var req={
     status:'pending', createdAt: FS?FS.serverTimestamp():new Date().toISOString(), siteVersion:RF_VERSION,
-    name:name, phone:phone, email:email||null, guests:order.guests,
+    name:name, phone:phone, email:email||null,
     weekId:order.weekId, weekLabel:order.weekLabel, dayISO:order.dayISO, dayLabel:order.dayLabel,
     shortNotice:order.shortNotice, window:order.window,
-    styles:order.styles.slice(),
-    packageId:order.packageId, packageLabel:order.packageLabel, perPerson:order.perPerson,
+    pricing:'pan',
+    lines: lines,
+    panSummary: panSummary(lines),
     service:order.service, serviceLabel:order.serviceLabel,
-    sides:order.sides.slice(),
-    addons:order.addons.map(function(a){ return {id:a.id,label:a.label,price:a.price,unit:a.unit}; }),
     estimate: total || null, occasion:order.occasion||null,
     venue:venue||null, address:addr, notes:notes||null,
     quote:null, travelFee:null, depositPaid:null, paymentMethod:null
@@ -1180,20 +1224,17 @@ async function sendReq(){
     await FS.addDoc(FS.collection(db,'requests'), req);
     try{
       fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:name,phone:phone,guests:order.guests,dayLabel:order.dayLabel,window:order.window,
-          styles:order.styles,packageLabel:order.packageLabel,serviceLabel:order.serviceLabel,sides:order.sides,
-          addons:order.addons.map(function(a){return a.label;}),estimate:total,occasion:order.occasion,
+        body:JSON.stringify({name:name,phone:phone,dayLabel:order.dayLabel,window:order.window,
+          panSummary:req.panSummary,lines:lines.map(function(l){return l.qty+'× '+l.label+(l.pan?' ('+l.pan+')':'');}),
+          serviceLabel:order.serviceLabel,estimate:total,occasion:order.occasion,
           venue:venue,address:addr,notes:notes,shortNotice:order.shortNotice})
       }).catch(function(){});
     }catch(e){}
 
     document.getElementById('sumBox').innerHTML=
-      row('Event day',order.dayLabel)+row('Serving',order.window)+row('Guests',String(order.guests))+
-      row('Chicken',order.styles.join(' + ')||'—')+
-      (order.packageLabel?row('Package',order.packageLabel):'')+
+      row('Event day',order.dayLabel)+row('Serving',order.window)+
+      lines.map(function(l){ return row(l.qty+'× '+l.pan||l.label, l.label+' · '+money(l.total)); }).join('')+
       row('Service',order.serviceLabel)+
-      (order.sides.length?row('Sides',order.sides.join(', ')):'')+
-      (order.addons.length?row('Add-ons',order.addons.map(function(a){return a.label;}).join(', ')):'')+
       row('Where',venue?venue+' · '+addr:addr)+
       row('Estimate', total?money(total):'Quoted by text');
     goStep(5);
@@ -1206,6 +1247,11 @@ async function sendReq(){
   }
 }
 function row(k,v){ return '<div><span>'+escH(k)+'</span><b>'+escH(v)+'</b></div>'; }
+function panSummary(lines){
+  var pans=lines.filter(function(l){ return l.kind!=='addon'; });
+  if(!pans.length) return '';
+  return pans.map(function(l){ return l.qty+'× '+l.pan+' '+l.label; }).join(', ');
+}
 </script>
 
 <script>
