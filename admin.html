@@ -183,6 +183,53 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 .bar-r{height:8px;background:var(--ink-3);border-radius:99px;margin-top:5px;overflow:hidden}
 .bar-r i{display:block;height:100%;background:var(--grad);border-radius:99px}
 
+/* ===== HERO EDITOR — live preview mirrors the real hero ===== */
+.hero-stage{background:#141010;border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative;margin-top:10px}
+.hero-scale{width:430px;transform-origin:top left}
+.hero-mock{padding:26px 20px 30px;text-align:center;position:relative;
+  background:radial-gradient(ellipse at 50% -14%, rgba(242,101,34,.28) 0%, rgba(224,27,18,.13) 38%, transparent 70%), #141010}
+.hero-mock .hm-logo{height:64px;width:auto;display:block;margin:0 auto}
+.hero-mock .hm-h1{font-family:'Archivo Black',sans-serif;color:#F6EFE4;font-size:1.5rem;line-height:1.18;margin-top:16px}
+.hero-mock .hm-h1 em{font-style:normal;background:linear-gradient(100deg,#F7A81B,#F26522 52%,#E01B12);
+  -webkit-background-clip:text;background-clip:text;color:transparent;display:block}
+.hero-mock .hm-p{color:#A3948C;font-size:.82rem;font-weight:600;margin-top:9px}
+.hero-mock .hm-cta{display:inline-block;margin-top:16px;background:linear-gradient(100deg,#F7A81B,#F26522 52%,#E01B12);
+  color:#fff;font-weight:800;font-size:.82rem;padding:12px 20px;border-radius:13px}
+#hmMedia{display:none;position:relative;margin:20px auto 4px;max-width:100%;border-radius:18px;overflow:hidden;
+  background:#000;border:1px solid rgba(255,243,214,.12);box-shadow:0 18px 46px rgba(0,0,0,.55)}
+#hmMedia.on{display:block}
+#hmMedia img{display:block;width:100%;height:100%;object-fit:cover}
+#hmMedia iframe{position:absolute;left:50%;transform:translateX(-50%);width:100%;border:0}
+.hero-badge{position:absolute;top:9px;right:9px;background:rgba(0,0,0,.62);color:#F6EFE4;
+  font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:99px;z-index:3}
+.kindrow{display:flex;gap:8px;margin-top:10px}
+.kindrow button{flex:1;padding:11px 8px;border-radius:11px;background:var(--ink-3);color:var(--muted);
+  font-weight:800;font-size:.8rem;border:1.5px solid transparent}
+.kindrow button.on{background:var(--grad);color:#fff}
+.sl-l{display:flex;justify-content:space-between;font-size:.74rem;font-weight:800;color:var(--muted);margin:16px 0 5px}
+.sl-l b{color:var(--gold);font-variant-numeric:tabular-nums}
+.sl{width:100%;-webkit-appearance:none;height:7px;border-radius:99px;background:var(--ink-3);outline:none}
+.sl::-webkit-slider-thumb{-webkit-appearance:none;width:25px;height:25px;border-radius:50%;
+  background:var(--gold);cursor:pointer;box-shadow:0 2px 7px rgba(0,0,0,.5)}
+.sl::-moz-range-thumb{width:25px;height:25px;border-radius:50%;background:var(--gold);cursor:pointer;border:none}
+.sl:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* ===== PER-DAY EVENT SCHEDULE ===== */
+.dayrow{background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:11px;margin-top:9px;
+  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.dayrow-in{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:7px;min-width:0}
+.dayrow .inp{margin-top:0;font-size:.82rem;padding:9px 10px}
+.dayrow-x{background:none;color:#FF8A80;font-weight:800;font-size:1rem;padding:6px 4px}
+.evdays{margin-top:8px;display:flex;flex-direction:column;gap:1px}
+.evday{display:flex;justify-content:space-between;gap:10px;padding:5px 8px;border-radius:6px;
+  background:rgba(255,243,214,.05);font-size:.76rem;font-weight:700}
+.evday.past{opacity:.42;text-decoration:line-through;text-decoration-thickness:1px}
+.evday-t{color:var(--gold);white-space:nowrap}
+.evday.past .evday-t{color:var(--muted)}
+.daysum{background:var(--ink-3);border-radius:10px;padding:11px 13px;margin-top:11px;font-size:.8rem;font-weight:700;line-height:1.6}
+.daysum b{color:var(--gold)}
+@media(max-width:480px){ .dayrow-in{grid-template-columns:1fr;gap:6px} }
+
 .sheet-veil{position:fixed;inset:0;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .25s;z-index:52}
 .sheet-veil.show{opacity:1;pointer-events:auto}
 .esheet{position:fixed;inset:0;background:var(--ink);z-index:53;transform:translateY(100%);
@@ -458,6 +505,15 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
       <span class="eyebrow">Photos</span>
       <h2 class="title display">Gallery</h2>
       <p class="sub">Shots from past jobs, shown in the "From the fryer" strip. Photos are resized and compressed automatically.</p>
+
+      <div class="card" style="border-left:4px solid var(--gold)">
+        <b style="font-size:.9rem">🎬 Homepage hero</b>
+        <p class="sub">The big photo or reel at the very top of the site. You see exactly how it looks before anything saves.</p>
+        <div id="heroSummary"></div>
+        <button class="btn" onclick="openHero()">Set up the hero</button>
+      </div>
+
+      <h3 class="title display" style="font-size:1rem;margin-top:26px">Gallery photos</h3>
       <div class="status" id="gStatus"></div>
       <div class="ggrid" id="gGrid"></div>
       <input type="file" id="gFile" accept="image/*" class="hidden">
@@ -580,18 +636,12 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
     <label class="fl">Where — street address</label>
     <input class="inp" id="evAddress" placeholder="300 S 300 W, Salt Lake City">
 
-    <label class="fl">When — date</label>
-    <input class="inp" type="date" id="evDate">
-
-    <label class="fl">When — end date (multi-day only)</label>
-    <input class="inp" type="date" id="evEnd">
-    <div class="hint">Leave blank for a single-day event.</div>
-
-    <label class="fl">What times</label>
-    <div class="row2">
-      <input class="inp" id="evStart" placeholder="Start · 8am">
-      <input class="inp" id="evEndTime" placeholder="End · 1pm">
-    </div>
+    <label class="fl">When — one row per day</label>
+    <div class="hint">Add a row for every day you'll be there, each with its own hours. Days don't have to be back to back — Friday, Saturday and Monday is fine.</div>
+    <div id="evDays"></div>
+    <button class="btn secondary" onclick="addDayRow()">＋ Add another day</button>
+    <button class="btn ghost" onclick="copyTimesDown()">⇊ Copy the first day's times to the rest</button>
+    <div class="daysum" id="evDaySum"></div>
 
     <label class="fl">Note (optional)</label>
     <textarea class="inp" id="evNote" placeholder="e.g. Look for the red canopy near the north entrance. Cash and card."></textarea>
@@ -611,6 +661,65 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
     <button class="btn" onclick="saveEvent()">Save event</button>
     <button class="btn ghost" id="evDeleteBtn" onclick="deleteEvent()">🗑 Delete this event</button>
     <div class="status" id="evSheetStatus"></div>
+  </div>
+</div>
+
+<!-- ============ HERO EDITOR ============ -->
+<div class="sheet-veil" id="heroVeil" onclick="closeHero()"></div>
+<div class="esheet" id="heroSheet">
+  <div class="esheet-top">
+    <button class="a-ghost" style="padding:8px 12px;border-radius:10px;font-weight:800;font-size:.78rem" onclick="closeHero()">‹ Cancel</button>
+    <b>Homepage hero</b>
+  </div>
+  <div class="esheet-body">
+
+    <label class="fl">Live preview — this is the real homepage</label>
+    <div class="hero-stage" id="heroStage">
+      <span class="hero-badge">Preview</span>
+      <div class="hero-scale" id="heroScale">
+        <div class="hero-mock">
+          <img class="hm-logo" src="logo.png" alt="Riah's Fav's">
+          <div id="hmMedia"></div>
+          <div class="hm-h1">Korean fried chicken,<em>catered by our family.</em></div>
+          <div class="hm-p" id="hmTag">Fried fresh for your party, office lunch, wedding or fundraiser.</div>
+          <div class="hm-cta">Request catering</div>
+        </div>
+      </div>
+    </div>
+    <div class="hint">Nothing is saved until you press Save. Cancel throws it all away.</div>
+
+    <label class="fl">What goes in the hero?</label>
+    <div class="kindrow" id="heroKinds">
+      <button type="button" data-k="none">Nothing</button>
+      <button type="button" data-k="photo">A photo</button>
+      <button type="button" data-k="reel">An IG reel</button>
+    </div>
+
+    <div id="heroPhotoBox" class="hidden">
+      <label class="fl">Hero photo</label>
+      <button class="btn secondary" onclick="document.getElementById('heroFile').click()">📷 Choose photo</button>
+      <input type="file" id="heroFile" accept="image/*" class="hidden">
+      <div class="hint">Landscape shots work best. Resized and compressed automatically.</div>
+    </div>
+
+    <div id="heroReelBox" class="hidden">
+      <label class="fl">Instagram reel link</label>
+      <input class="inp" id="heroReelUrl" placeholder="https://www.instagram.com/reel/ABC123/" oninput="onReelUrl()">
+      <div class="hint">Paste the reel's share link. Only public reels can be embedded.</div>
+    </div>
+
+    <div id="heroFrameBox" class="hidden">
+      <div class="sl-l"><span>Width</span><b id="hvW">320px</b></div>
+      <input type="range" class="sl" id="hW" min="180" max="430" step="5" value="320">
+      <div class="sl-l"><span>Height</span><b id="hvH">320px</b></div>
+      <input type="range" class="sl" id="hH" min="160" max="520" step="5" value="320">
+      <div class="sl-l"><span>Move up / down</span><b id="hvY">0</b></div>
+      <input type="range" class="sl" id="hY" min="-60" max="50" step="1" value="0">
+      <div class="hint" id="hYHint"></div>
+    </div>
+
+    <button class="btn" onclick="saveHero()">Save hero</button>
+    <div class="status" id="heroStatus"></div>
   </div>
 </div>
 
@@ -671,6 +780,9 @@ var ADMIN_EMAILS = ["kasaha01@gmail.com", "riahsfavs@gmail.com"];
 var FS=null, AUTH=null, db=null, auth=null;
 var REQS=[], EVENTS=[], GAL=[], WEEKDOCS={};
 var sched=null, policy={depositPercent:50,payInFullUnder:0}, business={}, cause={active:false};
+var hero={ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0} };
+var heroDraft=null;   // edits live here until Save; Cancel drops it
+var evDayRows=[];     // [{dateISO,startTime,endTime}] for the open event
 var menu={ styles:[], packages:[], sides:[], addons:[] };
 var filter='pending';
 
@@ -750,18 +862,20 @@ async function startAdmin(user){
 
   var p=await Promise.all([
     getDoc('settings','schedule'), getDoc('settings','policy'), getDoc('settings','business'), getDoc('settings','cause'),
+    getDoc('settings','hero'),
     getDoc('menu','styles'), getDoc('menu','packages'), getDoc('menu','sides'), getDoc('menu','addons')
   ]);
   sched   = Object.assign({}, STARTER.schedule, p[0]||{});
   policy  = Object.assign({}, STARTER.policy,  p[1]||{});
   business= Object.assign({}, STARTER.business, p[2]||{});
   cause   = Object.assign({}, STARTER.cause,   p[3]||{});
-  menu.styles   = (p[4]&&p[4].list) || STARTER.styles.slice();
-  menu.packages = (p[5]&&p[5].list) || [];
-  menu.sides    = (p[6]&&p[6].list) || [];
-  menu.addons   = (p[7]&&p[7].list) || [];
+  hero          = Object.assign({ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0} }, p[4]||{});
+  menu.styles   = (p[5]&&p[5].list) || STARTER.styles.slice();
+  menu.packages = (p[6]&&p[6].list) || [];
+  menu.sides    = (p[7]&&p[7].list) || [];
+  menu.addons   = (p[8]&&p[8].list) || [];
 
-  renderSched(); renderTw(); renderMenuEditors(); renderSettings();
+  renderSched(); renderTw(); renderMenuEditors(); renderSettings(); renderHeroSummary();
   await refreshWeeks();
 
   FS.onSnapshot(FS.collection(db,'requests'),function(s){
@@ -784,6 +898,7 @@ async function startAdmin(user){
   $('seedBtn').onclick=seedAll;
   $('gFile').onchange=onGalleryFile;
   $('evFile').onchange=onEventFile;
+  $('heroFile').onchange=onHeroFile;
 }
 
 /* ================= nav ================= */
@@ -1017,41 +1132,134 @@ async function deleteReq(r){
 
 /* ================= EVENTS ================= */
 var EV_KIND={market:'Farmers market',popup:'Pop-up',truck:'Food truck stop',festival:'Festival',fundraiser:'Fundraiser',private:'Private event'};
-function fmtEvDate(e){
-  if(!e.dateISO) return '';
-  var d=new Date(e.dateISO+'T12:00:00');
-  var s=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  if(e.endDateISO && e.endDateISO!==e.dateISO) s+=' – '+new Date(e.endDateISO+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  var t=[e.startTime,e.endTime].filter(Boolean).join(' – ');
-  return s+(t?' · '+t:'');
+/* Events are a LIST OF DAYS, not a range — "Fri, Sat, Mon" is three discrete
+   days with a gap, each able to have its own hours. Events saved under the old
+   dateISO/endDateISO shape are normalised here so none of them vanish. */
+function eventDays(e){
+  if(Array.isArray(e.days) && e.days.length){
+    return e.days.filter(function(d){ return d && d.dateISO; })
+                 .slice().sort(function(a,b){ return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0; });
+  }
+  if(!e.dateISO) return [];
+  var out=[], cur=new Date(e.dateISO+'T12:00:00'), last=new Date((e.endDateISO||e.dateISO)+'T12:00:00'), guard=0;
+  while(cur<=last && guard++<60){
+    out.push({ dateISO:isoD(cur), startTime:e.startTime||null, endTime:e.endTime||null });
+    cur.setDate(cur.getDate()+1);
+  }
+  return out;
 }
+function eventFirstISO(e){ var d=eventDays(e); return d.length?d[0].dateISO:null; }
+function eventLastISO(e){ var d=eventDays(e); return d.length?d[d.length-1].dateISO:null; }
+function nextDayOf(e,todayISO){
+  var d=eventDays(e);
+  for(var i=0;i<d.length;i++){ if(d[i].dateISO>=todayISO) return d[i]; }
+  return d.length?d[d.length-1]:null;
+}
+function dayTimes(d){ return [d.startTime,d.endTime].filter(Boolean).join(' – '); }
+function shortDay(isoStr){ return new Date(isoStr+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+
+function fmtEvDate(e){
+  var d=eventDays(e);
+  if(!d.length) return 'no days set';
+  if(d.length===1) return shortDay(d[0].dateISO)+(dayTimes(d[0])?' · '+dayTimes(d[0]):'');
+  var allSame=d.every(function(x){ return dayTimes(x)===dayTimes(d[0]); });
+  return d.length+' days · '+shortDay(d[0].dateISO)+' – '+shortDay(d[d.length-1].dateISO)+
+         (allSame && dayTimes(d[0]) ? ' · '+dayTimes(d[0]) : ' · times vary');
+}
+var EV_KIND={market:'Farmers market',popup:'Pop-up',truck:'Food truck stop',festival:'Festival',fundraiser:'Fundraiser',private:'Private event'};
+
 function upcomingEvents(){
   var t=isoD(new Date());
-  return EVENTS.filter(function(e){ return e.active!==false && e.dateISO && (e.endDateISO||e.dateISO)>=t; });
+  return EVENTS.filter(function(e){ var l=eventLastISO(e); return e.active!==false && l && l>=t; });
 }
 function renderEventList(){
   var t=isoD(new Date()), up=[], past=[];
-  EVENTS.forEach(function(e){ if(e.dateISO && (e.endDateISO||e.dateISO)>=t) up.push(e); else past.push(e); });
-  past.reverse();
+  EVENTS.forEach(function(e){ var l=eventLastISO(e); if(l && l>=t) up.push(e); else past.push(e); });
+  up.sort(function(a,b){
+    var an=(nextDayOf(a,t)||{}).dateISO||'', bn=(nextDayOf(b,t)||{}).dateISO||'';
+    return an<bn?-1:an>bn?1:0;
+  });
+  past.sort(function(a,b){ return (eventLastISO(b)||'')<(eventLastISO(a)||'')?-1:1; });
   fillEvents('evUpcoming',up,'No upcoming events. The site shows an empty state until you add one.');
   fillEvents('evPast',past,'Nothing past yet.');
 }
 function fillEvents(id,list,empty){
   var el=$(id); el.innerHTML='';
   if(!list.length){ el.innerHTML='<div class="card"><div class="sub">'+esc(empty)+'</div></div>'; return; }
+  var t=isoD(new Date());
   list.forEach(function(e){
-    var d=document.createElement('div');
-    d.className='evrow'+(id==='evPast'?' past':'')+(e.active===false?' off':'');
-    d.innerHTML='<div class="evrow-t">'+esc(e.title||'Untitled')+(e.active===false?' · <span style="color:#FF8A80">hidden</span>':'')+'</div>'+
-      '<div class="evrow-m">'+esc(EV_KIND[e.kind]||'Pop-up')+' · '+esc(fmtEvDate(e))+'</div>'+
+    var days=eventDays(e);
+    var rows=days.map(function(d){
+      var past=d.dateISO<t;
+      return '<div class="evday'+(past?' past':'')+'"><span>'+esc(shortDay(d.dateISO))+'</span>'+
+             '<span class="evday-t">'+esc(dayTimes(d)||'time TBA')+'</span></div>';
+    }).join('');
+    var d2=document.createElement('div');
+    d2.className='evrow'+(id==='evPast'?' past':'')+(e.active===false?' off':'');
+    d2.innerHTML='<div class="evrow-t">'+esc(e.title||'Untitled')+(e.active===false?' · <span style="color:#FF8A80">hidden</span>':'')+'</div>'+
+      '<div class="evrow-m">'+esc(EV_KIND[e.kind]||'Pop-up')+'</div>'+
       (e.host?'<div class="evrow-host">Hosted by '+esc(e.host)+'</div>':'')+
       (e.venue||e.address?'<div class="evrow-m">'+esc([e.venue,e.address].filter(Boolean).join(' · '))+'</div>':'')+
+      (rows?'<div class="evdays">'+rows+'</div>':'<div class="evrow-m">no days set</div>')+
       (e.note?'<div class="evrow-m">'+esc(e.note)+'</div>':'')+
       (e.img?'<img src="'+esc(e.img)+'" alt="">':'');
-    d.onclick=function(){ openEvent(e); };
-    el.appendChild(d);
+    d2.onclick=function(){ openEvent(e); };
+    el.appendChild(d2);
   });
 }
+
+/* ---- the day-row editor ---- */
+function renderDayRows(){
+  var el=$('evDays'); el.innerHTML='';
+  evDayRows.forEach(function(d,i){
+    var row=document.createElement('div'); row.className='dayrow';
+    var inner=document.createElement('div'); inner.className='dayrow-in';
+    inner.innerHTML='<span class="dayrow-n">Day '+(i+1)+(d.dateISO?' · '+esc(shortDay(d.dateISO)):'')+'</span>'+
+      '<input class="inp" type="date" value="'+esc(d.dateISO||'')+'">'+
+      '<input class="inp" placeholder="Start · 4pm" value="'+esc(d.startTime||'')+'">'+
+      '<input class="inp" placeholder="End · 9pm" value="'+esc(d.endTime||'')+'">';
+    var ins=inner.querySelectorAll('input');
+    ins[0].onchange=function(){ d.dateISO=ins[0].value; sortDayRows(); };
+    ins[1].oninput =function(){ d.startTime=ins[1].value.trim(); paintDaySum(); };
+    ins[2].oninput =function(){ d.endTime =ins[2].value.trim(); paintDaySum(); };
+    var x=document.createElement('button'); x.className='dayrow-x'; x.type='button'; x.textContent='✕';
+    x.title='Remove this day';
+    x.onclick=function(){ evDayRows.splice(i,1); if(!evDayRows.length) addDayRow(); else { renderDayRows(); paintDaySum(); } };
+    row.appendChild(inner); row.appendChild(x);
+    el.appendChild(row);
+  });
+  paintDaySum();
+}
+function sortDayRows(){
+  evDayRows.sort(function(a,b){
+    if(!a.dateISO) return 1; if(!b.dateISO) return -1;
+    return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0;
+  });
+  renderDayRows();
+}
+function addDayRow(){
+  var last=evDayRows[evDayRows.length-1];
+  evDayRows.push({ dateISO:'', startTime:last?last.startTime:'', endTime:last?last.endTime:'' });
+  renderDayRows();
+}
+function copyTimesDown(){
+  if(!evDayRows.length) return;
+  var f=evDayRows[0];
+  evDayRows.forEach(function(d){ d.startTime=f.startTime; d.endTime=f.endTime; });
+  renderDayRows();
+}
+function paintDaySum(){
+  var el=$('evDaySum'); if(!el) return;
+  var set=evDayRows.filter(function(d){ return d.dateISO; });
+  if(!set.length){ el.innerHTML='<b>No days yet.</b> Pick a date above — an event needs at least one.'; return; }
+  var lines=set.slice().sort(function(a,b){ return a.dateISO<b.dateISO?-1:1; }).map(function(d){
+    return esc(shortDay(d.dateISO))+' — <b>'+esc(dayTimes(d)||'time TBA')+'</b>';
+  });
+  var dupes = set.length !== new Set(set.map(function(d){return d.dateISO;})).size;
+  el.innerHTML='On the site this reads:<br>'+lines.join('<br>')+
+    (dupes?'<br><span style="color:#FF8A80">Two rows share a date — remove one.</span>':'');
+}
+
 var evEditing=null, evImg=null, evActive=true;
 function openEvent(e){
   evEditing=e||null; evImg=e?(e.img||null):null; evActive=e?(e.active!==false):true;
@@ -1061,10 +1269,9 @@ function openEvent(e){
   $('evHost').value    = e?(e.host||''):'';
   $('evVenue').value   = e?(e.venue||''):'';
   $('evAddress').value = e?(e.address||''):'';
-  $('evDate').value    = e?(e.dateISO||''):'';
-  $('evEnd').value     = e?(e.endDateISO||''):'';
-  $('evStart').value   = e?(e.startTime||''):'';
-  $('evEndTime').value = e?(e.endTime||''):'';
+  evDayRows = e ? eventDays(e).map(function(d){ return {dateISO:d.dateISO, startTime:d.startTime||'', endTime:d.endTime||''}; }) : [];
+  if(!evDayRows.length) evDayRows=[{dateISO:'',startTime:'',endTime:''}];
+  renderDayRows();
   $('evNote').value    = e?(e.note||''):'';
   $('evMap').value     = e?(e.mapUrl||''):'';
   $('evSheetStatus').textContent='';
@@ -1092,20 +1299,26 @@ async function onEventFile(ev){
   catch(e){ err('evSheetStatus',e); }
 }
 async function saveEvent(){
-  var date=$('evDate').value;
-  if(!date){ err('evSheetStatus','pick a date'); return; }
   var title=$('evTitle').value.trim();
   if(!title){ err('evSheetStatus','give it a name'); return; }
-  var endD=$('evEnd').value||null;
-  if(endD && endD<date){ err('evSheetStatus','the end date is before the start date'); return; }
+  var days=evDayRows.filter(function(d){ return d.dateISO; })
+    .map(function(d){ return { dateISO:d.dateISO, startTime:(d.startTime||'').trim()||null, endTime:(d.endTime||'').trim()||null }; })
+    .sort(function(a,b){ return a.dateISO<b.dateISO?-1:a.dateISO>b.dateISO?1:0; });
+  if(!days.length){ err('evSheetStatus','add at least one day with a date'); return; }
+  if(days.length !== new Set(days.map(function(d){return d.dateISO;})).size){
+    err('evSheetStatus','two rows have the same date — remove one'); return;
+  }
   var rec={
     kind:$('evKind').value, title:title,
     host:$('evHost').value.trim()||null,
     venue:$('evVenue').value.trim()||null,
     address:$('evAddress').value.trim()||null,
-    dateISO:date, endDateISO:endD,
-    startTime:$('evStart').value.trim()||null,
-    endTime:$('evEndTime').value.trim()||null,
+    days: days,
+    // Kept in sync for sorting and for anything still reading the old shape.
+    dateISO: days[0].dateISO,
+    endDateISO: days[days.length-1].dateISO,
+    startTime: days[0].startTime,
+    endTime: days[0].endTime,
     note:$('evNote').value.trim()||null,
     mapUrl:$('evMap').value.trim()||null,
     img:evImg||null, active:evActive, updatedAt:FS.serverTimestamp()
@@ -1122,6 +1335,149 @@ async function deleteEvent(){
   if(!evEditing) return;
   if(!confirm('Delete this event? It disappears from the site immediately.')) return;
   try{ await FS.deleteDoc(FS.doc(db,'events',evEditing.id)); closeEvent(); }catch(e){ err('evSheetStatus',e); }
+}
+
+/* ================= HERO EDITOR =================
+   Everything edits `heroDraft`, a copy. The live preview renders from that
+   copy using the same width/height/offset rules index.html applies, so the
+   preview is the real thing at real scale — not an approximation.
+   `hero` (and therefore the site) only changes when Save succeeds. */
+function parseReelId(url){
+  var m = String(url||'').match(/instagram\.com\/(?:reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
+  return m ? m[1] : null;
+}
+function renderHeroSummary(){
+  var el=$('heroSummary'); if(!el) return;
+  var label = hero.kind==='photo' ? 'A photo is set'
+            : hero.kind==='reel'  ? 'A reel is set'
+            : 'Nothing set — the hero shows the logo and headline only';
+  var f=hero.frame||{};
+  el.innerHTML='<div class="detail"><span>Right now</span><span>'+esc(label)+'</span></div>'+
+    (hero.kind!=='none'?'<div class="detail"><span>Size</span><span>'+(f.w||0)+' × '+(f.h||0)+'</span></div>':'');
+}
+
+function openHero(){
+  heroDraft = JSON.parse(JSON.stringify(hero));
+  if(!heroDraft.frame) heroDraft.frame={w:320,h:320,y:0};
+  $('heroReelUrl').value = heroDraft.reelId ? 'https://www.instagram.com/reel/'+heroDraft.reelId+'/' : '';
+  $('hW').value = heroDraft.frame.w;
+  $('hH').value = heroDraft.frame.h;
+  $('hY').value = heroDraft.frame.y;
+  ['hW','hH','hY'].forEach(function(id){ $(id).oninput = onHeroSlider; });
+  $('hmTag').textContent = business.tagline || 'Fried fresh for your party, office lunch, wedding or fundraiser.';
+  $('heroStatus').textContent='';
+  document.querySelectorAll('#heroKinds button').forEach(function(b){
+    b.onclick = function(){ setHeroKind(b.getAttribute('data-k')); };
+  });
+  setHeroKind(heroDraft.kind||'none', true);
+  $('heroVeil').classList.add('show'); $('heroSheet').classList.add('show');
+  requestAnimationFrame(scaleHeroStage);
+}
+function closeHero(){
+  heroDraft=null;
+  $('heroVeil').classList.remove('show'); $('heroSheet').classList.remove('show');
+  $('hmMedia').innerHTML='';   // stop any reel that was playing
+}
+
+function setHeroKind(k, keepOffset){
+  heroDraft.kind = k;
+  document.querySelectorAll('#heroKinds button').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-k')===k);
+  });
+  $('heroPhotoBox').classList.toggle('hidden', k!=='photo');
+  $('heroReelBox').classList.toggle('hidden',  k!=='reel');
+  $('heroFrameBox').classList.toggle('hidden', k==='none');
+  // The offset means different things for the two media types, so reset it
+  // when switching rather than carrying a value that no longer applies.
+  if(!keepOffset){
+    heroDraft.frame.y = (k==='reel') ? -22 : 0;
+    $('hY').value = heroDraft.frame.y;
+  }
+  $('hY').min = (k==='reel') ? -60 : -50;
+  $('hY').max = (k==='reel') ?  10 :  50;
+  $('hYHint').textContent = (k==='reel')
+    ? 'Slide until Instagram’s header and buttons are hidden outside the frame.'
+    : 'Slides which part of the photo shows through the frame.';
+  paintHero();
+}
+function onHeroSlider(){
+  heroDraft.frame.w = +$('hW').value;
+  heroDraft.frame.h = +$('hH').value;
+  heroDraft.frame.y = +$('hY').value;
+  paintHero();
+}
+function onReelUrl(){
+  var id = parseReelId($('heroReelUrl').value);
+  heroDraft.reelId = id;
+  if($('heroReelUrl').value.trim() && !id){
+    $('heroStatus').className='status err';
+    $('heroStatus').textContent='That doesn’t look like a reel link — it should contain /reel/.';
+  } else $('heroStatus').textContent='';
+  paintHero();
+}
+async function onHeroFile(ev){
+  var file = ev.target.files && ev.target.files[0]; if(!file) return;
+  ev.target.value='';
+  $('heroStatus').className='status'; $('heroStatus').textContent='Compressing photo…';
+  try{
+    heroDraft.img = await fileToCompressedDataUrl(file);
+    ok('heroStatus','Photo ready — check the preview, then Save.');
+    paintHero();
+  }catch(e){ err('heroStatus', e); }
+}
+
+/* Same rules index.html uses, so preview and site cannot drift. */
+function paintHero(){
+  var mount=$('hmMedia'), h=heroDraft;
+  var html = h.kind==='photo' && h.img   ? '<img src="'+esc(h.img)+'" alt="">'
+           : h.kind==='reel'  && h.reelId ? '<iframe src="https://www.instagram.com/reel/'+esc(h.reelId)+'/embed" scrolling="no" allowfullscreen></iframe>'
+           : '';
+  if(!html){ mount.innerHTML=''; mount.classList.remove('on'); mount.style.width=''; mount.style.height=''; }
+  else{
+    // Only rewrite the iframe when the reel actually changed, or it reloads on every slider tick.
+    var key = h.kind+':'+(h.kind==='reel'?h.reelId:(h.img||'').slice(-24));
+    if(mount.getAttribute('data-k')!==key){ mount.innerHTML=html; mount.setAttribute('data-k',key); }
+    mount.classList.add('on');
+    mount.style.width = h.frame.w+'px';
+    mount.style.height = h.frame.h+'px';
+    if(h.kind==='reel'){
+      var ifr=mount.querySelector('iframe');
+      if(ifr){ ifr.style.top=h.frame.y+'%'; ifr.style.height='190%'; }
+    }else{
+      var img=mount.querySelector('img');
+      if(img) img.style.objectPosition='50% '+Math.max(0,Math.min(100,50+(h.frame.y||0)))+'%';
+    }
+  }
+  $('hvW').textContent=h.frame.w+'px';
+  $('hvH').textContent=h.frame.h+'px';
+  $('hvY').textContent=(h.frame.y>0?'+':'')+h.frame.y;
+  scaleHeroStage();
+}
+
+/* The mock is built at a true 430px phone width, then scaled to fit the
+   sheet — so proportions in the preview match the real phone exactly. */
+function scaleHeroStage(){
+  var stage=$('heroStage'), inner=$('heroScale');
+  if(!stage||!inner) return;
+  var scale=Math.min(1, stage.clientWidth/430);
+  inner.style.transform='scale('+scale+')';
+  stage.style.height=(inner.offsetHeight*scale)+'px';
+}
+addEventListener('resize',function(){ if(heroDraft) scaleHeroStage(); });
+
+async function saveHero(){
+  var h=heroDraft; if(!h) return;
+  if(h.kind==='photo' && !h.img){ err('heroStatus','choose a photo first'); return; }
+  if(h.kind==='reel'  && !h.reelId){ err('heroStatus','paste a reel link first'); return; }
+  var rec={ kind:h.kind, img:h.kind==='photo'?h.img:null, reelId:h.kind==='reel'?h.reelId:null,
+            frame:h.frame, updatedAt:FS.serverTimestamp() };
+  $('heroStatus').className='status'; $('heroStatus').textContent='Saving…';
+  try{
+    await FS.setDoc(FS.doc(db,'settings','hero'), rec);
+    hero=Object.assign({},rec); renderHeroSummary();
+    ok('heroStatus','Saved ✓ — live on the site now');
+    setTimeout(closeHero,800);
+  }catch(e){ err('heroStatus', e); }
 }
 
 /* ================= SCHEDULE ================= */
