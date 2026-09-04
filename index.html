@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Riah's Fav's — public site — Version 2.0
+   Riah's Fav's — public site — Version 2.1
    Palette pulled straight off the logo:
      gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
      ribbon blue #1B4FA8 · plumeria cream #FFF3D6
@@ -420,17 +420,6 @@ input,select,textarea{font-size:var(--t-control)}
   </div>
 </section>
 
-<!-- availability -->
-<section class="rv">
-  <div class="wrap">
-    <span class="eyebrow">Booking calendar</span>
-    <h2 class="title display">Open catering weeks</h2>
-    <p class="sub">Every job needs at least two weeks so we can source and prep properly. Here's what's still open.</p>
-  </div>
-  <div class="strip" id="weeksStrip"></div>
-</section>
-
-<!-- menu -->
 <section id="menu" class="rv">
   <div class="wrap">
     <span class="eyebrow">How we fry it</span>
@@ -452,21 +441,15 @@ input,select,textarea{font-size:var(--t-control)}
   </div>
 </section>
 
-<!-- events -->
-
-<!-- cause / ribbon -->
-<section id="cause" class="rv" style="display:none">
+<section id="calendar" class="rv">
   <div class="wrap">
-    <span class="eyebrow">Why we do this</span>
-    <h2 class="title display" id="causeHeading">The ribbon</h2>
-    <div class="cause-card">
-      <p id="causeBody"></p>
-      <a class="cause-link" id="causeLink" style="display:none"></a>
-    </div>
+    <span class="eyebrow">Booking calendar</span>
+    <h2 class="title display">Open catering weeks</h2>
+    <p class="sub">Every job needs at least two weeks so we can source and prep properly. Here's what's still open.</p>
   </div>
+  <div class="strip" id="weeksStrip"></div>
 </section>
 
-<!-- how it works -->
 <section id="how" class="rv">
   <div class="wrap">
     <span class="eyebrow">How catering works</span>
@@ -480,7 +463,17 @@ input,select,textarea{font-size:var(--t-control)}
   </div>
 </section>
 
-<!-- gallery -->
+<section id="cause" class="rv" style="display:none">
+  <div class="wrap">
+    <span class="eyebrow">Why we do this</span>
+    <h2 class="title display" id="causeHeading">The ribbon</h2>
+    <div class="cause-card">
+      <p id="causeBody"></p>
+      <a class="cause-link" id="causeLink" style="display:none"></a>
+    </div>
+  </div>
+</section>
+
 <section class="rv" id="gallerySec" style="display:none">
   <div class="wrap"><span class="eyebrow">Recent jobs</span><h2 class="title display">From the fryer</h2></div>
   <div class="gal" id="galStrip"></div>
@@ -495,7 +488,7 @@ input,select,textarea{font-size:var(--t-control)}
     <p id="footTagline"></p>
     <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
     <div class="flinks" id="footLinks"></div>
-    <div class="ver">RIAH'S FAV'S · SITE VERSION 2.0</div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 2.1</div>
   </div>
 </footer>
 
@@ -603,8 +596,8 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <script>
-/* ================= Riah's Fav's — live site · Version 2.0 ================= */
-var RF_VERSION = '2.0';
+/* ================= Riah's Fav's — live site · Version 2.1 ================= */
+var RF_VERSION = '2.1';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
