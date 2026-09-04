@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Riah's Fav's — public site — Version 1.5
+   Riah's Fav's — public site — Version 1.6
    Palette pulled straight off the logo:
      gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
      ribbon blue #1B4FA8 · plumeria cream #FFF3D6
@@ -459,7 +459,7 @@ input,select,textarea{font-size:var(--t-control)}
     <p id="footTagline"></p>
     <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
     <div class="flinks" id="footLinks"></div>
-    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.5</div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.6</div>
   </div>
 </footer>
 
@@ -563,8 +563,8 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <script>
-/* ================= Riah's Fav's — live site · Version 1.5 ================= */
-var RF_VERSION = '1.5';
+/* ================= Riah's Fav's — live site · Version 1.6 ================= */
+var RF_VERSION = '1.6';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -796,21 +796,23 @@ function renderPans(){
     el.appendChild(d);
   });
 }
+function sidePrice(sd,panId){ return (sd.prices && sd.prices[panId]) || 0; }
+function pricedPansFor(sd){ return activeOnly(data.pans).filter(function(p){ return sidePrice(sd,p.id)>0; }); }
+/* A side with no price on any pan size cannot be ordered, so it must not be
+   advertised either — otherwise the menu lists something the form refuses. */
+function orderableSides(){ return activeOnly(data.sides).filter(function(sd){ return pricedPansFor(sd).length>0; }); }
+
 function renderSidesPublic(){
-  var list=activeOnly(data.sides);
+  var list=orderableSides();
   document.getElementById('sidesWrap').style.display=list.length?'block':'none';
   var el=document.getElementById('sideList'); el.innerHTML='';
   list.forEach(function(sd){
-    var bits=activeOnly(data.pans).map(function(p){
-      var pr=sidePrice(sd,p.id);
-      return pr?escH(p.label)+' '+money(pr):null;
-    }).filter(Boolean).join(' · ');
+    var bits=pricedPansFor(sd).map(function(p){ return escH(p.label)+' '+money(sidePrice(sd,p.id)); }).join(' · ');
     var b=document.createElement('span'); b.className='chip';
-    b.innerHTML=escH(sd.label)+(bits?'<span class="meta">'+bits+'</span>':'');
+    b.innerHTML=escH(sd.label)+'<span class="meta">'+bits+'</span>';
     el.appendChild(b);
   });
 }
-function sidePrice(sd,panId){ return (sd.prices && sd.prices[panId]) || 0; }
 
 var EV_KIND={market:'Farmers market',popup:'Pop-up',truck:'Food truck stop',festival:'Festival',fundraiser:'Fundraiser',private:'Private event'};
 
@@ -1087,12 +1089,11 @@ function gateStep2(){
 
 /* ---- wizard step 3: sides by the pan, plus flat add-ons ---- */
 function renderSideOpts(){
-  var list=activeOnly(data.sides), pans=activeOnly(data.pans);
+  var list=orderableSides();
   document.getElementById('sidesSection').style.display=list.length?'block':'none';
   var el=document.getElementById('sideOpts'); el.innerHTML='';
   list.forEach(function(sd){
-    var priced=pans.filter(function(p){ return sidePrice(sd,p.id)>0; });
-    if(!priced.length) return;
+    var priced=pricedPansFor(sd);
     var box=document.createElement('div'); box.className='panbox';
     box.innerHTML='<div class="panbox-n">'+escH(sd.label)+'</div>';
     priced.forEach(function(p){
@@ -1120,7 +1121,7 @@ function renderAddonOpts(){
   step3Empty();
 }
 function step3Empty(){
-  var none = !activeOnly(data.sides).length && !activeOnly(data.addons).length;
+  var none = !orderableSides().length && !activeOnly(data.addons).length;
   document.getElementById('step3Empty').innerHTML = none
     ? '<div class="empty" style="margin-top:18px"><b>Nothing to add here yet</b><p>Tell us what you’d like on the side in the notes on the next step and we’ll price it into your quote.</p></div>'
     : '';
@@ -1145,7 +1146,7 @@ function orderLines(){
                    qty:q, unitPrice:panPrice(p), total:q*panPrice(p) });
     });
   });
-  activeOnly(data.sides).forEach(function(sd){
+  orderableSides().forEach(function(sd){
     pans.forEach(function(p){
       var q=order.sideQty[sd.id+'|'+p.id]||0;
       if(!q) return;
