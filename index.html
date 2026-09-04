@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Riah's Fav's — public site — Version 1.7
+   Riah's Fav's — public site — Version 1.8
    Palette pulled straight off the logo:
      gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
      ribbon blue #1B4FA8 · plumeria cream #FFF3D6
@@ -354,6 +354,33 @@ input,select,textarea{font-size:var(--t-control)}
 </head>
 <body>
 
+<script>
+/* Runs before anything paints, on purpose.
+
+   Two separate things were dropping you mid-page on reload:
+
+   1. The browser restores the old scroll offset on reload. Because the menu,
+      events and availability all arrive from Firestore after first paint, the
+      page is SHORTER at restore time than it was when you scrolled — so the
+      restore clamps and lands somewhere you were never at (1400 became 908).
+      Manual restoration is the only honest option while content is async.
+
+   2. Clicking a nav link leaves #events in the URL, so every later reload
+      jumps to that section. A shared deep link should still work, so the hash
+      is only dropped when this is a RELOAD, not a fresh navigation. */
+(function(){
+  try{
+    if('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    var reloaded = nav ? nav.type === 'reload' : false;
+    if(reloaded && location.hash){
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    if(!location.hash) window.scrollTo(0, 0);
+  }catch(e){}
+})();
+</script>
+
 <div id="notchbar"></div>
 <header>
   <div class="hbar">
@@ -478,7 +505,7 @@ input,select,textarea{font-size:var(--t-control)}
     <p id="footTagline"></p>
     <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
     <div class="flinks" id="footLinks"></div>
-    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.7</div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.8</div>
   </div>
 </footer>
 
@@ -586,8 +613,8 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <script>
-/* ================= Riah's Fav's — live site · Version 1.7 ================= */
-var RF_VERSION = '1.7';
+/* ================= Riah's Fav's — live site · Version 1.8 ================= */
+var RF_VERSION = '1.8';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -706,6 +733,22 @@ function renderAll(){
   renderTimeWindows(); renderServices(); renderOccasions();
   renderChickenOpts(); renderSideOpts(); renderAddonOpts();
   applyCopy(); refreshEst(); gateStep1(); gateStep2();
+  settleHash();
+}
+/* A #section link lands before the events and menu have rendered, so the
+   target has moved by the time the page settles. Re-aim once, without
+   smooth-scrolling, so a deep link ends up where it says. */
+function settleHash(){
+  if(!location.hash) return;
+  var el;
+  try{ el = document.querySelector(location.hash); }catch(e){ return; }
+  if(!el) return;
+  requestAnimationFrame(function(){
+    var prev = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    el.scrollIntoView();
+    document.documentElement.style.scrollBehavior = prev;
+  });
 }
 
 function applyCopy(){
