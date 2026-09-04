@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#141010">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
-/* ================= Riah's Fav's Admin — Version 1.4 ================= */
+/* ================= Riah's Fav's Admin — Version 1.5 ================= */
 :root{
   --ink:#141010;--ink-2:#1F1917;--ink-3:#2A2220;--ink-4:#352B28;--line:rgba(255,243,214,.12);
   --gold:#F7A81B;--orange:#F26522;--red:#E01B12;--blue:#1B4FA8;--blue-lite:#3B79E0;
@@ -133,6 +133,10 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 .pill.p-pending{background:rgba(224,27,18,.2);color:#FF8A80}
 .pill.p-quoted{background:rgba(59,121,224,.2);color:#8FB6F5}
 .pill.p-confirmed{background:rgba(95,168,111,.2);color:#96D3A3}
+.feetag{font-size:.6rem;font-weight:800;color:var(--gold);background:rgba(247,168,27,.16);
+  padding:3px 7px;border-radius:99px;margin-left:6px;white-space:nowrap}
+.feewarn{background:rgba(247,168,27,.12);border:1px solid rgba(247,168,27,.4);border-radius:10px;
+  padding:11px 13px;font-size:.8rem;font-weight:700;color:var(--petal);margin-top:11px;line-height:1.5}
 .rush{font-size:.6rem;font-weight:800;color:#FF8A80;background:rgba(224,27,18,.2);padding:4px 8px;border-radius:99px;margin-left:6px}
 .req-b{padding:0 16px 16px;display:none}
 .req.open .req-b{display:block}
@@ -338,7 +342,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
       <div class="hqgrid" id="homeQuick"></div>
       <h3 class="title display" style="font-size:1.05rem;margin-top:26px">Next 14 days</h3>
       <div id="homeUpcoming"></div>
-      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.4</div>
+      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.5</div>
     </div>
 
     <!-- ============ REQUESTS ============ -->
@@ -606,7 +610,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
         <div class="status" id="causeStatus"></div>
       </div>
 
-      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.4</div>
+      <div class="ver">RIAH'S FAV'S ADMIN · VERSION 1.5</div>
     </div>
 
   </div>
@@ -741,8 +745,8 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 </div>
 
 <script>
-/* ================= Riah's Fav's Admin — Version 1.4 ================= */
-var RF_VERSION = '1.4';
+/* ================= Riah's Fav's Admin — Version 1.5 ================= */
+var RF_VERSION = '1.5';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -991,7 +995,8 @@ function reqCard(r){
   head.innerHTML='<div class="req-top"><div style="min-width:0">'+
     '<div class="req-n">'+esc(r.name||'—')+(r.shortNotice?'<span class="rush">⏱ RUSH</span>':'')+'</div>'+
     '<div class="req-m">'+esc(r.dayLabel||'')+' · '+esc(r.window||'')+'</div>'+
-    '<div class="req-m">'+esc(reqPans(r))+' · '+esc(r.serviceLabel||'')+'</div>'+
+    '<div class="req-m">'+esc(reqPans(r))+' · '+esc(r.serviceLabel||'')+
+      (r.serviceFee?'<span class="feetag">+ fee</span>':'')+'</div>'+
     '</div><span class="pill p-'+esc(r.status||'pending')+'">'+esc(r.status||'pending')+'</span></div>';
   head.onclick=function(){ c.classList.toggle('open'); };
   c.appendChild(head);
@@ -1002,7 +1007,7 @@ function reqCard(r){
     (r.email?det('Email',r.email):'')+
     det('Occasion',r.occasion||'—')+
     orderLinesHtml(r)+
-    det('Service',r.serviceLabel||'—')+
+    det('Service', (r.serviceLabel||'—') + (r.serviceFee?' · on-site fee not yet priced':''))+
     det('Where',[r.venue,r.address].filter(Boolean).join(' · ')||'—')+
     (r.notes?det('Notes',r.notes):'')+
     det('Their estimate', r.estimate?money(r.estimate):'none — quote by head count')+
@@ -1084,9 +1089,12 @@ function openQuote(r){
   $('qBody').innerHTML=
     '<div class="card"><div class="sub">'+esc(r.name)+' · '+esc(r.dayLabel||'')+'</div>'+
     '<div class="detail"><span>Order</span><span>'+esc(reqPans(r))+'</span></div>'+
+    '<div class="detail"><span>Service</span><span>'+esc(r.serviceLabel||'—')+'</span></div>'+
+    (r.serviceFee?'<div class="feewarn">💵 They chose <b>'+esc(r.serviceLabel)+'</b>. The on-site fee is not in their estimate — add it to the total below, or to the travel/setup field.</div>':'')+
     '<div class="detail"><span>Their estimate</span><span>'+(r.estimate?money(r.estimate):'none — you quote it')+'</span></div></div>'+
     '<label class="fl">Food + service total ($)</label><input class="inp" id="qAmt" inputmode="decimal" value="'+(r.quote||(suggested?Math.round(suggested):''))+'" placeholder="0">'+
-    '<label class="fl">Travel / setup fee ($)</label><input class="inp" id="qFee" inputmode="decimal" value="'+(r.travelFee||'')+'" placeholder="0">'+
+    '<label class="fl">Travel'+(r.serviceFee?' / on-site':'')+' fee ($)</label>'+
+    '<input class="inp" id="qFee" inputmode="decimal" value="'+(r.travelFee||'')+'" placeholder="0">'+
     '<div class="card" id="qPreview"></div>'+
     '<button class="btn" onclick="saveQuote()">Save quote</button><div class="status" id="qStatus"></div>';
   ['qAmt','qFee'].forEach(function(id){ $(id).oninput=qPreview; });
@@ -1890,7 +1898,7 @@ function bars(id,rows){
 function csvCell(v){ v=String(v==null?'':v); return '"'+v.replace(/"/g,'""')+'"'; }
 function exportCSV(){
   var cols=['dayISO','dayLabel','window','status','name','phone','email','occasion','panSummary',
-    'serviceLabel','estimate','quote','travelFee','depositPaid','paymentMethod','venue','address','notes','shortNotice'];
+    'serviceLabel','serviceFee','estimate','quote','travelFee','depositPaid','paymentMethod','venue','address','notes','shortNotice'];
   var lines=[cols.map(csvCell).join(',')];
   REQS.forEach(function(r){
     lines.push(cols.map(function(c){

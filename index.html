@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Riah's Fav's — public site — Version 1.4
+   Riah's Fav's — public site — Version 1.5
    Palette pulled straight off the logo:
      gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
      ribbon blue #1B4FA8 · plumeria cream #FFF3D6
@@ -282,6 +282,9 @@ input,select,textarea{font-size:var(--t-control)}
 
 .est{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:20px}
 .est-row{display:flex;justify-content:space-between;font-size:.86rem;font-weight:700;padding:5px 0;gap:12px}
+.chip.fee .meta:after{content:' · +fee';color:var(--gold);font-weight:800}
+.chip.fee.sel .meta:after{color:#fff}
+.est-row.pending span:last-child{color:var(--gold);font-style:italic}
 .est-row.total{border-top:1px solid var(--line);margin-top:7px;padding-top:11px;font-size:1rem;font-weight:800}
 .est-row.total b{font-family:'Archivo Black';background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
 .est-note{font-size:.75rem;color:var(--muted);margin-top:9px;line-height:1.5;font-weight:600}
@@ -456,7 +459,7 @@ input,select,textarea{font-size:var(--t-control)}
     <p id="footTagline"></p>
     <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
     <div class="flinks" id="footLinks"></div>
-    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.4</div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.5</div>
   </div>
 </footer>
 
@@ -494,6 +497,7 @@ input,select,textarea{font-size:var(--t-control)}
     <div class="est" id="estBox3"></div>
     <span class="lbl">Service style</span>
     <div class="chips" id="serviceChips"></div>
+    <div class="note" id="serviceNote"></div>
     <div class="nav-row">
       <button class="btn btn-soft" onclick="goStep(1)">Back</button>
       <button class="btn" id="next2" disabled onclick="goStep(3)">Continue</button>
@@ -559,8 +563,8 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <script>
-/* ================= Riah's Fav's — live site · Version 1.4 ================= */
-var RF_VERSION = '1.4';
+/* ================= Riah's Fav's — live site · Version 1.5 ================= */
+var RF_VERSION = '1.5';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -606,9 +610,11 @@ var FALLBACK = {
   ],
   sides: [], addons: [],
   services: [
-    { id:'dropoff', label:'Drop-off',         desc:'Trays delivered hot' },
-    { id:'setup',   label:'Delivery + setup', desc:'We set the buffet' },
-    { id:'onsite',  label:'Served on-site',   desc:'We stay and serve' }
+    { id:'dropoff', label:'Drop-off',       desc:'Trays delivered hot',  fee:false },
+    /* The on-site fee depends on hours, staff and distance, so it is never
+       priced on the site — it is flagged here and quoted by hand. */
+    { id:'onsite',  label:'Served on-site', desc:'We stay and serve',    fee:true,
+      feeNote:'Extra fee — quoted with your total' }
   ],
   occasions: ['Birthday','Wedding','Office lunch','Graduation','Church / community','Fundraiser','Block party','Other'],
   business: {
@@ -633,7 +639,7 @@ var data = {
 var order = {
   weekId:null, weekLabel:null, dayISO:null, dayLabel:null, shortNotice:false, window:null,
   chicken:{}, sideQty:{}, addons:[],
-  service:'dropoff', serviceLabel:'Drop-off', occasion:null
+  service:'dropoff', serviceLabel:'Drop-off', serviceFee:false, occasion:null
 };
 
 /* ================= boot ================= */
@@ -1055,11 +1061,23 @@ function renderChickenOpts(){
 function renderServices(){
   var el=document.getElementById('serviceChips'); el.innerHTML='';
   (data.services||FALLBACK.services).forEach(function(sv,i){
-    var b=document.createElement('button'); b.type='button'; b.className='chip'+(i===0?' sel':'');
+    var b=document.createElement('button'); b.type='button'; b.className='chip'+(i===0?' sel':'')+(sv.fee?' fee':'');
     b.innerHTML=escH(sv.label)+'<span class="meta">'+escH(sv.desc||'')+'</span>';
-    b.onclick=function(){ selectOne(el,b); order.service=sv.id; order.serviceLabel=sv.label; };
+    b.onclick=function(){
+      selectOne(el,b);
+      order.service=sv.id; order.serviceLabel=sv.label; order.serviceFee=!!sv.fee;
+      paintServiceNote(sv); refreshEst();
+    };
     el.appendChild(b);
+    if(i===0){ order.service=sv.id; order.serviceLabel=sv.label; order.serviceFee=!!sv.fee; paintServiceNote(sv); }
   });
+}
+function paintServiceNote(sv){
+  var n=document.getElementById('serviceNote');
+  if(!n) return;
+  n.textContent = sv.fee ? ('💵 ' + (sv.feeNote || 'Extra fee — quoted with your total') +
+    '. It depends on how long you need us and how far we travel, so we price it by hand rather than guess.') : '';
+  n.classList.toggle('on', !!sv.fee);
 }
 function panCount(bag){ return Object.keys(bag).reduce(function(n,k){ return n+bag[k]; },0); }
 function gateStep2(){
@@ -1158,8 +1176,13 @@ function refreshEst(){
         (l.qty>1?' × '+l.qty:'')+'</span><span>'+money(l.total)+'</span></div>';
     }).join('');
     var total=estimateTotal();
+    if(order.serviceFee){
+      html+='<div class="est-row pending"><span>'+escH(order.serviceLabel)+'</span><span>fee quoted</span></div>';
+    }
     html+='<div class="est-row total"><span>Estimate</span><b>'+money(total)+'</b></div>'+
-      '<div class="est-note">Pan prices are firm. Travel and anything custom gets itemised in your real quote. '+
+      '<div class="est-note">Pan prices are firm.'+
+      (order.serviceFee?' The '+escH(order.serviceLabel).toLowerCase()+' fee is not in this figure — it lands in your quote.':'')+
+      ' Travel and anything custom gets itemised in your real quote. '+
       'Deposit to hold the date would be about '+money(depositFor(total))+'.</div>';
   }
   ['estBox','estBox2','estBox3'].forEach(function(id){ var e=document.getElementById(id); if(e) e.innerHTML=html; });
@@ -1213,7 +1236,7 @@ async function sendReq(){
     pricing:'pan',
     lines: lines,
     panSummary: panSummary(lines),
-    service:order.service, serviceLabel:order.serviceLabel,
+    service:order.service, serviceLabel:order.serviceLabel, serviceFee:!!order.serviceFee,
     estimate: total || null, occasion:order.occasion||null,
     venue:venue||null, address:addr, notes:notes||null,
     quote:null, travelFee:null, depositPaid:null, paymentMethod:null
@@ -1226,7 +1249,7 @@ async function sendReq(){
       fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({name:name,phone:phone,dayLabel:order.dayLabel,window:order.window,
           panSummary:req.panSummary,lines:lines.map(function(l){return l.qty+'× '+l.label+(l.pan?' ('+l.pan+')':'');}),
-          serviceLabel:order.serviceLabel,estimate:total,occasion:order.occasion,
+          serviceLabel:order.serviceLabel,serviceFee:!!order.serviceFee,estimate:total,occasion:order.occasion,
           venue:venue,address:addr,notes:notes,shortNotice:order.shortNotice})
       }).catch(function(){});
     }catch(e){}
@@ -1234,7 +1257,7 @@ async function sendReq(){
     document.getElementById('sumBox').innerHTML=
       row('Event day',order.dayLabel)+row('Serving',order.window)+
       lines.map(function(l){ return row(l.qty+'× '+l.pan||l.label, l.label+' · '+money(l.total)); }).join('')+
-      row('Service',order.serviceLabel)+
+      row('Service',order.serviceLabel+(order.serviceFee?' · fee quoted separately':''))+
       row('Where',venue?venue+' · '+addr:addr)+
       row('Estimate', total?money(total):'Quoted by text');
     goStep(5);
