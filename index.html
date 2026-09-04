@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   Riah's Fav's — public site — Version 1.9
+   Riah's Fav's — public site — Version 2.0
    Palette pulled straight off the logo:
      gold #F7A81B → orange #F26522 → red #E01B12  (the wordmark gradient)
      ribbon blue #1B4FA8 · plumeria cream #FFF3D6
@@ -411,10 +411,13 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <!-- next pop-up banner -->
-<section id="nextWrap" style="display:none;padding:0">
-  <div class="wrap"><div class="card" style="border-left:4px solid var(--gold)">
-    <div class="eyebrow">Catch us next</div><div id="nextBody"></div>
-  </div></div>
+<section id="events" class="rv">
+  <div class="wrap">
+    <span class="eyebrow">Catch us next</span>
+    <h2 class="title display">Markets &amp; pop-ups</h2>
+    <p class="sub">No order needed — just come find us. Dates go up the moment we lock them in.</p>
+    <div id="evList" class="grid2"></div>
+  </div>
 </section>
 
 <!-- availability -->
@@ -450,14 +453,6 @@ input,select,textarea{font-size:var(--t-control)}
 </section>
 
 <!-- events -->
-<section id="events" class="rv">
-  <div class="wrap">
-    <span class="eyebrow">Out in the wild</span>
-    <h2 class="title display">Markets &amp; pop-ups</h2>
-    <p class="sub">No order needed — just come find us. Dates go up the moment we lock them in.</p>
-    <div id="evList" class="grid2"></div>
-  </div>
-</section>
 
 <!-- cause / ribbon -->
 <section id="cause" class="rv" style="display:none">
@@ -500,7 +495,7 @@ input,select,textarea{font-size:var(--t-control)}
     <p id="footTagline"></p>
     <div class="area"><b>Where we cater</b><span id="footArea">Salt Lake County, Davis County, and parts of Utah County.</span></div>
     <div class="flinks" id="footLinks"></div>
-    <div class="ver">RIAH'S FAV'S · SITE VERSION 1.9</div>
+    <div class="ver">RIAH'S FAV'S · SITE VERSION 2.0</div>
   </div>
 </footer>
 
@@ -608,8 +603,8 @@ input,select,textarea{font-size:var(--t-control)}
 </div>
 
 <script>
-/* ================= Riah's Fav's — live site · Version 1.9 ================= */
-var RF_VERSION = '1.9';
+/* ================= Riah's Fav's — live site · Version 2.0 ================= */
+var RF_VERSION = '2.0';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -947,7 +942,6 @@ function renderEvents(){
   if(!list.length){
     el.className='';
     el.innerHTML='<div class="empty"><b>Nothing on the books right now</b><p>No markets or pop-ups scheduled yet — check back soon, or book us privately.</p></div>';
-    document.getElementById('nextWrap').style.display='none';
     return;
   }
   el.className='grid2';
@@ -956,16 +950,6 @@ function renderEvents(){
     img.onclick=function(){ openLightbox(img.src, img.alt); };
   });
 
-  var n=list[0], todayISO=iso(new Date());
-  var nd=nextDayOf(n,todayISO), days=eventDays(n);
-  var more=days.filter(function(d){ return d.dateISO>todayISO; }).length-1;
-  document.getElementById('nextBody').innerHTML=
-    '<div style="font-weight:800;font-size:1.05rem;margin-top:5px">'+escH(n.title||'Pop-up')+'</div>'+
-    '<div class="sub" style="margin-top:5px">'+(nd?escH(fmtLongDay(nd.dateISO))+(dayTimes(nd)?' · '+escH(dayTimes(nd)):''):'')+
-    (more>0?'<br>'+more+' more day'+(more===1?'':'s')+' this run':'')+
-    (n.host?'<br>Hosted by '+escH(n.host):'')+(n.venue?'<br>'+escH(n.venue):'')+'</div>'+
-    '<a class="btn btn-soft" style="margin-top:14px" href="#events">See all pop-ups</a>';
-  document.getElementById('nextWrap').style.display='block';
 }
 
 /* Renders the admin-configured hero media. Shared shape with the admin's
