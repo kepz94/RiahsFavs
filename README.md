@@ -1,6 +1,6 @@
 # Riah's Fav's — Korean Fried Chicken Catering
 
-Version 2.3
+Version 2.4
 
 A two-file site plus a serverless email hook. Same architecture as CakedbyK:
 plain HTML/CSS/JS, no build step, no framework, no bundler. You edit the file,
