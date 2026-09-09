@@ -1,6 +1,6 @@
 # Riah's Fav's — Korean Fried Chicken Catering
 
-Version 1.1
+Version 2.2
 
 A two-file site plus a serverless email hook. Same architecture as CakedbyK:
 plain HTML/CSS/JS, no build step, no framework, no bundler. You edit the file,
@@ -107,6 +107,7 @@ settings/schedule   booking rules, serving windows, blocked dates
 settings/policy     deposit percent, pay-in-full threshold
 settings/business   tagline, service area, socials, contact
 settings/cause      the "why we do this" section (off until written)
+settings/hero       what sits at the top of the homepage — see below
 menu/styles         the two chicken styles
 menu/packages       per-guest tiers — empty until Riah adds them
 menu/sides          empty; the section hides itself when empty
@@ -116,6 +117,48 @@ requests/{auto}     one catering request, pending → quoted → confirmed → c
 events/{auto}       pop-ups: host, venue, address, date, times, photo
 gallery/{auto}      photos for the "From the fryer" strip
 ```
+
+### The homepage hero
+
+`settings/hero` carries a `kind`, and only one kind is live at a time:
+
+| `kind`  | What the top of the page shows                                    |
+|---------|-------------------------------------------------------------------|
+| `none`  | The brandmark, headline and buttons on the flat gradient          |
+| `photo` | A boxed photo card above the headline                             |
+| `reel`  | A boxed Instagram reel embed above the headline                   |
+| `video` | **A looping video filling the hero, headline sitting over it**    |
+
+The film (`kind: 'video'`, added in 2.2) is a separate layer from the boxed
+photo/reel card, and the two cannot both be showing: `heroMarkup()` returns
+nothing for `video`, so `body.has-hero` stays off and only `body.has-film`
+turns on. Setting the hero back to a photo or a reel restores 2.1 behaviour
+exactly.
+
+```
+hero.film = {
+  url:    'https://…/hero.mp4'  direct link to the file — .mp4/.webm/.mov/.m4v
+  poster: '<data URL>'          still frame; compressed in the browser like any photo
+  scrim:  0-90                  how much darkness sits over the video
+  height: 50-100                hero height as a percent of the screen
+  y:      0-100                 which part of the frame shows through the crop
+}
+```
+
+**The video is not stored in Firestore.** A document caps at 1 MB, so unlike
+photos the film is referenced by URL — put the file anywhere that serves it
+over HTTPS (the repo root works: commit `hero.mp4` and set the link to
+`hero.mp4`). Keep it under about 10 MB; every phone that opens the page pays
+for it.
+
+It autoplays because it is `muted` + `playsinline` + `loop` — the only
+combination iOS and Android allow without a tap. When autoplay is refused
+anyway (Low Power Mode), when the link is dead, or when the visitor has
+Reduce Motion switched on, the still frame stands in underneath and the hero
+still reads. The film also pauses itself while scrolled off-screen or while
+the tab is in the background, so it is not decoding through the whole visit.
+`#heroFilm`'s `data-film` attribute always names the current state — `off`,
+`loading`, `playing`, `poster`, `blocked`, `offscreen` or `hidden`.
 
 Images are compressed in the browser and stored as data URLs directly in
 Firestore — same approach as CakedbyK, so there's no Storage bucket to

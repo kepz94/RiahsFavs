@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#141010">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Kaushan+Script&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
 <style>
-/* ================= Riah's Fav's Admin — Version 2.1 ================= */
+/* ================= Riah's Fav's Admin — Version 2.2 ================= */
 :root{
   --ink:#141010;--ink-2:#1F1917;--ink-3:#2A2220;--ink-4:#352B28;--line:rgba(255,243,214,.12);
   --gold:#F7A81B;--orange:#F26522;--red:#E01B12;--blue:#1B4FA8;--blue-lite:#3B79E0;
@@ -223,6 +223,26 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 #hmMedia.on{display:block}
 #hmMedia img{display:block;width:100%;height:100%;object-fit:cover}
 #hmMedia iframe{position:absolute;left:50%;transform:translateX(-50%);width:100%;border:0}
+/* Hero film preview (Version 2.2) — mirrors #heroFilm on the live site so the
+   owner sees the real thing before saving. Same scrim maths, same crop. */
+.hero-mock{overflow:hidden}
+#hmFilm{display:none;position:absolute;inset:0;z-index:0;overflow:hidden;background:#000}
+.hero-mock.has-film #hmFilm{display:block}
+#hmFilm video,#hmFilm .film-poster{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:100%;height:100%;object-fit:cover;object-position:50% calc(var(--film-y,50) * 1%)}
+#hmFilm .film-poster{z-index:0}
+#hmFilm video{z-index:1}
+#hmFilm:after{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg, rgba(20,16,16,.50) 0%, rgba(20,16,16,.10) 36%, rgba(20,16,16,.86) 100%),
+             rgba(20,16,16,calc(var(--film-scrim,55) / 100))}
+.hero-mock.has-film .hm-logo{display:none}
+.hero-mock.has-film .hm-h1,.hero-mock.has-film .hm-p,.hero-mock.has-film .hm-cta{position:relative;z-index:3}
+/* The live hero centres its content in the film; the preview must too, or the
+   owner judges a layout the site never shows. */
+.hero-mock.has-film{display:flex;flex-direction:column;justify-content:center;padding:52px 20px 46px}
+.hero-mock.has-film .hm-cta{align-self:center}
+.hero-mock.has-film .hm-h1{margin-top:0;text-shadow:0 2px 20px rgba(0,0,0,.62)}
+.hero-mock.has-film .hm-p{color:#FFF3D6;text-shadow:0 1px 14px rgba(0,0,0,.7)}
 .hero-badge{position:absolute;top:9px;right:9px;background:rgba(0,0,0,.62);color:#F6EFE4;
   font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:99px;z-index:3}
 .kindrow{display:flex;gap:8px;margin-top:10px}
@@ -702,6 +722,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
       <span class="hero-badge">Preview</span>
       <div class="hero-scale" id="heroScale">
         <div class="hero-mock">
+          <div id="hmFilm" aria-hidden="true"></div>
           <img class="hm-logo" src="logo.png" alt="Riah's Fav's">
           <div id="hmMedia"></div>
           <div class="hm-h1">Korean fried chicken,<em>catered by our family.</em></div>
@@ -717,6 +738,7 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
       <button type="button" data-k="none">Nothing</button>
       <button type="button" data-k="photo">A photo</button>
       <button type="button" data-k="reel">An IG reel</button>
+      <button type="button" data-k="video">A video</button>
     </div>
 
     <div id="heroPhotoBox" class="hidden">
@@ -730,6 +752,32 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
       <label class="fl">Instagram reel link</label>
       <input class="inp" id="heroReelUrl" placeholder="https://www.instagram.com/reel/ABC123/" oninput="onReelUrl()">
       <div class="hint">Paste the reel's share link. Only public reels can be embedded.</div>
+    </div>
+
+    <div id="heroVideoBox" class="hidden">
+      <label class="fl">Video link</label>
+      <input class="inp" id="heroVidUrl" placeholder="https://…/hero.mp4" oninput="onFilmUrl()">
+      <div class="hint">A direct link to the video file itself — it has to end in
+        .mp4, .webm, .mov or .m4v. A YouTube, Instagram or TikTok page link will not
+        work here. Keep it short and under about 10&nbsp;MB: it plays on loop, muted,
+        behind the headline, and phones pay for every megabyte.</div>
+
+      <label class="fl">Still frame</label>
+      <button class="btn secondary" onclick="document.getElementById('heroPosterFile').click()">📷 Choose still</button>
+      <input type="file" id="heroPosterFile" accept="image/*" class="hidden">
+      <div class="hint">Shown while the video loads, and instead of it on a phone that
+        blocks autoplay or has Reduce Motion switched on. Worth setting.</div>
+
+      <div class="sl-l"><span>Darkness over the video</span><b id="hvS">55%</b></div>
+      <input type="range" class="sl" id="hS" min="0" max="90" step="5" value="55">
+      <div class="hint">The headline has to stay readable over every frame, not just
+        the first one. Darker is safer.</div>
+
+      <div class="sl-l"><span>Hero height</span><b id="hvHt">78%</b></div>
+      <input type="range" class="sl" id="hHt" min="50" max="100" step="2" value="78">
+
+      <div class="sl-l"><span>Move the picture up / down</span><b id="hvFY">50</b></div>
+      <input type="range" class="sl" id="hFY" min="0" max="100" step="1" value="50">
     </div>
 
     <div id="heroFrameBox" class="hidden">
@@ -758,8 +806,8 @@ label.fl{font-size:.66rem;font-weight:800;letter-spacing:.11em;text-transform:up
 </div>
 
 <script>
-/* ================= Riah's Fav's Admin — Version 2.1 ================= */
-var RF_VERSION = '2.1';
+/* ================= Riah's Fav's Admin — Version 2.2 ================= */
+var RF_VERSION = '2.2';
 var dynImport = new Function('u','return import(u)');
 
 /* ---------------------------------------------------------------
@@ -780,7 +828,7 @@ var ADMIN_EMAILS = ["kasaha01@gmail.com", "riahsfavs@gmail.com"];
 var FS=null, AUTH=null, db=null, auth=null;
 var REQS=[], EVENTS=[], GAL=[], WEEKDOCS={};
 var sched=null, policy={depositPercent:50,payInFullUnder:0}, business={}, cause={active:false};
-var hero={ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0} };
+var hero={ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0}, film:{url:null,poster:null,scrim:55,height:78,y:50} };
 var heroDraft=null;   // edits live here until Save; Cancel drops it
 var evDayRows=[];     // [{dateISO,startTime,endTime}] for the open event
 var menu={ styles:[], pans:[], sides:[], addons:[] };
@@ -874,7 +922,7 @@ async function startAdmin(user){
   policy  = Object.assign({}, STARTER.policy,  p[1]||{});
   business= Object.assign({}, STARTER.business, p[2]||{});
   cause   = Object.assign({}, STARTER.cause,   p[3]||{});
-  hero          = Object.assign({ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0} }, p[4]||{});
+  hero          = Object.assign({ kind:'none', img:null, reelId:null, frame:{w:320,h:320,y:0}, film:{url:null,poster:null,scrim:55,height:78,y:50} }, p[4]||{});
   menu.styles   = (p[5]&&p[5].list) || STARTER.styles.slice();
   menu.pans     = (p[6]&&p[6].list && p[6].list.length) ? p[6].list : STARTER.pans.slice();
   menu.sides    = (p[7]&&p[7].list) || [];
@@ -904,6 +952,7 @@ async function startAdmin(user){
   $('gFile').onchange=onGalleryFile;
   $('evFile').onchange=onEventFile;
   $('heroFile').onchange=onHeroFile;
+  $('heroPosterFile').onchange=onFilmPoster;
 }
 
 /* ================= nav ================= */
@@ -1380,10 +1429,15 @@ function renderHeroSummary(){
   var el=$('heroSummary'); if(!el) return;
   var label = hero.kind==='photo' ? 'A photo is set'
             : hero.kind==='reel'  ? 'A reel is set'
+            : hero.kind==='video' ? (heroFilmOf(hero).url ? 'A looping video is set' : 'Video chosen, but no link yet')
             : 'Nothing set — the hero shows the logo and headline only';
   var f=hero.frame||{};
   el.innerHTML='<div class="detail"><span>Right now</span><span>'+esc(label)+'</span></div>'+
-    (hero.kind!=='none'?'<div class="detail"><span>Size</span><span>'+(f.w||0)+' × '+(f.h||0)+'</span></div>':'');
+    (hero.kind==='video'
+       ? '<div class="detail"><span>Height</span><span>'+heroFilmOf(hero).height+'% of the screen</span></div>'+
+         '<div class="detail"><span>Darkness</span><span>'+heroFilmOf(hero).scrim+'%</span></div>'
+       : hero.kind!=='none'
+       ? '<div class="detail"><span>Size</span><span>'+(f.w||0)+' × '+(f.h||0)+'</span></div>' : '');
 }
 
 function openHero(){
@@ -1394,6 +1448,14 @@ function openHero(){
   $('hH').value = heroDraft.frame.h;
   $('hY').value = heroDraft.frame.y;
   ['hW','hH','hY'].forEach(function(id){ $(id).oninput = onHeroSlider; });
+  /* Version 2.2 — the film controls, seeded from the same draft copy. */
+  if(!heroDraft.film) heroDraft.film = { url:null, poster:null, scrim:55, height:78, y:50 };
+  heroDraft.film = Object.assign({ url:null, poster:null, scrim:55, height:78, y:50 }, heroDraft.film);
+  $('heroVidUrl').value = heroDraft.film.url || '';
+  $('hS').value  = heroDraft.film.scrim;
+  $('hHt').value = heroDraft.film.height;
+  $('hFY').value = heroDraft.film.y;
+  ['hS','hHt','hFY'].forEach(function(id){ $(id).oninput = onFilmSlider; });
   $('hmTag').textContent = business.tagline || 'Fried fresh for your party, office lunch, wedding or fundraiser.';
   $('heroStatus').textContent='';
   document.querySelectorAll('#heroKinds button').forEach(function(b){
@@ -1416,7 +1478,10 @@ function setHeroKind(k, keepOffset){
   });
   $('heroPhotoBox').classList.toggle('hidden', k!=='photo');
   $('heroReelBox').classList.toggle('hidden',  k!=='reel');
-  $('heroFrameBox').classList.toggle('hidden', k==='none');
+  $('heroVideoBox').classList.toggle('hidden', k!=='video');
+  /* The width/height/offset sliders size the boxed card. A film is full-bleed
+     and carries its own three sliders, so they stay out of its way. */
+  $('heroFrameBox').classList.toggle('hidden', k==='none' || k==='video');
   // The offset means different things for the two media types, so reset it
   // when switching rather than carrying a value that no longer applies.
   if(!keepOffset){
@@ -1456,8 +1521,77 @@ async function onHeroFile(ev){
   }catch(e){ err('heroStatus', e); }
 }
 
+/* ---- HERO FILM (kind 'video') — Version 2.2 ------------------------------
+   Same rules index.html uses, so the preview and the site cannot drift. The
+   film is a second, isolated layer: the photo/reel branch in paintHero below
+   is untouched and produces no markup for kind 'video', so the boxed card and
+   the film can never both be showing. */
+var FILM_DEFAULT_A = { url:null, poster:null, scrim:55, height:78, y:50 };
+function heroFilmOf(h){ return Object.assign({}, FILM_DEFAULT_A, (h && h.film) || {}); }
+
+/* Mirrors filmSrc() on the site — only a real video file may reach a src. */
+function filmSrcA(u){
+  var v = String(u==null?'':u).trim();
+  if(!v) return null;
+  if(/^(https?:|blob:|data:video\/)/i.test(v)) return v;
+  if(/^[\w./-]+\.(mp4|webm|mov|m4v)(\?[\w=&.%-]*)?$/i.test(v)) return v;
+  return null;
+}
+function onFilmUrl(){
+  var raw = $('heroVidUrl').value;
+  heroDraft.film.url = raw.trim() || null;
+  if(raw.trim() && !filmSrcA(raw)){
+    $('heroStatus').className='status err';
+    $('heroStatus').textContent='That doesn’t look like a video file — the link has to end in .mp4, .webm, .mov or .m4v.';
+  } else $('heroStatus').textContent='';
+  paintHero();
+}
+function onFilmSlider(){
+  heroDraft.film.scrim  = +$('hS').value;
+  heroDraft.film.height = +$('hHt').value;
+  heroDraft.film.y      = +$('hFY').value;
+  paintHero();
+}
+async function onFilmPoster(ev){
+  var file = ev.target.files && ev.target.files[0]; if(!file) return;
+  ev.target.value='';
+  $('heroStatus').className='status'; $('heroStatus').textContent='Compressing still…';
+  try{
+    heroDraft.film.poster = await fileToCompressedDataUrl(file);
+    ok('heroStatus','Still ready — check the preview, then Save.');
+    paintHero();
+  }catch(e){ err('heroStatus', e); }
+}
+function paintHeroFilm(){
+  var mount=$('hmFilm'), mock=document.querySelector('.hero-mock'), f=heroFilmOf(heroDraft);
+  if(!mount||!mock) return;
+  var src = filmSrcA(f.url);
+  var on  = heroDraft.kind==='video' && !!src;
+  mock.classList.toggle('has-film', on);
+  if(!on){ mount.innerHTML=''; mount.removeAttribute('data-src'); mock.style.minHeight=''; return; }
+  // Only rewrite when the source really changed, or every slider tick restarts
+  // the download.
+  var key = String(f.url)+'|'+String(f.poster?f.poster.slice(-24):'');
+  if(mount.getAttribute('data-src')!==key){
+    mount.innerHTML = (f.poster ? '<img class="film-poster" src="'+esc(f.poster)+'" alt="">' : '') +
+      '<video src="'+esc(src)+'"'+(f.poster?' poster="'+esc(f.poster)+'"':'')+
+      ' autoplay muted loop playsinline webkit-playsinline preload="auto"></video>';
+    mount.setAttribute('data-src', key);
+    var v=mount.querySelector('video'); if(v){ var g=v.play(); if(g&&g.catch) g.catch(function(){}); }
+  }
+  mock.style.setProperty('--film-scrim', String(f.scrim));
+  mock.style.setProperty('--film-y',     String(f.y));
+  // The mock is a fixed-width phone, so height is shown as its share of a
+  // 932px-tall screen — the same proportion the real hero takes.
+  mock.style.minHeight = Math.round(932 * (f.height/100)) + 'px';
+  $('hvS').textContent  = f.scrim+'%';
+  $('hvHt').textContent = f.height+'%';
+  $('hvFY').textContent = String(f.y);
+}
+
 /* Same rules index.html uses, so preview and site cannot drift. */
 function paintHero(){
+  paintHeroFilm();            /* Version 2.2 — the film layer, then the boxed card below, unchanged */
   var mount=$('hmMedia'), h=heroDraft;
   var html = h.kind==='photo' && h.img   ? '<img src="'+esc(h.img)+'" alt="">'
            : h.kind==='reel'  && h.reelId ? '<iframe src="https://www.instagram.com/reel/'+esc(h.reelId)+'/embed" scrolling="no" allowfullscreen></iframe>'
@@ -1500,8 +1634,18 @@ async function saveHero(){
   var h=heroDraft; if(!h) return;
   if(h.kind==='photo' && !h.img){ err('heroStatus','choose a photo first'); return; }
   if(h.kind==='reel'  && !h.reelId){ err('heroStatus','paste a reel link first'); return; }
+  /* Version 2.2 — a film needs a link that is actually a video file. */
+  var film = heroFilmOf(h);
+  if(h.kind==='video' && !filmSrcA(film.url)){
+    err('heroStatus','paste a link to a video file first — it has to end in .mp4, .webm, .mov or .m4v');
+    return;
+  }
   var rec={ kind:h.kind, img:h.kind==='photo'?h.img:null, reelId:h.kind==='reel'?h.reelId:null,
-            frame:h.frame, updatedAt:FS.serverTimestamp() };
+            frame:h.frame,
+            film:{ url:    h.kind==='video' ? film.url : null,
+                   poster: h.kind==='video' ? (film.poster||null) : null,
+                   scrim:  film.scrim, height: film.height, y: film.y },
+            updatedAt:FS.serverTimestamp() };
   $('heroStatus').className='status'; $('heroStatus').textContent='Saving…';
   try{
     await FS.setDoc(FS.doc(db,'settings','hero'), rec);
