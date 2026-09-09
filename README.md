@@ -1,6 +1,6 @@
 # Riah's Fav's — Korean Fried Chicken Catering
 
-Version 2.2
+Version 2.3
 
 A two-file site plus a serverless email hook. Same architecture as CakedbyK:
 plain HTML/CSS/JS, no build step, no framework, no bundler. You edit the file,
@@ -13,6 +13,8 @@ you push, it's live.
 | `api/notify.js`        | Emails the kitchen when a request comes in              |
 | `firestore.rules`      | Database security rules — **must be published**         |
 | `manifest.webmanifest` | Makes it installable as a phone app                     |
+| `hero.mp4`             | The looping video behind the homepage headline          |
+| `hero-poster.jpg`      | Its still frame — shown while it loads, and instead of it when autoplay is blocked |
 | `vercel.json`          | Clean URLs, and keeps `/admin.html` out of search       |
 
 ---
@@ -146,10 +148,39 @@ hero.film = {
 ```
 
 **The video is not stored in Firestore.** A document caps at 1 MB, so unlike
-photos the film is referenced by URL — put the file anywhere that serves it
-over HTTPS (the repo root works: commit `hero.mp4` and set the link to
-`hero.mp4`). Keep it under about 10 MB; every phone that opens the page pays
-for it.
+photos the film is referenced by URL — the file lives in the repo root and is
+served by Vercel like any other static asset.
+
+### The film currently ships in the branch, not the database
+
+`settings/hero` is the normal home for this, but writing it needs Firestore
+rules that permit the write. So `index.html` carries an explicit override near
+the top, right under the Firebase config:
+
+```js
+var HERO_FILM = {
+  url:    'hero.mp4',
+  poster: 'hero-poster.jpg',
+  scrim:  55,     // 0-90   darkness over the footage
+  height: 78,     // 50-100 hero height as a percent of the screen
+  y:      50      // 0-100  which part of the frame shows through the crop
+};
+```
+
+While `url` is non-null this **outranks `settings/hero` entirely** — whatever
+the database holds, or fails to hold, the film is what shows. That is the only
+thing on the site that overrules the admin, and it is deliberately one visible
+constant rather than a quietly edited default.
+
+**To hand the hero back to the admin,** set `url` to `null`. Nothing else
+changes; `settings/hero` takes over again on the next load, and every kind
+(`none`, `photo`, `reel`, `video`) behaves as it did before.
+
+The committed `hero.mp4` is H.264 High / yuv420p, 720x1280, 13s, no audio
+track, `+faststart` so playback begins before the file finishes downloading —
+2.8 MB. Re-encode with the same settings if it is ever replaced; HEVC will not
+play in Chrome or Firefox, and an audio track is dead weight on a hero that is
+muted by necessity.
 
 It autoplays because it is `muted` + `playsinline` + `loop` — the only
 combination iOS and Android allow without a tap. When autoplay is refused
