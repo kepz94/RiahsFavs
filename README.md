@@ -1,6 +1,6 @@
 # Riah's Fav's — Korean Fried Chicken Catering
 
-Version 2.5
+Version 2.6
 
 A two-file site plus a serverless email hook. Same architecture as CakedbyK:
 plain HTML/CSS/JS, no build step, no framework, no bundler. You edit the file,
@@ -13,8 +13,6 @@ you push, it's live.
 | `api/notify.js`        | Emails the kitchen when a request comes in              |
 | `firestore.rules`      | Database security rules — **must be published**         |
 | `manifest.webmanifest` | Makes it installable as a phone app                     |
-| `hero.mp4`             | The looping video behind the homepage headline          |
-| `hero-poster.jpg`      | Its still frame — shown while it loads, and instead of it when autoplay is blocked |
 | `vercel.json`          | Clean URLs, and keeps `/admin.html` out of search       |
 
 ---
@@ -151,45 +149,30 @@ hero.film = {
 photos the film is referenced by URL — the file lives in the repo root and is
 served by Vercel like any other static asset.
 
-### The film currently ships in the branch, not the database
+### The film is retired (2.6) — the mechanism stays
 
-`settings/hero` is the normal home for this, but writing it needs Firestore
-rules that permit the write. So `index.html` carries an explicit override near
-the top, right under the Firebase config:
+The autoplay video hero ran from 2.3 to 2.5 and was retired in 2.6. `hero.mp4`
+and `hero-poster.jpg` are gone from the repo, and the branch override in
+`index.html` is switched off:
 
 ```js
-var HERO_FILM = {
-  url:    'hero.mp4',
-  poster: 'hero-poster.jpg',
-  scrim:  55,     // 0-90   darkness over the footage
-  height: 78,     // 50-100 hero height as a percent of the screen
-  y:      50      // 0-100  which part of the frame shows through the crop
-};
+var HERO_FILM = { url: null, poster: null, scrim: 55, height: 100, y: 50 };
 ```
 
-While `url` is non-null this **outranks `settings/hero` entirely** — whatever
-the database holds, or fails to hold, the film is what shows. That is the only
-thing on the site that overrules the admin, and it is deliberately one visible
-constant rather than a quietly edited default.
+With `url` null the override does nothing and **`settings/hero` is back in
+charge**, so Admin → Homepage hero controls the top of the page again — every
+kind (`none`, `photo`, `reel`, `video`) behaves normally.
 
-**To hand the hero back to the admin,** set `url` to `null`. Nothing else
-changes; `settings/hero` takes over again on the next load, and every kind
-(`none`, `photo`, `reel`, `video`) behaves as it did before.
+The `video` kind itself is untouched and still works. To bring a film back:
+set the hero to a video in the admin, or commit a file and point `HERO_FILM.url`
+at it again. If you do, re-encode as H.264 High / yuv420p with `+faststart` and
+no audio track — HEVC will not play in Chrome or Firefox, and audio is dead
+weight on a hero that must be muted to autoplay at all.
 
-The committed `hero.mp4` is H.264 High / yuv420p, 720x1280, 13s, no audio
-track, `+faststart` so playback begins before the file finishes downloading —
-2.8 MB. Re-encode with the same settings if it is ever replaced; HEVC will not
-play in Chrome or Firefox, and an audio track is dead weight on a hero that is
-muted by necessity.
-
-It autoplays because it is `muted` + `playsinline` + `loop` — the only
-combination iOS and Android allow without a tap. When autoplay is refused
-anyway (Low Power Mode), when the link is dead, or when the visitor has
-Reduce Motion switched on, the still frame stands in underneath and the hero
-still reads. The film also pauses itself while scrolled off-screen or while
-the tab is in the background, so it is not decoding through the whole visit.
-`#heroFilm`'s `data-film` attribute always names the current state — `off`,
-`loading`, `playing`, `poster`, `blocked`, `offscreen` or `hidden`.
+**Known limit, for whoever asks next:** iOS Low Power Mode blocks auto-playing
+video at OS level. Muted, `playsinline` and `autoplay` set correctly changes
+nothing, and no override exists. That is why a still frame mattered, and it is
+not a bug worth chasing again.
 
 Images are compressed in the browser and stored as data URLs directly in
 Firestore — same approach as CakedbyK, so there's no Storage bucket to
